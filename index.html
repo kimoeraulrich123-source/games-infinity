@@ -360,6 +360,31 @@
       animation:floaty 2.6s ease-in-out infinite;
     }
 
+    .audio-box{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:8px;
+    }
+
+    .toggle-sound{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.07);
+      font-weight:800;
+      color:#eef5ff;
+    }
+
+    .range{
+      width:160px;
+      accent-color:#8b5cf6;
+    }
+
     @keyframes floaty{
       0%,100%{transform:translateY(0)}
       50%{transform:translateY(-4px)}
@@ -385,11 +410,23 @@
     <div id="screen-setup" class="hero">
       <div class="card stack">
         <div class="fun-box">
-          <div class="big">Crée une room ou rejoins une partie 🎭</div>
+          <div class="big">Crée une room ou rejoins une partie</div>
           <p class="sub">
             Mode principal : Firebase / Firestore. Si la config Firebase n’est pas disponible,
             l’app passe automatiquement en mode local offline.
           </p>
+
+          <div class="audio-box">
+            <label class="toggle-sound">
+              <input id="soundEnabled" type="checkbox" checked />
+              Son activé
+            </label>
+            <label class="toggle-sound">
+              Volume
+              <input id="soundVolume" class="range" type="range" min="0" max="100" value="45" />
+            </label>
+            <button id="btnStartAudio" class="btn btn-secondary">Activer l’ambiance</button>
+          </div>
         </div>
 
         <div class="phasebar">
@@ -458,7 +495,7 @@
           <li>La majorité reçoit le même mot A.</li>
           <li>Un ou plusieurs undercovers reçoivent le mot proche B.</li>
           <li>Chaque joueur voit son mot une seule fois, puis confirme avec “J’ai vu”.</li>
-          <li>Les rôles ne sont pas révélés pendant la partie.</li>
+          <li>Personne ne connaît officiellement son rôle.</li>
           <li>Discussion → Vote → Résultat → Manche suivante.</li>
           <li>Les civils gagnent si tous les undercovers sont éliminés.</li>
           <li>Les undercovers gagnent s’ils atteignent une parité favorable.</li>
@@ -467,7 +504,7 @@
         <h3>Anti-triche</h3>
         <ul class="list">
           <li>Les mots des autres joueurs ne sont jamais affichés.</li>
-          <li>Le rôle exact n’est pas affiché au joueur.</li>
+          <li>Le rôle exact n’est affiché à personne.</li>
           <li>Un vote par joueur vérifié via transaction Firestore.</li>
           <li>Actions verrouillées selon la phase.</li>
           <li>Révélation privée stockée par document secret individuel.</li>
@@ -758,7 +795,8 @@
 
     const STORAGE_KEYS = {
       profile: "undercover_profile_v1",
-      offlineRoom: "undercover_offline_room_v1"
+      offlineRoom: "undercover_offline_room_v1",
+      soundPrefs: "undercover_sound_prefs_v1"
     };
 
     function getProfile(){
@@ -770,6 +808,186 @@
       return p;
     }
     const PROFILE = getProfile();
+
+    /******************************************************************
+     * AUDIO
+     ******************************************************************/
+    const audioState = {
+      ctx: null,
+      master: null,
+      ambienceGain: null,
+      ambienceStarted: false,
+      enabled: true,
+      volume: 0.45,
+      noiseNodes: [],
+      pulseInterval: null
+    };
+
+    function loadSoundPrefs(){
+      const prefs = loadLocal(STORAGE_KEYS.soundPrefs, { enabled:true, volume:45 });
+      audioState.enabled = !!prefs.enabled;
+      audioState.volume = (Number(prefs.volume || 45) / 100);
+      $("soundEnabled").checked = audioState.enabled;
+      $("soundVolume").value = Math.round(audioState.volume * 100);
+    }
+
+    function saveSoundPrefs(){
+      saveLocal(STORAGE_KEYS.soundPrefs, {
+        enabled: $("soundEnabled").checked,
+        volume: Number($("soundVolume").value || 45)
+      });
+    }
+
+    async function ensureAudio(){
+      if(audioState.ctx) return audioState.ctx;
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if(!Ctx) return null;
+
+      audioState.ctx = new Ctx();
+      audioState.master = audioState.ctx.createGain();
+      audioState.master.gain.value = audioState.enabled ? audioState.volume : 0;
+      audioState.master.connect(audioState.ctx.destination);
+
+      audioState.ambienceGain = audioState.ctx.createGain();
+      audioState.ambienceGain.gain.value = 0;
+      audioState.ambienceGain.connect(audioState.master);
+
+      return audioState.ctx;
+    }
+
+    function updateAudioSettings(){
+      audioState.enabled = $("soundEnabled").checked;
+      audioState.volume = Number($("soundVolume").value || 45) / 100;
+      if(audioState.master){
+        audioState.master.gain.cancelScheduledValues(audioState.ctx.currentTime);
+        audioState.master.gain.linearRampToValueAtTime(audioState.enabled ? audioState.volume : 0, audioState.ctx.currentTime + 0.08);
+      }
+      saveSoundPrefs();
+    }
+
+    function tone(freq=440, duration=0.12, type="sine", gain=0.05, when=0){
+      if(!audioState.ctx || !audioState.enabled) return;
+      const ctx = audioState.ctx;
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + when);
+
+      g.gain.setValueAtTime(0.0001, ctx.currentTime + when);
+      g.gain.exponentialRampToValueAtTime(gain, ctx.currentTime + when + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + when + duration);
+
+      osc.connect(g);
+      g.connect(audioState.master);
+
+      osc.start(ctx.currentTime + when);
+      osc.stop(ctx.currentTime + when + duration + 0.02);
+    }
+
+    function uiRevealSound(){
+      tone(370, 0.14, "triangle", 0.04, 0);
+      tone(494, 0.18, "sine", 0.03, 0.07);
+      tone(622, 0.22, "triangle", 0.025, 0.12);
+    }
+
+    function uiSeenSound(){
+      tone(660, 0.08, "sine", 0.035, 0);
+      tone(880, 0.11, "triangle", 0.03, 0.05);
+    }
+
+    function uiVoteSound(){
+      tone(220, 0.07, "square", 0.025, 0);
+      tone(180, 0.09, "triangle", 0.02, 0.04);
+    }
+
+    function uiPhaseSound(){
+      tone(280, 0.08, "triangle", 0.03, 0);
+      tone(420, 0.1, "triangle", 0.028, 0.05);
+    }
+
+    function uiWinSound(isCivil=true){
+      if(isCivil){
+        tone(523, 0.14, "triangle", 0.04, 0);
+        tone(659, 0.18, "triangle", 0.04, 0.09);
+        tone(784, 0.24, "sine", 0.03, 0.18);
+      }else{
+        tone(220, 0.14, "sawtooth", 0.03, 0);
+        tone(196, 0.2, "triangle", 0.03, 0.09);
+        tone(165, 0.28, "sine", 0.025, 0.18);
+      }
+    }
+
+    function createNoiseBuffer(ctx){
+      const buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for(let i=0;i<data.length;i++){
+        data[i] = (Math.random() * 2 - 1) * 0.35;
+      }
+      return buffer;
+    }
+
+    function startAmbience(){
+      if(audioState.ambienceStarted || !audioState.ctx) return;
+      const ctx = audioState.ctx;
+
+      const lowOsc = ctx.createOscillator();
+      const lowGain = ctx.createGain();
+      lowOsc.type = "sine";
+      lowOsc.frequency.value = 48;
+      lowGain.gain.value = 0.008;
+      lowOsc.connect(lowGain);
+      lowGain.connect(audioState.ambienceGain);
+      lowOsc.start();
+
+      const midOsc = ctx.createOscillator();
+      const midGain = ctx.createGain();
+      midOsc.type = "triangle";
+      midOsc.frequency.value = 92;
+      midGain.gain.value = 0.004;
+      midOsc.connect(midGain);
+      midGain.connect(audioState.ambienceGain);
+      midOsc.start();
+
+      const noiseSource = ctx.createBufferSource();
+      noiseSource.buffer = createNoiseBuffer(ctx);
+      noiseSource.loop = true;
+      const noiseFilter = ctx.createBiquadFilter();
+      noiseFilter.type = "bandpass";
+      noiseFilter.frequency.value = 650;
+      noiseFilter.Q.value = 0.6;
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.value = 0.006;
+      noiseSource.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(audioState.ambienceGain);
+      noiseSource.start();
+
+      audioState.noiseNodes = [lowOsc, lowGain, midOsc, midGain, noiseSource, noiseFilter, noiseGain];
+      audioState.ambienceStarted = true;
+
+      audioState.ambienceGain.gain.cancelScheduledValues(ctx.currentTime);
+      audioState.ambienceGain.gain.linearRampToValueAtTime(0.028, ctx.currentTime + 1.4);
+
+      audioState.pulseInterval = setInterval(()=>{
+        if(!audioState.ctx || !audioState.enabled) return;
+        const t = audioState.ctx.currentTime;
+        const delta = (Math.random() * 0.005);
+        audioState.ambienceGain.gain.cancelScheduledValues(t);
+        audioState.ambienceGain.gain.linearRampToValueAtTime(0.022 + delta, t + 1.8);
+      }, 2000);
+    }
+
+    async function enableAudioNow(){
+      const ctx = await ensureAudio();
+      if(!ctx) return;
+      if(ctx.state === "suspended"){
+        await ctx.resume();
+      }
+      updateAudioSettings();
+      startAmbience();
+      uiPhaseSound();
+    }
 
     /******************************************************************
      * ÉTAT
@@ -789,7 +1007,9 @@
       unsubRoom: null,
       unsubPlayers: null,
       tickInterval: null,
-      offline: null
+      offline: null,
+      lastPhase: "",
+      lastWinner: ""
     };
 
     /******************************************************************
@@ -860,6 +1080,25 @@
       return me?.revealedRound === currentRoundNumber();
     }
 
+    function maybePlayPhaseAudio(){
+      const room = getRoom();
+      if(!room) return;
+
+      if(state.lastPhase !== room.phase){
+        if(room.phase === "reveal") uiRevealSound();
+        else if(room.phase === "discussion" || room.phase === "vote" || room.phase === "result") uiPhaseSound();
+        state.lastPhase = room.phase;
+      }
+
+      if(room.winner && state.lastWinner !== room.winner){
+        uiWinSound(room.winner === "civils");
+        state.lastWinner = room.winner;
+      }
+      if(!room.winner){
+        state.lastWinner = "";
+      }
+    }
+
     function renderPlayers(){
       const players = getPlayers();
       setText("aliveCount", `Vivants : ${players.filter(p => p.alive).length}`);
@@ -900,6 +1139,7 @@
       updateRevealPanel();
       updateVotePanel();
       updateButtons();
+      maybePlayPhaseAudio();
     }
 
     function updateButtons(){
@@ -1130,12 +1370,10 @@
 
       for(const p of alive){
         const word = undercoverIds.includes(p.id) ? pair.b : pair.a;
-        const role = undercoverIds.includes(p.id) ? "undercover" : "civil";
         batch.set(privateRef(state.roomId, p.secretId), {
           roundNumber,
           pairIndex,
           word,
-          role,
           playerId: p.id,
           seen: false
         });
@@ -1157,6 +1395,8 @@
       await firebaseFns.setDoc(privateRef(state.roomId, state.mySecret), {
         seen: true
       }, { merge:true });
+
+      uiSeenSound();
     }
 
     async function firebaseStartDiscussion(){
@@ -1222,6 +1462,8 @@
         tx.set(playerRef(state.roomId, state.myId), {
           votedRound: roomData.roundNumber
         }, { merge:true });
+      }).then(()=>{
+        uiVoteSound();
       }).catch(err=>{
         alert(err.message || "Impossible de voter.");
       });
@@ -1495,7 +1737,6 @@
         room.privateWords[p.id] = {
           roundNumber,
           word: undercoverIds.includes(p.id) ? pair.b : pair.a,
-          role: undercoverIds.includes(p.id) ? "undercover" : "civil",
           playerId: p.id,
           seen: false
         };
@@ -1507,6 +1748,7 @@
       updateRoomHeader();
       updateRevealPanel();
       setStatus("Révélation", "Passe le téléphone au joueur affiché, puis clique sur “J’ai vu”.");
+      uiRevealSound();
     }
 
     function offlineCurrentRevealPlayer(){
@@ -1538,6 +1780,7 @@
       renderPlayers();
       updateRoomHeader();
       updateRevealPanel();
+      uiSeenSound();
     }
 
     function offlineStartDiscussion(){
@@ -1582,6 +1825,7 @@
       persistOffline();
       updateVotePanel();
       renderPlayers();
+      uiVoteSound();
     }
 
     function offlineResolveVotes(){
@@ -1810,11 +2054,25 @@
     /******************************************************************
      * ACTIONS
      ******************************************************************/
+    $("btnStartAudio").addEventListener("click", async ()=>{
+      await enableAudioNow();
+    });
+
+    $("soundEnabled").addEventListener("change", ()=>{
+      updateAudioSettings();
+    });
+
+    $("soundVolume").addEventListener("input", ()=>{
+      updateAudioSettings();
+    });
+
     $("btnCopyLink").addEventListener("click", ()=>{
       copy($("shareLinkInput").value);
+      uiPhaseSound();
     });
 
     $("btnCreateOnline").addEventListener("click", async ()=>{
+      await enableAudioNow();
       const nickname = $("createNickname").value.trim();
       const settings = {
         discussionSeconds: clamp(Number($("createDiscussion").value || 90), 15, 600),
@@ -1834,7 +2092,8 @@
       }
     });
 
-    $("btnCreateOffline").addEventListener("click", ()=>{
+    $("btnCreateOffline").addEventListener("click", async ()=>{
+      await enableAudioNow();
       const nickname = $("createNickname").value.trim();
       const settings = {
         discussionSeconds: clamp(Number($("createDiscussion").value || 90), 15, 600),
@@ -1846,6 +2105,7 @@
     });
 
     $("btnJoinRoom").addEventListener("click", async ()=>{
+      await enableAudioNow();
       const roomId = $("joinRoomCode").value.trim().toUpperCase();
       const nickname = $("joinNickname").value.trim();
 
@@ -1862,47 +2122,56 @@
       }
     });
 
-    $("btnStartRound").addEventListener("click", ()=>{
+    $("btnStartRound").addEventListener("click", async ()=>{
+      await enableAudioNow();
       if(state.mode === "firebase") firebaseStartRound();
       else offlineStartRound();
     });
 
-    $("btnSeenWord").addEventListener("click", ()=>{
+    $("btnSeenWord").addEventListener("click", async ()=>{
+      await enableAudioNow();
       if(state.mode === "firebase") firebaseMarkSeen();
       else offlineMarkSeen();
     });
 
-    $("btnForceDiscussion").addEventListener("click", ()=>{
+    $("btnForceDiscussion").addEventListener("click", async ()=>{
+      await enableAudioNow();
       if(state.mode === "firebase") firebaseStartDiscussion();
       else offlineStartDiscussion();
     });
 
-    $("btnForceVote").addEventListener("click", ()=>{
+    $("btnForceVote").addEventListener("click", async ()=>{
+      await enableAudioNow();
       if(state.mode === "firebase") firebaseStartVote();
       else offlineStartVote();
     });
 
-    $("btnNextRound").addEventListener("click", ()=>{
+    $("btnNextRound").addEventListener("click", async ()=>{
+      await enableAudioNow();
       if(state.mode === "firebase") firebaseNextRound();
       else offlineNextRound();
     });
 
-    $("btnResetGame").addEventListener("click", ()=>{
+    $("btnResetGame").addEventListener("click", async ()=>{
+      await enableAudioNow();
       if(state.mode === "firebase") firebaseResetGame();
       else offlineResetGame();
     });
 
-    $("btnAddOfflinePlayer").addEventListener("click", ()=>{
+    $("btnAddOfflinePlayer").addEventListener("click", async ()=>{
+      await enableAudioNow();
       const name = $("offlinePlayerName").value.trim();
       if(!name) return;
       offlineAddPlayer(name);
       $("offlinePlayerName").value = "";
+      uiPhaseSound();
     });
 
     /******************************************************************
      * BOOT
      ******************************************************************/
     async function boot(){
+      loadSoundPrefs();
       await initFirebaseIfConfigured();
       updateModeBadge();
 
