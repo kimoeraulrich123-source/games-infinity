@@ -3,38 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Undercover – Mots proches</title>
+  <title>Undercover Deluxe</title>
   <style>
     :root{
-      --bg:#0f1021;
-      --bg2:#171936;
-      --bg3:#241f52;
-      --card:rgba(255,255,255,.09);
-      --card-2:rgba(255,255,255,.06);
-      --text:#f8fbff;
-      --muted:#bed0ff;
-      --accent:#7c3aed;
-      --accent2:#22c55e;
-      --accent3:#38bdf8;
-      --danger:#fb7185;
-      --warning:#fbbf24;
-      --border:rgba(255,255,255,.12);
-      --shadow:0 18px 60px rgba(0,0,0,.35);
-      --radius:22px;
+      --bg:#090b16;
+      --bg2:#10152d;
+      --bg3:#181f42;
+      --card:rgba(255,255,255,.08);
+      --card2:rgba(255,255,255,.05);
+      --text:#f6f9ff;
+      --muted:#b8c8ef;
+      --muted2:#8fa4db;
+      --line:rgba(255,255,255,.12);
+      --purple:#8b5cf6;
+      --blue:#38bdf8;
+      --green:#22c55e;
+      --yellow:#fbbf24;
+      --red:#fb7185;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+      --radius:24px;
+      --radius2:18px;
+      --ok:#bbf7d0;
+      --danger:#fecdd3;
+      --warn:#fde68a;
     }
 
     *{box-sizing:border-box}
     html,body{
       margin:0;
-      padding:0;
       min-height:100%;
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:
-        radial-gradient(circle at 10% 10%, rgba(124,58,237,.22), transparent 30%),
-        radial-gradient(circle at 90% 20%, rgba(34,197,94,.18), transparent 26%),
-        radial-gradient(circle at 50% 90%, rgba(56,189,248,.16), transparent 28%),
-        linear-gradient(180deg,var(--bg),var(--bg2) 50%, #0c1024 100%);
+        radial-gradient(circle at 10% 12%, rgba(139,92,246,.22), transparent 28%),
+        radial-gradient(circle at 90% 15%, rgba(56,189,248,.14), transparent 22%),
+        radial-gradient(circle at 50% 85%, rgba(34,197,94,.12), transparent 20%),
+        linear-gradient(180deg,var(--bg),var(--bg2) 45%,var(--bg3) 100%);
     }
 
     body::before{
@@ -42,104 +46,123 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      background-image:
-        radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
-      background-size:20px 20px;
-      mask-image:linear-gradient(180deg, rgba(0,0,0,.7), rgba(0,0,0,.18));
-      opacity:.35;
+      opacity:.18;
+      background-image:radial-gradient(rgba(255,255,255,.8) 1px, transparent 1px);
+      background-size:24px 24px;
+      mask-image:linear-gradient(180deg, rgba(0,0,0,.7), transparent);
     }
 
+    button,input{font:inherit}
     a{color:#93c5fd}
-    button,input,select,textarea{font:inherit}
-    .app{max-width:1180px;margin:0 auto;padding:18px}
+
+    .app{
+      max-width:1240px;
+      margin:0 auto;
+      padding:18px;
+      position:relative;
+      z-index:1;
+    }
+
     .hidden{display:none !important}
 
     .topbar{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      gap:12px;
+      gap:16px;
       position:sticky;
       top:0;
       z-index:20;
-      padding:14px 0 18px;
+      padding:12px 0 18px;
       backdrop-filter:blur(14px);
-      background:linear-gradient(180deg, rgba(15,16,33,.88), rgba(15,16,33,.35));
+      background:linear-gradient(180deg, rgba(9,11,22,.92), rgba(9,11,22,.35));
     }
 
-    .brand{display:flex;align-items:center;gap:14px}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
     .logo{
-      width:52px;
-      height:52px;
-      border-radius:16px;
+      width:56px;
+      height:56px;
+      border-radius:18px;
       display:grid;
       place-items:center;
-      font-size:1.2rem;
       font-weight:900;
-      color:#08111a;
+      font-size:1.35rem;
+      color:#07111f;
       background:
-        radial-gradient(circle at 30% 30%, #fef08a, transparent 35%),
-        linear-gradient(135deg,#34d399,#60a5fa 55%,#a855f7);
-      box-shadow:0 12px 34px rgba(96,165,250,.32);
+        radial-gradient(circle at 30% 25%, #fff7a8, transparent 35%),
+        linear-gradient(135deg,#34d399,#60a5fa 50%,#a855f7);
+      box-shadow:0 14px 40px rgba(96,165,250,.3);
       transform:rotate(-8deg);
     }
 
     .brand h1{
       margin:0;
-      font-size:1.22rem;
+      font-size:1.25rem;
       letter-spacing:.01em;
     }
 
     .brand p{
       margin:4px 0 0;
       color:var(--muted);
-      font-size:.94rem;
+      font-size:.95rem;
     }
 
-    .row{display:flex;gap:12px;flex-wrap:wrap}
-    .stack{display:flex;flex-direction:column;gap:14px}
-    .grid{display:grid;gap:16px}
-    .grid-2{grid-template-columns:1.2fr .8fr}
-    @media(max-width:950px){.grid-2,.hero{grid-template-columns:1fr !important}}
-
-    .chip,.pill,.phase,.badge{
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.07);
-      backdrop-filter:blur(10px);
-    }
-
-    .chip{
-      border-radius:999px;
-      padding:9px 13px;
-      color:var(--text);
-      font-size:.92rem;
-      font-weight:700;
+    .row{display:flex; gap:12px; flex-wrap:wrap}
+    .stack{display:flex; flex-direction:column; gap:14px}
+    .grid{display:grid; gap:16px}
+    .grid-2{grid-template-columns:1.18fr .82fr}
+    .grid-3{grid-template-columns:repeat(3,1fr)}
+    .hero{display:grid; grid-template-columns:1.08fr .92fr; gap:16px; margin-top:10px}
+    @media(max-width:980px){
+      .hero,.grid-2,.grid-3{grid-template-columns:1fr !important}
+      .topbar{align-items:flex-start; flex-direction:column}
     }
 
     .card{
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
-      border:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.045));
+      border:1px solid var(--line);
       border-radius:var(--radius);
-      box-shadow:var(--shadow);
       padding:18px;
+      box-shadow:var(--shadow);
       backdrop-filter:blur(16px);
     }
 
-    .card h2,.card h3{margin:0 0 10px}
-    .sub{color:var(--muted);font-size:.96rem}
-    .hero{display:grid;grid-template-columns:1.08fr .92fr;gap:16px;margin-top:16px}
-    .big{
-      font-size:clamp(1.8rem,4.2vw,3.3rem);
-      font-weight:900;
-      line-height:1.02;
-      letter-spacing:-.03em;
+    .section-title{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
     }
 
-    .field{display:flex;flex-direction:column;gap:8px}
-    label{font-size:.94rem;color:#e5efff;font-weight:700}
+    .big{
+      font-size:clamp(2rem,4.5vw,3.4rem);
+      font-weight:900;
+      line-height:1.02;
+      letter-spacing:-.04em;
+    }
 
-    input,select{
+    .sub{color:var(--muted); font-size:.96rem}
+    .tiny{color:var(--muted2); font-size:.85rem}
+
+    .fun-box{
+      border-radius:22px;
+      padding:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        linear-gradient(135deg, rgba(139,92,246,.22), rgba(56,189,248,.10)),
+        rgba(255,255,255,.03);
+    }
+
+    .field{display:flex; flex-direction:column; gap:8px}
+    label{font-weight:800; font-size:.93rem; color:#e8efff}
+
+    input{
       width:100%;
       border-radius:16px;
       border:1px solid rgba(255,255,255,.14);
@@ -147,16 +170,14 @@
       color:var(--text);
       padding:13px 14px;
       outline:none;
-      transition:.18s border-color,.18s box-shadow,.18s transform;
+      transition:.18s ease;
     }
-
-    input:focus,select:focus{
+    input::placeholder{color:#adc0ed}
+    input:focus{
       border-color:rgba(96,165,250,.8);
-      box-shadow:0 0 0 4px rgba(96,165,250,.14);
+      box-shadow:0 0 0 4px rgba(96,165,250,.15);
       transform:translateY(-1px);
     }
-
-    input::placeholder{color:#b5c6ef}
 
     .btn{
       border:0;
@@ -164,56 +185,87 @@
       padding:12px 16px;
       font-weight:900;
       cursor:pointer;
-      transition:.18s transform,.18s opacity,.18s filter;
+      color:white;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap:10px;
-      color:white;
-      box-shadow:0 10px 24px rgba(0,0,0,.18);
+      transition:.18s ease;
+      box-shadow:0 12px 28px rgba(0,0,0,.18);
     }
     .btn:hover{transform:translateY(-2px) scale(1.01)}
-    .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .btn:disabled{opacity:.45; cursor:not-allowed; transform:none}
 
-    .btn-primary{
-      background:linear-gradient(135deg,#8b5cf6,#3b82f6);
-    }
-    .btn-secondary{
-      background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.06));
-      border:1px solid rgba(255,255,255,.12);
-      color:#fff;
-    }
-    .btn-danger{
-      background:linear-gradient(135deg,#fb7185,#ef4444);
-    }
-    .btn-warning{
-      background:linear-gradient(135deg,#fbbf24,#f59e0b);
-      color:#161616;
+    .btn-primary{background:linear-gradient(135deg,#8b5cf6,#3b82f6)}
+    .btn-secondary{background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.06)); border:1px solid rgba(255,255,255,.12)}
+    .btn-danger{background:linear-gradient(135deg,#fb7185,#ef4444)}
+    .btn-warning{background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#181818}
+    .btn-green{background:linear-gradient(135deg,#34d399,#22c55e); color:#072012}
+
+    .chip,.pill,.phase,.badge,.toggle{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.07);
+      backdrop-filter:blur(10px);
     }
 
-    .pill{
-      padding:8px 12px;
+    .chip,.pill,.toggle{
       border-radius:999px;
-      color:#e8f1ff;
-      font-size:.88rem;
-      font-weight:700;
-    }
-
-    .phasebar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
-    .phase{
-      padding:10px 14px;
-      border-radius:999px;
-      color:#d5e2ff;
+      padding:9px 13px;
       font-weight:800;
-    }
-    .phase.active{
-      background:linear-gradient(135deg,rgba(124,58,237,.35),rgba(56,189,248,.28));
-      border-color:rgba(147,197,253,.4);
-      box-shadow:0 0 0 1px rgba(147,197,253,.18) inset;
+      font-size:.9rem;
     }
 
-    .list{margin:0;padding-left:18px;color:#edf4ff}
-    .list li{margin:6px 0}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border-radius:999px;
+      padding:8px 11px;
+      font-size:.84rem;
+      font-weight:900;
+    }
+    .badge-ok{background:rgba(34,197,94,.14); color:var(--ok); border-color:rgba(34,197,94,.3)}
+    .badge-danger{background:rgba(251,113,133,.15); color:var(--danger); border-color:rgba(251,113,133,.3)}
+    .badge-warn{background:rgba(251,191,36,.14); color:var(--warn); border-color:rgba(251,191,36,.3)}
+
+    .phasebar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:6px;
+    }
+
+    .phase{
+      border-radius:999px;
+      padding:10px 14px;
+      color:#dbe7ff;
+      font-weight:900;
+      font-size:.92rem;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .phase.active{
+      background:linear-gradient(135deg, rgba(139,92,246,.35), rgba(56,189,248,.24));
+      border-color:rgba(147,197,253,.45);
+      box-shadow:0 0 0 1px rgba(147,197,253,.16) inset;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+    }
+    @media(max-width:980px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+    .stat{
+      padding:14px;
+      border-radius:20px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+    }
+    .stat .k{color:var(--muted2); font-size:.84rem; font-weight:800}
+    .stat .v{font-size:1.3rem; font-weight:900; margin-top:6px}
 
     .players{
       display:grid;
@@ -223,9 +275,8 @@
 
     .player{
       border:1px solid rgba(255,255,255,.12);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
-      border-radius:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border-radius:20px;
       padding:13px;
       position:relative;
       overflow:hidden;
@@ -234,42 +285,18 @@
     .player::before{
       content:"";
       position:absolute;
-      inset:auto -30px -30px auto;
       width:90px;
       height:90px;
       border-radius:50%;
-      background:radial-gradient(circle, rgba(124,58,237,.18), transparent 60%);
+      right:-28px;
+      bottom:-28px;
+      background:radial-gradient(circle, rgba(139,92,246,.18), transparent 65%);
     }
 
-    .player .name{font-weight:900;font-size:1rem}
-    .player .meta{color:var(--muted);font-size:.9rem;margin-top:4px}
-    .player.dead{opacity:.5;filter:grayscale(.25)}
-    .player.me{outline:2px solid rgba(52,211,153,.65)}
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 11px;
-      border-radius:999px;
-      font-size:.85rem;
-      font-weight:900;
-    }
-    .badge-ok{
-      background:rgba(52,211,153,.15);
-      color:#bbf7d0;
-      border-color:rgba(52,211,153,.28);
-    }
-    .badge-danger{
-      background:rgba(251,113,133,.15);
-      color:#fecdd3;
-      border-color:rgba(251,113,133,.28);
-    }
-    .badge-warn{
-      background:rgba(251,191,36,.16);
-      color:#fde68a;
-      border-color:rgba(251,191,36,.28);
-    }
+    .player.me{outline:2px solid rgba(52,211,153,.6)}
+    .player.dead{opacity:.5; filter:grayscale(.25)}
+    .player .name{font-weight:900; font-size:1rem}
+    .player .meta{margin-top:4px; color:var(--muted); font-size:.9rem}
 
     .copyline{
       display:flex;
@@ -283,42 +310,73 @@
       display:grid;
       place-items:center;
       text-align:center;
-      min-height:250px;
-      border-radius:26px;
+      min-height:280px;
+      border-radius:28px;
       padding:28px;
       border:1px solid rgba(255,255,255,.12);
       background:
-        radial-gradient(circle at 18% 20%, rgba(251,191,36,.22), transparent 26%),
-        radial-gradient(circle at 85% 18%, rgba(56,189,248,.22), transparent 28%),
-        radial-gradient(circle at 50% 80%, rgba(124,58,237,.24), transparent 28%),
-        rgba(255,255,255,.06);
+        radial-gradient(circle at 15% 20%, rgba(251,191,36,.18), transparent 22%),
+        radial-gradient(circle at 85% 18%, rgba(56,189,248,.2), transparent 24%),
+        radial-gradient(circle at 50% 82%, rgba(139,92,246,.24), transparent 26%),
+        rgba(255,255,255,.05);
       box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
     }
 
     .role{
       font-size:1rem;
       font-weight:900;
-      margin-bottom:10px;
+      margin-bottom:12px;
       color:#dbeafe;
       text-transform:uppercase;
       letter-spacing:.08em;
     }
     .word{
-      font-size:clamp(2.2rem,7vw,4.2rem);
+      font-size:clamp(2.2rem,7vw,4.5rem);
       font-weight:900;
       letter-spacing:.02em;
-      text-shadow:0 6px 24px rgba(0,0,0,.24);
+      text-shadow:0 8px 26px rgba(0,0,0,.24);
     }
-    .warning{color:#fde68a;font-size:.95rem;margin-top:10px}
+    .warning{color:#fde68a; font-size:.95rem; margin-top:12px}
+
+    .timer-wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+    }
+
     .timer{
-      font-size:clamp(2rem,5vw,3.4rem);
+      font-size:clamp(2rem,5vw,3.6rem);
       font-weight:900;
       letter-spacing:.04em;
     }
 
-    .center{text-align:center}
-    .mini{font-size:.88rem;color:var(--muted)}
-    .separator{height:1px;background:rgba(255,255,255,.08);margin:12px 0}
+    .timer.urgent{
+      color:#ffd3dc;
+      text-shadow:0 0 22px rgba(251,113,133,.3);
+      animation:pulseTimer .7s infinite alternate;
+    }
+
+    @keyframes pulseTimer{
+      from{transform:scale(1)}
+      to{transform:scale(1.03)}
+    }
+
+    .progress{
+      width:min(520px, 100%);
+      height:12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.09);
+    }
+
+    .progress > div{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#8b5cf6,#38bdf8,#22c55e);
+      transition:width .2s linear;
+    }
 
     .vote-grid{
       display:grid;
@@ -327,9 +385,9 @@
     }
 
     .vote-item{
-      border:1px solid var(--border);
+      border:1px solid var(--line);
       background:rgba(255,255,255,.05);
-      border-radius:16px;
+      border-radius:18px;
       padding:12px;
       display:flex;
       justify-content:space-between;
@@ -340,49 +398,67 @@
     .result-box{
       padding:16px;
       border-radius:18px;
-      background:rgba(255,255,255,.06);
-      border:1px solid var(--border);
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
     }
 
+    .list{margin:0; padding-left:18px}
+    .list li{margin:6px 0; color:#edf4ff}
+    .separator{height:1px; background:rgba(255,255,255,.08); margin:8px 0}
+    .center{text-align:center}
     .mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
-    .footer-note{margin-top:20px;color:var(--muted);font-size:.9rem}
-
-    .fun-box{
-      padding:16px;
-      border-radius:20px;
-      background:
-        linear-gradient(135deg, rgba(124,58,237,.22), rgba(56,189,248,.12));
-      border:1px solid rgba(255,255,255,.12);
-    }
-
-    .sparkle{
-      display:inline-block;
-      animation:floaty 2.6s ease-in-out infinite;
-    }
 
     .audio-box{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
       align-items:center;
-      margin-top:8px;
-    }
-
-    .toggle-sound{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.07);
-      font-weight:800;
-      color:#eef5ff;
+      margin-top:6px;
     }
 
     .range{
       width:160px;
       accent-color:#8b5cf6;
+    }
+
+    .toast-wrap{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      z-index:99;
+    }
+
+    .toast{
+      min-width:260px;
+      max-width:340px;
+      padding:14px 16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(180deg, rgba(17,23,47,.96), rgba(13,18,36,.96));
+      box-shadow:0 18px 50px rgba(0,0,0,.3);
+      animation:toastIn .24s ease;
+    }
+
+    .toast .t1{font-weight:900}
+    .toast .t2{margin-top:6px; color:var(--muted); font-size:.92rem}
+
+    @keyframes toastIn{
+      from{transform:translateY(10px); opacity:0}
+      to{transform:translateY(0); opacity:1}
+    }
+
+    .footer-note{
+      margin-top:20px;
+      color:var(--muted);
+      font-size:.9rem;
+    }
+
+    .sparkle{
+      display:inline-block;
+      animation:floaty 2.5s ease-in-out infinite;
     }
 
     @keyframes floaty{
@@ -397,13 +473,15 @@
       <div class="brand">
         <div class="logo">U</div>
         <div>
-          <h1>Undercover – Mots proches <span class="sparkle">✨</span></h1>
-          <p>Version fun, multijoueur par lien, avec fallback hors ligne.</p>
+          <h1>Undercover Deluxe <span class="sparkle">✨</span></h1>
+          <p>Plus de mots, plus d’ambiance, meilleur offline, rôle totalement caché.</p>
         </div>
       </div>
+
       <div class="row">
         <span id="modeBadge" class="chip">Mode : Local offline</span>
         <span id="roomBadge" class="chip">Room : —</span>
+        <span id="roundBadge" class="chip">Manche : 0</span>
       </div>
     </div>
 
@@ -412,20 +490,39 @@
         <div class="fun-box">
           <div class="big">Crée une room ou rejoins une partie</div>
           <p class="sub">
-            Mode principal : Firebase / Firestore. Si la config Firebase n’est pas disponible,
-            l’app passe automatiquement en mode local offline.
+            En online avec Firebase ou en local offline sur un seul téléphone.
+            Ici, personne ne voit son rôle : chaque joueur ne voit qu’un mot.
           </p>
 
           <div class="audio-box">
-            <label class="toggle-sound">
+            <label class="toggle">
               <input id="soundEnabled" type="checkbox" checked />
               Son activé
             </label>
-            <label class="toggle-sound">
+            <label class="toggle">
               Volume
               <input id="soundVolume" class="range" type="range" min="0" max="100" value="45" />
             </label>
             <button id="btnStartAudio" class="btn btn-secondary">Activer l’ambiance</button>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="k">Paires de mots</div>
+            <div class="v" id="wordsCount">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Mode principal</div>
+            <div class="v">Firebase</div>
+          </div>
+          <div class="stat">
+            <div class="k">Fallback</div>
+            <div class="v">Offline</div>
+          </div>
+          <div class="stat">
+            <div class="k">Rôle caché</div>
+            <div class="v">Oui</div>
           </div>
         </div>
 
@@ -445,6 +542,7 @@
                 <label>Ton pseudo</label>
                 <input id="createNickname" placeholder="Ex : Ulrich" maxlength="20" />
               </div>
+
               <div class="row">
                 <div class="field" style="flex:1">
                   <label>Durée discussion (secondes)</label>
@@ -455,12 +553,14 @@
                   <input id="createVote" type="number" min="10" max="300" value="45" />
                 </div>
               </div>
+
               <div class="row">
                 <div class="field" style="flex:1">
                   <label>Nombre d’undercover</label>
                   <input id="createUndercover" type="number" min="1" max="4" value="1" />
                 </div>
               </div>
+
               <div class="row">
                 <button id="btnCreateOnline" class="btn btn-primary">Créer en mode Firebase</button>
                 <button id="btnCreateOffline" class="btn btn-secondary">Créer en local offline</button>
@@ -480,7 +580,7 @@
                 <input id="joinNickname" placeholder="Ex : Maya" maxlength="20" />
               </div>
               <button id="btnJoinRoom" class="btn btn-primary">Rejoindre</button>
-              <div class="mini">
+              <div class="tiny">
                 Astuce : le code peut venir de l’URL, par exemple
                 <span class="mono">?room=ABCD</span>.
               </div>
@@ -492,22 +592,24 @@
       <div class="card stack">
         <h3>Règles rapides</h3>
         <ul class="list">
-          <li>La majorité reçoit le même mot A.</li>
-          <li>Un ou plusieurs undercovers reçoivent le mot proche B.</li>
-          <li>Chaque joueur voit son mot une seule fois, puis confirme avec “J’ai vu”.</li>
-          <li>Personne ne connaît officiellement son rôle.</li>
+          <li>La majorité reçoit un mot A.</li>
+          <li>Les undercovers reçoivent un mot proche B.</li>
+          <li>Chaque joueur voit seulement son mot.</li>
+          <li>Personne ne sait officiellement s’il est civil ou undercover.</li>
           <li>Discussion → Vote → Résultat → Manche suivante.</li>
           <li>Les civils gagnent si tous les undercovers sont éliminés.</li>
-          <li>Les undercovers gagnent s’ils atteignent une parité favorable.</li>
+          <li>Les undercovers gagnent quand la parité devient favorable.</li>
         </ul>
+
         <div class="separator"></div>
-        <h3>Anti-triche</h3>
+
+        <h3>Améliorations de cette version</h3>
         <ul class="list">
-          <li>Les mots des autres joueurs ne sont jamais affichés.</li>
-          <li>Le rôle exact n’est affiché à personne.</li>
-          <li>Un vote par joueur vérifié via transaction Firestore.</li>
-          <li>Actions verrouillées selon la phase.</li>
-          <li>Révélation privée stockée par document secret individuel.</li>
+          <li>Beaucoup plus de mots.</li>
+          <li>Compteur audio sur les 5 dernières secondes.</li>
+          <li>Toasts de feedback.</li>
+          <li>Offline amélioré avec vote joueur par joueur.</li>
+          <li>Ambiance sonore générée dans le navigateur.</li>
         </ul>
       </div>
     </div>
@@ -515,7 +617,7 @@
     <div id="screen-room" class="hidden stack" style="margin-top:16px">
       <div class="grid grid-2">
         <div class="card stack">
-          <div class="row" style="justify-content:space-between;align-items:flex-start">
+          <div class="section-title">
             <div>
               <h2 id="roomTitle">Room</h2>
               <div class="sub" id="roomMeta">En attente des joueurs…</div>
@@ -539,11 +641,23 @@
             <div id="step-result" class="phase">Résultat</div>
           </div>
 
-          <div class="row">
-            <span class="pill" id="settingsUndercover">Undercover : 1</span>
-            <span class="pill" id="settingsDiscussion">Discussion : 90s</span>
-            <span class="pill" id="settingsVote">Vote : 45s</span>
-            <span class="pill" id="aliveCount">Vivants : 0</span>
+          <div class="stats">
+            <div class="stat">
+              <div class="k">Undercover</div>
+              <div class="v" id="settingsUndercover">1</div>
+            </div>
+            <div class="stat">
+              <div class="k">Discussion</div>
+              <div class="v" id="settingsDiscussion">90s</div>
+            </div>
+            <div class="stat">
+              <div class="k">Vote</div>
+              <div class="v" id="settingsVote">45s</div>
+            </div>
+            <div class="stat">
+              <div class="k">Vivants</div>
+              <div class="v" id="aliveCount">0</div>
+            </div>
           </div>
 
           <div class="row">
@@ -554,7 +668,7 @@
             <button id="btnResetGame" class="btn btn-danger hidden">Réinitialiser la partie</button>
           </div>
 
-          <div id="statusBox" class="result-box">
+          <div class="result-box">
             <div id="statusTitle" style="font-weight:900">Statut</div>
             <div id="statusText" class="sub">Prépare la room, partage le lien, puis démarre quand tout le monde est prêt.</div>
           </div>
@@ -568,13 +682,14 @@
 
       <div id="panel-reveal" class="card hidden">
         <div class="stack">
-          <div class="row" style="justify-content:space-between;align-items:center">
+          <div class="section-title">
             <div>
               <h2>Révélation privée</h2>
-              <div class="sub">Chaque joueur ne voit que son mot sur son propre écran.</div>
+              <div class="sub">Chaque joueur voit uniquement son mot.</div>
             </div>
             <span id="revealProgress" class="badge badge-warn">0 / 0 ont vu</span>
           </div>
+
           <div class="word-box">
             <div>
               <div id="revealRole" class="role">Ton mot</div>
@@ -582,30 +697,36 @@
               <div class="warning">Ne montre pas cet écran aux autres joueurs.</div>
             </div>
           </div>
-          <div class="row center" style="justify-content:center">
+
+          <div class="center">
             <button id="btnSeenWord" class="btn btn-primary">J’ai vu</button>
           </div>
         </div>
       </div>
 
       <div id="panel-discussion" class="card hidden">
-        <div class="stack center">
-          <h2>Discussion</h2>
+        <div class="timer-wrap">
+          <h2 style="margin:0">Discussion</h2>
           <div class="sub">Décrivez votre mot sans le dire directement.</div>
           <div id="discussionTimer" class="timer">00:00</div>
+          <div class="progress"><div id="discussionProgress"></div></div>
         </div>
       </div>
 
       <div id="panel-vote" class="card hidden">
         <div class="stack">
-          <div class="row" style="justify-content:space-between;align-items:center">
+          <div class="section-title">
             <div>
               <h2>Vote</h2>
-              <div class="sub">Un vote par joueur vivant. Les joueurs éliminés ne votent plus.</div>
+              <div class="sub">Un vote par joueur vivant.</div>
             </div>
             <div id="voteTimer" class="timer" style="font-size:2rem">00:00</div>
           </div>
+
+          <div class="progress"><div id="voteProgress"></div></div>
+
           <div id="voteInfo" class="badge badge-warn">Tu n’as pas encore voté</div>
+          <div id="offlineVoteVoter" class="sub hidden"></div>
           <div id="voteGrid" class="vote-grid"></div>
         </div>
       </div>
@@ -625,21 +746,23 @@
       <div id="panel-offline-admin" class="card hidden">
         <div class="stack">
           <h2>Mode local offline</h2>
-          <div class="sub">Ajoute les joueurs sur ce téléphone, puis fais passer l’appareil pour la révélation privée.</div>
+          <div class="sub">Ajoute les joueurs sur ce téléphone, puis passe l’écran pour la révélation et le vote.</div>
           <div class="row">
             <input id="offlinePlayerName" placeholder="Pseudo du joueur" maxlength="20" />
             <button id="btnAddOfflinePlayer" class="btn btn-secondary">Ajouter</button>
           </div>
-          <div class="mini">Minimum conseillé : 3 joueurs.</div>
+          <div class="tiny">Minimum conseillé : 3 joueurs.</div>
         </div>
       </div>
     </div>
 
     <div class="footer-note">
       Conseil : en mode Firebase, seul l’hôte doit forcer les transitions si besoin.
-      Les timers se synchronisent automatiquement par timestamp de room.
+      En offline, le vote passe joueur par joueur pour être plus propre.
     </div>
   </div>
+
+  <div id="toastWrap" class="toast-wrap"></div>
 
   <script type="module">
     /******************************************************************
@@ -655,7 +778,7 @@
     };
 
     /******************************************************************
-     * PAIRES DE MOTS PROCHES
+     * PAIRES DE MOTS
      ******************************************************************/
     const WORD_PAIRS = [
       { a:"Spider-Man", b:"Superman" },
@@ -747,7 +870,106 @@
       { a:"Foot", b:"Rugby" },
       { a:"Tennis", b:"Badminton" },
       { a:"Basket", b:"Volley" },
-      { a:"Natation", b:"Plongée" }
+      { a:"Natation", b:"Plongée" },
+
+      { a:"Lune", b:"Soleil" },
+      { a:"Étoile", b:"Planète" },
+      { a:"Nuage", b:"Brouillard" },
+      { a:"Orage", b:"Tempête" },
+      { a:"Pluie", b:"Neige" },
+      { a:"Mer", b:"Océan" },
+      { a:"Lac", b:"Rivière" },
+      { a:"Cascade", b:"Fontaine" },
+      { a:"Sable", b:"Poussière" },
+      { a:"Roche", b:"Cristal" },
+
+      { a:"Lion", b:"Tigre" },
+      { a:"Chat", b:"Panthère" },
+      { a:"Chien", b:"Loup" },
+      { a:"Lapin", b:"Lièvre" },
+      { a:"Ours", b:"Panda" },
+      { a:"Aigle", b:"Faucon" },
+      { a:"Pigeon", b:"Mouette" },
+      { a:"Poisson", b:"Requin" },
+      { a:"Dauphin", b:"Baleine" },
+      { a:"Tortue", b:"Escargot" },
+
+      { a:"Chemise", b:"Polo" },
+      { a:"Pull", b:"Sweat" },
+      { a:"Manteau", b:"Veste" },
+      { a:"Jean", b:"Pantalon" },
+      { a:"Chaussures", b:"Baskets" },
+      { a:"Bonnet", b:"Casquette" },
+      { a:"Écharpe", b:"Foulard" },
+      { a:"Sac", b:"Valise" },
+      { a:"Bague", b:"Bracelet" },
+      { a:"Lunettes", b:"Masque" },
+
+      { a:"Stylo", b:"Crayon" },
+      { a:"Livre", b:"Cahier" },
+      { a:"Feuille", b:"Carton" },
+      { a:"Gomme", b:"Correcteur" },
+      { a:"Tableau", b:"Écran" },
+      { a:"Calculatrice", b:"Ordinateur" },
+      { a:"Bureau", b:"Table" },
+      { a:"Cartable", b:"Sac à dos" },
+      { a:"École", b:"Université" },
+      { a:"Examen", b:"Contrôle" },
+
+      { a:"Film", b:"Série" },
+      { a:"Cinéma", b:"Théâtre" },
+      { a:"Musique", b:"Podcast" },
+      { a:"Guitare", b:"Basse" },
+      { a:"Piano", b:"Synthé" },
+      { a:"Batterie", b:"Percussion" },
+      { a:"Photo", b:"Vidéo" },
+      { a:"Dessin", b:"Peinture" },
+      { a:"Roman", b:"BD" },
+      { a:"Poème", b:"Chanson" },
+
+      { a:"Wifi", b:"Bluetooth" },
+      { a:"Internet", b:"Réseau" },
+      { a:"Mot de passe", b:"Code PIN" },
+      { a:"Application", b:"Jeu" },
+      { a:"Site web", b:"Blog" },
+      { a:"Cloud", b:"Disque dur" },
+      { a:"Batterie", b:"Chargeur" },
+      { a:"Câble", b:"Adaptateur" },
+      { a:"Écran tactile", b:"Pavé tactile" },
+      { a:"Notification", b:"Message" },
+
+      { a:"Matin", b:"Aube" },
+      { a:"Soir", b:"Nuit" },
+      { a:"Hier", b:"Demain" },
+      { a:"Seconde", b:"Minute" },
+      { a:"Heure", b:"Journée" },
+      { a:"Semaine", b:"Mois" },
+      { a:"Vacances", b:"Week-end" },
+      { a:"Départ", b:"Arrivée" },
+      { a:"Début", b:"Fin" },
+      { a:"Pause", b:"Repos" },
+
+      { a:"Café", b:"Thé" },
+      { a:"Lait", b:"Crème" },
+      { a:"Eau", b:"Jus" },
+      { a:"Sucre", b:"Miel" },
+      { a:"Sel", b:"Poivre" },
+      { a:"Soupe", b:"Purée" },
+      { a:"Salade", b:"Crudités" },
+      { a:"Gâteau", b:"Tarte" },
+      { a:"Bonbon", b:"Chewing-gum" },
+      { a:"Confiture", b:"Pâte à tartiner" },
+
+      { a:"Dormir", b:"Rêver" },
+      { a:"Courir", b:"Marcher" },
+      { a:"Sauter", b:"Danser" },
+      { a:"Lire", b:"Écrire" },
+      { a:"Parler", b:"Chuchoter" },
+      { a:"Crier", b:"Chanter" },
+      { a:"Regarder", b:"Observer" },
+      { a:"Chercher", b:"Trouver" },
+      { a:"Monter", b:"Descendre" },
+      { a:"Ouvrir", b:"Fermer" }
     ];
 
     /******************************************************************
@@ -775,12 +997,7 @@
       return out;
     }
     function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
-    function formatTimeLeft(ms){
-      const total = Math.max(0, Math.ceil(ms / 1000));
-      const m = String(Math.floor(total / 60)).padStart(2, "0");
-      const s = String(total % 60).padStart(2, "0");
-      return `${m}:${s}`;
-    }
+    function now(){ return Date.now(); }
     function copy(text){ navigator.clipboard.writeText(text).catch(()=>{}); }
     function saveLocal(key,val){ localStorage.setItem(key, JSON.stringify(val)); }
     function loadLocal(key,fallback=null){
@@ -791,12 +1008,38 @@
         return fallback;
       }
     }
-    function now(){ return Date.now(); }
+    function formatTimeLeft(ms){
+      const total = Math.max(0, Math.ceil(ms / 1000));
+      const m = String(Math.floor(total / 60)).padStart(2, "0");
+      const s = String(total % 60).padStart(2, "0");
+      return `${m}:${s}`;
+    }
+    function escapeHtml(s){
+      return String(s ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+    function pct(val){
+      return `${Math.max(0, Math.min(100, val))}%`;
+    }
+
+    function toast(title, text=""){
+      const wrap = $("toastWrap");
+      const el = document.createElement("div");
+      el.className = "toast";
+      el.innerHTML = `<div class="t1">${escapeHtml(title)}</div><div class="t2">${escapeHtml(text)}</div>`;
+      wrap.appendChild(el);
+      setTimeout(()=>{ el.style.opacity="0"; el.style.transform="translateY(8px)"; }, 2600);
+      setTimeout(()=> el.remove(), 3000);
+    }
 
     const STORAGE_KEYS = {
-      profile: "undercover_profile_v1",
-      offlineRoom: "undercover_offline_room_v1",
-      soundPrefs: "undercover_sound_prefs_v1"
+      profile: "undercover_profile_v2",
+      offlineRoom: "undercover_offline_room_v2",
+      soundPrefs: "undercover_sound_prefs_v2"
     };
 
     function getProfile(){
@@ -819,14 +1062,13 @@
       ambienceStarted: false,
       enabled: true,
       volume: 0.45,
-      noiseNodes: [],
-      pulseInterval: null
+      lastCountdownMark: null
     };
 
     function loadSoundPrefs(){
       const prefs = loadLocal(STORAGE_KEYS.soundPrefs, { enabled:true, volume:45 });
       audioState.enabled = !!prefs.enabled;
-      audioState.volume = (Number(prefs.volume || 45) / 100);
+      audioState.volume = Number(prefs.volume || 45) / 100;
       $("soundEnabled").checked = audioState.enabled;
       $("soundVolume").value = Math.round(audioState.volume * 100);
     }
@@ -858,9 +1100,10 @@
     function updateAudioSettings(){
       audioState.enabled = $("soundEnabled").checked;
       audioState.volume = Number($("soundVolume").value || 45) / 100;
-      if(audioState.master){
-        audioState.master.gain.cancelScheduledValues(audioState.ctx.currentTime);
-        audioState.master.gain.linearRampToValueAtTime(audioState.enabled ? audioState.volume : 0, audioState.ctx.currentTime + 0.08);
+      if(audioState.master && audioState.ctx){
+        const t = audioState.ctx.currentTime;
+        audioState.master.gain.cancelScheduledValues(t);
+        audioState.master.gain.linearRampToValueAtTime(audioState.enabled ? audioState.volume : 0, t + 0.08);
       }
       saveSoundPrefs();
     }
@@ -885,45 +1128,42 @@
       osc.stop(ctx.currentTime + when + duration + 0.02);
     }
 
-    function uiRevealSound(){
-      tone(370, 0.14, "triangle", 0.04, 0);
-      tone(494, 0.18, "sine", 0.03, 0.07);
-      tone(622, 0.22, "triangle", 0.025, 0.12);
+    function sfxReveal(){
+      tone(370,0.14,"triangle",0.04,0);
+      tone(510,0.18,"sine",0.03,0.07);
+      tone(660,0.22,"triangle",0.025,0.12);
     }
-
-    function uiSeenSound(){
-      tone(660, 0.08, "sine", 0.035, 0);
-      tone(880, 0.11, "triangle", 0.03, 0.05);
+    function sfxSeen(){
+      tone(690,0.08,"sine",0.035,0);
+      tone(920,0.12,"triangle",0.028,0.05);
     }
-
-    function uiVoteSound(){
-      tone(220, 0.07, "square", 0.025, 0);
-      tone(180, 0.09, "triangle", 0.02, 0.04);
+    function sfxVote(){
+      tone(220,0.07,"square",0.025,0);
+      tone(180,0.1,"triangle",0.02,0.04);
     }
-
-    function uiPhaseSound(){
-      tone(280, 0.08, "triangle", 0.03, 0);
-      tone(420, 0.1, "triangle", 0.028, 0.05);
+    function sfxPhase(){
+      tone(290,0.08,"triangle",0.03,0);
+      tone(420,0.11,"triangle",0.028,0.05);
     }
-
-    function uiWinSound(isCivil=true){
+    function sfxCountdown(){
+      tone(840,0.06,"square",0.018,0);
+    }
+    function sfxWin(isCivil=true){
       if(isCivil){
-        tone(523, 0.14, "triangle", 0.04, 0);
-        tone(659, 0.18, "triangle", 0.04, 0.09);
-        tone(784, 0.24, "sine", 0.03, 0.18);
+        tone(523,0.14,"triangle",0.04,0);
+        tone(659,0.18,"triangle",0.04,0.09);
+        tone(784,0.25,"sine",0.03,0.18);
       }else{
-        tone(220, 0.14, "sawtooth", 0.03, 0);
-        tone(196, 0.2, "triangle", 0.03, 0.09);
-        tone(165, 0.28, "sine", 0.025, 0.18);
+        tone(220,0.14,"sawtooth",0.03,0);
+        tone(196,0.2,"triangle",0.03,0.09);
+        tone(165,0.28,"sine",0.025,0.18);
       }
     }
 
     function createNoiseBuffer(ctx){
       const buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
       const data = buffer.getChannelData(0);
-      for(let i=0;i<data.length;i++){
-        data[i] = (Math.random() * 2 - 1) * 0.35;
-      }
+      for(let i=0;i<data.length;i++) data[i] = (Math.random() * 2 - 1) * 0.35;
       return buffer;
     }
 
@@ -934,7 +1174,7 @@
       const lowOsc = ctx.createOscillator();
       const lowGain = ctx.createGain();
       lowOsc.type = "sine";
-      lowOsc.frequency.value = 48;
+      lowOsc.frequency.value = 50;
       lowGain.gain.value = 0.008;
       lowOsc.connect(lowGain);
       lowGain.connect(audioState.ambienceGain);
@@ -943,50 +1183,39 @@
       const midOsc = ctx.createOscillator();
       const midGain = ctx.createGain();
       midOsc.type = "triangle";
-      midOsc.frequency.value = 92;
+      midOsc.frequency.value = 95;
       midGain.gain.value = 0.004;
       midOsc.connect(midGain);
       midGain.connect(audioState.ambienceGain);
       midOsc.start();
 
-      const noiseSource = ctx.createBufferSource();
-      noiseSource.buffer = createNoiseBuffer(ctx);
-      noiseSource.loop = true;
-      const noiseFilter = ctx.createBiquadFilter();
-      noiseFilter.type = "bandpass";
-      noiseFilter.frequency.value = 650;
-      noiseFilter.Q.value = 0.6;
-      const noiseGain = ctx.createGain();
-      noiseGain.gain.value = 0.006;
-      noiseSource.connect(noiseFilter);
-      noiseFilter.connect(noiseGain);
-      noiseGain.connect(audioState.ambienceGain);
-      noiseSource.start();
+      const noise = ctx.createBufferSource();
+      noise.buffer = createNoiseBuffer(ctx);
+      noise.loop = true;
+      const bp = ctx.createBiquadFilter();
+      bp.type = "bandpass";
+      bp.frequency.value = 700;
+      bp.Q.value = 0.6;
+      const ng = ctx.createGain();
+      ng.gain.value = 0.006;
+      noise.connect(bp);
+      bp.connect(ng);
+      ng.connect(audioState.ambienceGain);
+      noise.start();
 
-      audioState.noiseNodes = [lowOsc, lowGain, midOsc, midGain, noiseSource, noiseFilter, noiseGain];
       audioState.ambienceStarted = true;
-
-      audioState.ambienceGain.gain.cancelScheduledValues(ctx.currentTime);
-      audioState.ambienceGain.gain.linearRampToValueAtTime(0.028, ctx.currentTime + 1.4);
-
-      audioState.pulseInterval = setInterval(()=>{
-        if(!audioState.ctx || !audioState.enabled) return;
-        const t = audioState.ctx.currentTime;
-        const delta = (Math.random() * 0.005);
-        audioState.ambienceGain.gain.cancelScheduledValues(t);
-        audioState.ambienceGain.gain.linearRampToValueAtTime(0.022 + delta, t + 1.8);
-      }, 2000);
+      const t = ctx.currentTime;
+      audioState.ambienceGain.gain.cancelScheduledValues(t);
+      audioState.ambienceGain.gain.linearRampToValueAtTime(0.028, t + 1.2);
     }
 
     async function enableAudioNow(){
       const ctx = await ensureAudio();
       if(!ctx) return;
-      if(ctx.state === "suspended"){
-        await ctx.resume();
-      }
+      if(ctx.state === "suspended") await ctx.resume();
       updateAudioSettings();
       startAmbience();
-      uiPhaseSound();
+      sfxPhase();
     }
 
     /******************************************************************
@@ -1009,60 +1238,13 @@
       tickInterval: null,
       offline: null,
       lastPhase: "",
-      lastWinner: ""
+      lastWinner: "",
+      recentPairIndexes: []
     };
 
     /******************************************************************
-     * UI
+     * UI / ROOM HELPERS
      ******************************************************************/
-    function show(el, yes=true){
-      if(!el) return;
-      el.classList.toggle("hidden", !yes);
-    }
-    function setText(id, text){
-      const el = $(id);
-      if(el) el.textContent = text;
-    }
-    function updateModeBadge(){
-      setText("modeBadge", `Mode : ${state.mode === "firebase" ? "Firebase" : "Local offline"}`);
-    }
-    function updateRoomBadge(){
-      setText("roomBadge", `Room : ${state.roomId || "—"}`);
-    }
-    function phaseLabel(phase){
-      switch(phase){
-        case "lobby": return "Lobby";
-        case "reveal": return "Révélation";
-        case "discussion": return "Discussion";
-        case "vote": return "Vote";
-        case "result": return "Résultat";
-        default: return "—";
-      }
-    }
-    function updateStepUI(phase){
-      ["lobby","reveal","discussion","vote","result"].forEach(p=>{
-        const el = $("step-"+p);
-        if(el) el.classList.toggle("active", p === phase);
-      });
-      setText("phaseBadge", phaseLabel(phase));
-      show($("panel-reveal"), phase === "reveal");
-      show($("panel-discussion"), phase === "discussion");
-      show($("panel-vote"), phase === "vote");
-      show($("panel-result"), phase === "result");
-    }
-    function setStatus(title, text){
-      setText("statusTitle", title);
-      setText("statusText", text);
-    }
-    function escapeHtml(s){
-      return String(s ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
     function getRoom(){
       return state.mode === "firebase" ? state.roomData : state.offline;
     }
@@ -1075,41 +1257,62 @@
     function currentRoundNumber(){
       return getRoom()?.roundNumber || 0;
     }
+    function phaseLabel(phase){
+      switch(phase){
+        case "lobby": return "Lobby";
+        case "reveal": return "Révélation";
+        case "discussion": return "Discussion";
+        case "vote": return "Vote";
+        case "result": return "Résultat";
+        default: return "—";
+      }
+    }
     function hasSeenCurrentWord(){
       const me = getPlayers().find(p => p.id === state.myId);
       return me?.revealedRound === currentRoundNumber();
     }
+    function setText(id, text){
+      const el = $(id);
+      if(el) el.textContent = text;
+    }
+    function show(el, yes=true){
+      if(!el) return;
+      el.classList.toggle("hidden", !yes);
+    }
+    function setStatus(title, text){
+      setText("statusTitle", title);
+      setText("statusText", text);
+    }
 
-    function maybePlayPhaseAudio(){
-      const room = getRoom();
-      if(!room) return;
+    function updateModeBadge(){
+      setText("modeBadge", `Mode : ${state.mode === "firebase" ? "Firebase" : "Local offline"}`);
+    }
+    function updateRoomBadge(){
+      setText("roomBadge", `Room : ${state.roomId || "—"}`);
+      setText("roundBadge", `Manche : ${currentRoundNumber()}`);
+    }
 
-      if(state.lastPhase !== room.phase){
-        if(room.phase === "reveal") uiRevealSound();
-        else if(room.phase === "discussion" || room.phase === "vote" || room.phase === "result") uiPhaseSound();
-        state.lastPhase = room.phase;
-      }
-
-      if(room.winner && state.lastWinner !== room.winner){
-        uiWinSound(room.winner === "civils");
-        state.lastWinner = room.winner;
-      }
-      if(!room.winner){
-        state.lastWinner = "";
-      }
+    function updateStepUI(phase){
+      ["lobby","reveal","discussion","vote","result"].forEach(p=>{
+        $("step-"+p)?.classList.toggle("active", p === phase);
+      });
+      setText("phaseBadge", phaseLabel(phase));
+      show($("panel-reveal"), phase === "reveal");
+      show($("panel-discussion"), phase === "discussion");
+      show($("panel-vote"), phase === "vote");
+      show($("panel-result"), phase === "result");
     }
 
     function renderPlayers(){
       const players = getPlayers();
-      setText("aliveCount", `Vivants : ${players.filter(p => p.alive).length}`);
+      setText("aliveCount", players.filter(p => p.alive).length);
       $("playersList").innerHTML = players.map(p=>{
         const tags = [];
         if(p.id === state.myId) tags.push("Toi");
         if(p.host) tags.push("Hôte");
         if(!p.alive) tags.push("Éliminé");
-        const cls = `player ${p.alive ? "" : "dead"} ${p.id === state.myId ? "me" : ""}`;
         return `
-          <div class="${cls}">
+          <div class="player ${p.id===state.myId ? "me" : ""} ${p.alive ? "" : "dead"}">
             <div class="name">${escapeHtml(p.nickname || "Joueur")}</div>
             <div class="meta">${tags.join(" • ") || "En jeu"}</div>
             <div class="meta">Révélation : ${p.revealedRound === currentRoundNumber() ? "vue" : "pas vue"}</div>
@@ -1118,28 +1321,21 @@
       }).join("") || `<div class="sub">Aucun joueur</div>`;
     }
 
-    function updateRoomHeader(){
+    function maybePlayPhaseAudio(){
       const room = getRoom();
-      const settings = room?.settings || {};
-      setText("roomTitle", `Room ${state.roomId || "—"}`);
-      setText("roomMeta", state.mode === "firebase"
-        ? "Room multijoueur synchronisée en ligne."
-        : "Partie locale sur un seul appareil."
-      );
-      setText("settingsUndercover", `Undercover : ${settings.undercoverCount ?? 1}`);
-      setText("settingsDiscussion", `Discussion : ${settings.discussionSeconds ?? 90}s`);
-      setText("settingsVote", `Vote : ${settings.voteSeconds ?? 45}s`);
-      $("shareLinkInput").value = state.mode === "firebase"
-        ? `${location.origin}${location.pathname}?room=${encodeURIComponent(state.roomId || "")}`
-        : `${location.origin}${location.pathname}`;
-      show($("hostBadge"), state.isHost);
-      show($("panel-offline-admin"), state.mode === "offline" && state.isHost);
-      updateStepUI(room?.phase || "lobby");
-      updateResultPanel();
-      updateRevealPanel();
-      updateVotePanel();
-      updateButtons();
-      maybePlayPhaseAudio();
+      if(!room) return;
+
+      if(state.lastPhase !== room.phase){
+        if(room.phase === "reveal") sfxReveal();
+        else if(["discussion","vote","result"].includes(room.phase)) sfxPhase();
+        state.lastPhase = room.phase;
+      }
+
+      if(room.winner && state.lastWinner !== room.winner){
+        sfxWin(room.winner === "civils");
+        state.lastWinner = room.winner;
+      }
+      if(!room.winner) state.lastWinner = "";
     }
 
     function updateButtons(){
@@ -1160,6 +1356,48 @@
           ? hasSeenCurrentWord()
           : !offlineCurrentRevealPlayer();
       }
+    }
+
+    function updateRoomHeader(){
+      const room = getRoom();
+      const settings = room?.settings || {};
+      setText("roomTitle", `Room ${state.roomId || "—"}`);
+      setText("roomMeta", state.mode === "firebase"
+        ? "Room multijoueur synchronisée en ligne."
+        : "Partie locale sur un seul appareil."
+      );
+      setText("settingsUndercover", settings.undercoverCount ?? 1);
+      setText("settingsDiscussion", `${settings.discussionSeconds ?? 90}s`);
+      setText("settingsVote", `${settings.voteSeconds ?? 45}s`);
+
+      $("shareLinkInput").value = state.mode === "firebase"
+        ? `${location.origin}${location.pathname}?room=${encodeURIComponent(state.roomId || "")}`
+        : `${location.origin}${location.pathname}`;
+
+      show($("hostBadge"), state.isHost);
+      show($("panel-offline-admin"), state.mode === "offline" && state.isHost);
+
+      updateRoomBadge();
+      updateStepUI(room?.phase || "lobby");
+      updateResultPanel();
+      updateRevealPanel();
+      updateVotePanel();
+      updateButtons();
+      maybePlayPhaseAudio();
+    }
+
+    function pickPairIndex(){
+      const max = WORD_PAIRS.length;
+      if(max <= 1) return 0;
+      let idx = randInt(max);
+      let tries = 0;
+      while(state.recentPairIndexes.includes(idx) && tries < 20){
+        idx = randInt(max);
+        tries++;
+      }
+      state.recentPairIndexes.push(idx);
+      if(state.recentPairIndexes.length > 8) state.recentPairIndexes.shift();
+      return idx;
     }
 
     /******************************************************************
@@ -1217,7 +1455,6 @@
           pairIndex: -1,
           undercoverIds: [],
           civilianWord: "",
-          statusWord: "En attente",
           discussionEndsAt: 0,
           voteEndsAt: 0
         }
@@ -1242,6 +1479,7 @@
 
       history.replaceState(null, "", `${location.pathname}?room=${encodeURIComponent(roomId)}`);
       await subscribeFirebaseRoom(roomId);
+      toast("Room créée", `Code : ${roomId}`);
     }
 
     async function joinFirebaseRoom(roomId, nickname){
@@ -1251,9 +1489,7 @@
       state.mode = "firebase";
       state.roomId = roomId;
       state.myName = nickname;
-
-      const data = snap.data();
-      state.isHost = data.hostId === state.myId;
+      state.isHost = snap.data().hostId === state.myId;
 
       await firebaseFns.setDoc(playerRef(roomId, state.myId), {
         id: state.myId,
@@ -1268,6 +1504,7 @@
 
       history.replaceState(null, "", `${location.pathname}?room=${encodeURIComponent(roomId)}`);
       await subscribeFirebaseRoom(roomId);
+      toast("Room rejointe", `Bienvenue ${nickname}`);
     }
 
     async function subscribeFirebaseRoom(roomId){
@@ -1306,7 +1543,7 @@
       if(state.mode !== "firebase" || !state.roomId) return;
       const room = getRoom();
 
-      if(room?.phase !== "reveal" && room?.phase !== "discussion" && room?.phase !== "vote" && room?.phase !== "result"){
+      if(!["reveal","discussion","vote","result"].includes(room?.phase)){
         state.myPrivateWord = null;
         updateRevealPanel();
         return;
@@ -1315,9 +1552,7 @@
       const snap = await firebaseFns.getDoc(privateRef(state.roomId, state.mySecret));
       if(snap.exists()){
         const data = snap.data();
-        if(data.roundNumber === currentRoundNumber()){
-          state.myPrivateWord = data;
-        }
+        if(data.roundNumber === currentRoundNumber()) state.myPrivateWord = data;
       }
       updateRevealPanel();
     }
@@ -1328,13 +1563,11 @@
 
       const alive = getAlivePlayers();
       const ucCount = clamp(Number(room.settings.undercoverCount || 1), 1, Math.max(1, alive.length - 1));
-
       if(alive.length < ucCount + 2){
-        alert("Pas assez de joueurs vivants pour lancer la manche.");
-        return;
+        return alert("Pas assez de joueurs vivants pour lancer la manche.");
       }
 
-      const pairIndex = randInt(WORD_PAIRS.length);
+      const pairIndex = pickPairIndex();
       const pair = WORD_PAIRS[pairIndex];
       const shuffled = shuffle(alive.map(p => p.id));
       const undercoverIds = shuffled.slice(0, ucCount);
@@ -1354,7 +1587,6 @@
           pairIndex,
           undercoverIds,
           civilianWord: pair.a,
-          statusWord: "Révélation en cours",
           discussionEndsAt: 0,
           voteEndsAt: 0
         }
@@ -1381,12 +1613,12 @@
 
       await batch.commit();
       setStatus("Révélation", "Chaque joueur doit voir son mot puis cliquer sur “J’ai vu”.");
+      toast("Manche lancée", "Révélation en cours");
     }
 
     async function firebaseMarkSeen(){
       const room = getRoom();
-      if(!room || room.phase !== "reveal") return;
-      if(hasSeenCurrentWord()) return;
+      if(!room || room.phase !== "reveal" || hasSeenCurrentWord()) return;
 
       await firebaseFns.setDoc(playerRef(state.roomId, state.myId), {
         revealedRound: currentRoundNumber()
@@ -1396,24 +1628,23 @@
         seen: true
       }, { merge:true });
 
-      uiSeenSound();
+      sfxSeen();
+      toast("Mot vu", "Tu es prêt pour la discussion");
     }
 
     async function firebaseStartDiscussion(){
       const room = getRoom();
       if(!state.isHost || room.phase !== "reveal") return;
-
       const allSeen = getAlivePlayers().every(p => p.revealedRound === currentRoundNumber());
       if(!allSeen) return;
 
       const end = Date.now() + Number(room.settings.discussionSeconds || 90) * 1000;
-
       await firebaseFns.updateDoc(roomRef(state.roomId), {
         phase: "discussion",
         updatedAt: firebaseFns.serverTimestamp(),
-        "current.statusWord": "Discussion",
         "current.discussionEndsAt": end
       });
+      toast("Discussion lancée", "Décrivez votre mot sans le dire");
     }
 
     async function firebaseStartVote(){
@@ -1421,13 +1652,12 @@
       if(!state.isHost || room.phase !== "discussion") return;
 
       const end = Date.now() + Number(room.settings.voteSeconds || 45) * 1000;
-
       await firebaseFns.updateDoc(roomRef(state.roomId), {
         phase: "vote",
         updatedAt: firebaseFns.serverTimestamp(),
-        "current.statusWord": "Vote",
         "current.voteEndsAt": end
       });
+      toast("Vote lancé", "Choisissez un joueur");
     }
 
     async function firebaseCastVote(targetId){
@@ -1435,8 +1665,7 @@
       if(!room || room.phase !== "vote") return;
 
       const me = getPlayers().find(p => p.id === state.myId);
-      if(!me?.alive) return;
-      if(me.votedRound === currentRoundNumber()) return;
+      if(!me?.alive || me.votedRound === currentRoundNumber()) return;
 
       await firebaseFns.runTransaction(state.db, async (tx)=>{
         const roomSnap = await tx.get(roomRef(state.roomId));
@@ -1463,7 +1692,8 @@
           votedRound: roomData.roundNumber
         }, { merge:true });
       }).then(()=>{
-        uiVoteSound();
+        sfxVote();
+        toast("Vote enregistré");
       }).catch(err=>{
         alert(err.message || "Impossible de voter.");
       });
@@ -1504,11 +1734,8 @@
       const aliveCivil = survivors.length - aliveUC;
 
       let winner = "";
-      if(aliveUC === 0){
-        winner = "civils";
-      }else if(aliveUC >= aliveCivil){
-        winner = "undercover";
-      }
+      if(aliveUC === 0) winner = "civils";
+      else if(aliveUC >= aliveCivil) winner = "undercover";
 
       const resultText = eliminatedId
         ? `${eliminatedPlayer?.nickname || "Un joueur"} a été éliminé.`
@@ -1519,12 +1746,12 @@
         updatedAt: firebaseFns.serverTimestamp(),
         resultText,
         winner,
-        "current.statusWord": winner ? `Victoire ${winner}` : "Résultat",
         "current.aliveIds": survivors.map(p => p.id),
         "current.eliminatedIds": eliminatedId ? firebaseFns.arrayUnion(eliminatedId) : room.current.eliminatedIds || []
       });
 
       await batch.commit();
+      toast("Résultat prêt");
     }
 
     async function firebaseNextRound(){
@@ -1535,12 +1762,10 @@
       const batch = firebaseFns.writeBatch(state.db);
 
       votesSnap.forEach(doc => batch.delete(doc.ref));
-
       batch.update(roomRef(state.roomId), {
         phase: "lobby",
         updatedAt: firebaseFns.serverTimestamp(),
         resultText: "",
-        "current.statusWord": "En attente",
         "current.discussionEndsAt": 0,
         "current.voteEndsAt": 0
       });
@@ -1550,15 +1775,15 @@
       }
 
       await batch.commit();
+      toast("Retour au lobby");
     }
 
     async function firebaseResetGame(){
-      const room = getRoom();
       if(!state.isHost) return;
+      const room = getRoom();
 
       const votesSnap = await firebaseFns.getDocs(votesCol(state.roomId));
       const batch = firebaseFns.writeBatch(state.db);
-
       votesSnap.forEach(doc => batch.delete(doc.ref));
 
       for(const p of getPlayers()){
@@ -1581,13 +1806,13 @@
           pairIndex: -1,
           undercoverIds: [],
           civilianWord: "",
-          statusWord: "En attente",
           discussionEndsAt: 0,
           voteEndsAt: 0
         }
       });
 
       await batch.commit();
+      toast("Partie réinitialisée");
     }
 
     function autoPhaseProgress(){
@@ -1604,11 +1829,11 @@
     }
 
     /******************************************************************
-     * MODE OFFLINE
+     * OFFLINE
      ******************************************************************/
     function createOfflineRoom(nickname, settings){
       const roomId = "LOCAL";
-      const offline = {
+      state.offline = {
         mode: "offline",
         roomId,
         hostId: state.myId,
@@ -1617,18 +1842,16 @@
         winner: "",
         resultText: "",
         settings,
-        players: [
-          {
-            id: state.myId,
-            secretId: state.mySecret,
-            nickname,
-            host: true,
-            alive: true,
-            joinedAt: now(),
-            revealedRound: -1,
-            votedRound: -1
-          }
-        ],
+        players: [{
+          id: state.myId,
+          secretId: state.mySecret,
+          nickname,
+          host: true,
+          alive: true,
+          joinedAt: now(),
+          revealedRound: -1,
+          votedRound: -1
+        }],
         current: {
           aliveIds: [state.myId],
           eliminatedIds: [],
@@ -1640,17 +1863,19 @@
         privateWords: {},
         votes: {},
         offlineRevealQueue: [],
-        offlineRevealIndex: 0
+        offlineRevealIndex: 0,
+        offlineVoteQueue: [],
+        offlineVoteIndex: 0
       };
 
       state.mode = "offline";
       state.roomId = roomId;
       state.myName = nickname;
       state.isHost = true;
-      state.offline = offline;
       state.myPrivateWord = null;
       persistOffline();
       mountOfflineRoom();
+      toast("Partie locale créée");
     }
 
     function persistOffline(){
@@ -1680,7 +1905,6 @@
       if(!state.isHost || !state.offline) return;
       const clean = String(name || "").trim();
       if(!clean) return;
-
       state.offline.players.push({
         id: uid("p"),
         secretId: uid("secret"),
@@ -1691,11 +1915,11 @@
         revealedRound: -1,
         votedRound: -1
       });
-
       state.offline.current.aliveIds = state.offline.players.filter(p => p.alive).map(p => p.id);
       persistOffline();
       renderPlayers();
       updateRoomHeader();
+      toast("Joueur ajouté", clean);
     }
 
     function offlineStartRound(){
@@ -1704,12 +1928,9 @@
 
       const alive = room.players.filter(p => p.alive);
       const ucCount = clamp(Number(room.settings.undercoverCount || 1), 1, Math.max(1, alive.length - 1));
-      if(alive.length < ucCount + 2){
-        alert("Pas assez de joueurs.");
-        return;
-      }
+      if(alive.length < ucCount + 2) return alert("Pas assez de joueurs.");
 
-      const pairIndex = randInt(WORD_PAIRS.length);
+      const pairIndex = pickPairIndex();
       const pair = WORD_PAIRS[pairIndex];
       const shuffled = shuffle(alive.map(p => p.id));
       const undercoverIds = shuffled.slice(0, ucCount);
@@ -1722,11 +1943,12 @@
       room.current.pairIndex = pairIndex;
       room.current.undercoverIds = undercoverIds;
       room.current.aliveIds = alive.map(p => p.id);
-      room.current.eliminatedIds = room.current.eliminatedIds || [];
       room.privateWords = {};
       room.votes = {};
       room.offlineRevealQueue = alive.map(p => p.id);
       room.offlineRevealIndex = 0;
+      room.offlineVoteQueue = [];
+      room.offlineVoteIndex = 0;
 
       for(const p of room.players){
         p.votedRound = -1;
@@ -1748,7 +1970,8 @@
       updateRoomHeader();
       updateRevealPanel();
       setStatus("Révélation", "Passe le téléphone au joueur affiché, puis clique sur “J’ai vu”.");
-      uiRevealSound();
+      sfxReveal();
+      toast("Manche lancée");
     }
 
     function offlineCurrentRevealPlayer(){
@@ -1761,7 +1984,6 @@
     function offlineMarkSeen(){
       const room = state.offline;
       if(!room || room.phase !== "reveal") return;
-
       const player = offlineCurrentRevealPlayer();
       if(!player) return;
 
@@ -1780,7 +2002,13 @@
       renderPlayers();
       updateRoomHeader();
       updateRevealPanel();
-      uiSeenSound();
+      sfxSeen();
+
+      if(offlineCurrentRevealPlayer()){
+        toast("Mot vu", `Passe à ${offlineCurrentRevealPlayer().nickname}`);
+      }else{
+        toast("Tous les joueurs ont vu");
+      }
     }
 
     function offlineStartDiscussion(){
@@ -1794,6 +2022,7 @@
       room.current.discussionEndsAt = now() + Number(room.settings.discussionSeconds || 90) * 1000;
       persistOffline();
       updateRoomHeader();
+      toast("Discussion lancée");
     }
 
     function offlineStartVote(){
@@ -1803,29 +2032,49 @@
       room.phase = "vote";
       room.current.voteEndsAt = now() + Number(room.settings.voteSeconds || 45) * 1000;
       room.votes = {};
+      room.offlineVoteQueue = room.players.filter(p => p.alive).map(p => p.id);
+      room.offlineVoteIndex = 0;
       for(const p of room.players) p.votedRound = -1;
 
       persistOffline();
       updateRoomHeader();
+      toast("Vote lancé", "Passe le téléphone à chaque joueur vivant");
+    }
+
+    function offlineCurrentVoter(){
+      const room = state.offline;
+      if(!room || room.phase !== "vote") return null;
+      const id = room.offlineVoteQueue[room.offlineVoteIndex];
+      return room.players.find(p => p.id === id) || null;
     }
 
     function offlineCastVote(targetId){
       const room = state.offline;
       if(!room || room.phase !== "vote") return;
 
-      const me = room.players.find(p => p.id === state.myId);
-      if(!me){
-        alert("En mode offline, seul l’hôte sur cet appareil peut gérer le vote.");
-        return;
-      }
-      if(!me.alive || me.votedRound === room.roundNumber) return;
+      const voter = offlineCurrentVoter();
+      if(!voter || !voter.alive || voter.votedRound === room.roundNumber) return;
+      if(targetId === voter.id) return;
 
-      room.votes[state.myId] = { playerId: state.myId, targetId, roundNumber: room.roundNumber };
-      me.votedRound = room.roundNumber;
+      room.votes[voter.id] = {
+        playerId: voter.id,
+        targetId,
+        roundNumber: room.roundNumber
+      };
+      voter.votedRound = room.roundNumber;
+      room.offlineVoteIndex += 1;
+
       persistOffline();
       updateVotePanel();
       renderPlayers();
-      uiVoteSound();
+      sfxVote();
+
+      const nextVoter = offlineCurrentVoter();
+      if(nextVoter){
+        toast("Vote enregistré", `Passe à ${nextVoter.nickname}`);
+      }else{
+        toast("Tous les votes sont enregistrés");
+      }
     }
 
     function offlineResolveVotes(){
@@ -1834,8 +2083,8 @@
 
       const alive = room.players.filter(p => p.alive);
       const tally = {};
-
       for(const p of alive) tally[p.id] = 0;
+
       Object.values(room.votes).forEach(v=>{
         if(v.targetId in tally) tally[v.targetId]++;
       });
@@ -1857,13 +2106,9 @@
         ? `${eliminatedPlayer.nickname} a été éliminé.`
         : "Personne n’a été éliminé.";
 
-      if(aliveUC === 0){
-        room.winner = "civils";
-      }else if(aliveUC >= aliveCivil){
-        room.winner = "undercover";
-      }else{
-        room.winner = "";
-      }
+      if(aliveUC === 0) room.winner = "civils";
+      else if(aliveUC >= aliveCivil) room.winner = "undercover";
+      else room.winner = "";
 
       room.current.aliveIds = survivors.map(p => p.id);
       if(eliminatedId) room.current.eliminatedIds.push(eliminatedId);
@@ -1872,6 +2117,7 @@
       renderPlayers();
       updateRoomHeader();
       updateResultPanel();
+      toast("Résultat prêt");
     }
 
     function offlineNextRound(){
@@ -1883,10 +2129,13 @@
       room.votes = {};
       room.current.discussionEndsAt = 0;
       room.current.voteEndsAt = 0;
+      room.offlineVoteQueue = [];
+      room.offlineVoteIndex = 0;
       for(const p of room.players) p.votedRound = -1;
 
       persistOffline();
       updateRoomHeader();
+      toast("Retour au lobby");
     }
 
     function offlineResetGame(){
@@ -1909,6 +2158,8 @@
       room.votes = {};
       room.offlineRevealQueue = [];
       room.offlineRevealIndex = 0;
+      room.offlineVoteQueue = [];
+      room.offlineVoteIndex = 0;
 
       for(const p of room.players){
         p.alive = true;
@@ -1919,6 +2170,7 @@
       persistOffline();
       renderPlayers();
       updateRoomHeader();
+      toast("Partie réinitialisée");
     }
 
     function offlineAutoProgress(){
@@ -1938,8 +2190,7 @@
      ******************************************************************/
     function updateRevealPanel(){
       const room = getRoom();
-      const phase = room?.phase;
-      if(phase !== "reveal") return;
+      if(room?.phase !== "reveal") return;
 
       if(state.mode === "firebase"){
         if(state.myPrivateWord){
@@ -1977,26 +2228,52 @@
 
     function updateVotePanel(){
       const room = getRoom();
-      const phase = room?.phase;
-      if(phase !== "vote") return;
+      if(room?.phase !== "vote") return;
 
       const alive = getAlivePlayers();
-      const me = getPlayers().find(p => p.id === state.myId);
-      const alreadyVoted = me?.votedRound === currentRoundNumber();
-      setText("voteInfo", alreadyVoted ? "Vote enregistré" : "Tu n’as pas encore voté");
-
       const grid = $("voteGrid");
-      grid.innerHTML = alive
-        .filter(p => p.id !== state.myId || state.mode === "offline")
-        .map(p => `
-          <div class="vote-item">
-            <div>
-              <div style="font-weight:900">${escapeHtml(p.nickname)}</div>
-              <div class="mini">${p.alive ? "En jeu" : "Éliminé"}</div>
+      const offlineVoterEl = $("offlineVoteVoter");
+
+      if(state.mode === "firebase"){
+        const me = getPlayers().find(p => p.id === state.myId);
+        const alreadyVoted = me?.votedRound === currentRoundNumber();
+        setText("voteInfo", alreadyVoted ? "Vote enregistré" : "Tu n’as pas encore voté");
+        show(offlineVoterEl, false);
+
+        grid.innerHTML = alive
+          .filter(p => p.id !== state.myId)
+          .map(p => `
+            <div class="vote-item">
+              <div>
+                <div style="font-weight:900">${escapeHtml(p.nickname)}</div>
+                <div class="tiny">${p.alive ? "En jeu" : "Éliminé"}</div>
+              </div>
+              <button class="btn btn-secondary" data-vote="${escapeHtml(p.id)}" ${(!me?.alive || alreadyVoted) ? "disabled" : ""}>Voter</button>
             </div>
-            <button class="btn btn-secondary" data-vote="${escapeHtml(p.id)}" ${(!me?.alive || alreadyVoted) ? "disabled" : ""}>Voter</button>
-          </div>
-        `).join("");
+          `).join("");
+      } else {
+        const voter = offlineCurrentVoter();
+        const allDone = !voter;
+        setText("voteInfo", allDone ? "Tous les votes sont enregistrés" : "Vote en local : passe le téléphone");
+        show(offlineVoterEl, true);
+        offlineVoterEl.textContent = allDone
+          ? "Tous les joueurs vivants ont voté."
+          : `C’est à ${voter.nickname} de voter.`;
+
+        grid.innerHTML = allDone
+          ? `<div class="sub">En attente du résultat…</div>`
+          : alive
+              .filter(p => p.id !== voter.id)
+              .map(p => `
+                <div class="vote-item">
+                  <div>
+                    <div style="font-weight:900">${escapeHtml(p.nickname)}</div>
+                    <div class="tiny">${p.alive ? "En jeu" : "Éliminé"}</div>
+                  </div>
+                  <button class="btn btn-secondary" data-vote="${escapeHtml(p.id)}">Voter</button>
+                </div>
+              `).join("");
+      }
 
       [...grid.querySelectorAll("[data-vote]")].forEach(btn=>{
         btn.addEventListener("click", ()=>{
@@ -2029,21 +2306,40 @@
     /******************************************************************
      * TIMER
      ******************************************************************/
+    function updateTimerVisual(timerId, progressId, endAt, totalSeconds){
+      const room = getRoom();
+      const ms = Math.max(0, (endAt || 0) - Date.now());
+      const totalMs = Math.max(1000, (totalSeconds || 1) * 1000);
+      const ratio = ((totalMs - ms) / totalMs) * 100;
+
+      const timerEl = $(timerId);
+      timerEl.textContent = formatTimeLeft(ms);
+      timerEl.classList.toggle("urgent", ms <= 5000 && ms > 0);
+      $(progressId).style.width = pct(ratio);
+
+      const secLeft = Math.ceil(ms / 1000);
+      if(ms > 0 && secLeft <= 5 && secLeft >= 1){
+        const key = `${room.phase}_${secLeft}`;
+        if(audioState.lastCountdownMark !== key){
+          audioState.lastCountdownMark = key;
+          sfxCountdown();
+        }
+      }
+      if(ms <= 0) audioState.lastCountdownMark = null;
+    }
+
     function startTick(){
       if(state.tickInterval) clearInterval(state.tickInterval);
-
       state.tickInterval = setInterval(()=>{
         const room = getRoom();
         if(!room) return;
 
         if(room.phase === "discussion"){
-          const ms = (room.current?.discussionEndsAt || 0) - Date.now();
-          setText("discussionTimer", formatTimeLeft(ms));
+          updateTimerVisual("discussionTimer", "discussionProgress", room.current?.discussionEndsAt || 0, room.settings?.discussionSeconds || 90);
         }
 
         if(room.phase === "vote"){
-          const ms = (room.current?.voteEndsAt || 0) - Date.now();
-          setText("voteTimer", formatTimeLeft(ms));
+          updateTimerVisual("voteTimer", "voteProgress", room.current?.voteEndsAt || 0, room.settings?.voteSeconds || 45);
         }
 
         if(state.mode === "firebase") autoPhaseProgress();
@@ -2054,21 +2350,14 @@
     /******************************************************************
      * ACTIONS
      ******************************************************************/
-    $("btnStartAudio").addEventListener("click", async ()=>{
-      await enableAudioNow();
-    });
-
-    $("soundEnabled").addEventListener("change", ()=>{
-      updateAudioSettings();
-    });
-
-    $("soundVolume").addEventListener("input", ()=>{
-      updateAudioSettings();
-    });
+    $("btnStartAudio").addEventListener("click", async ()=>{ await enableAudioNow(); toast("Audio activé"); });
+    $("soundEnabled").addEventListener("change", ()=> updateAudioSettings());
+    $("soundVolume").addEventListener("input", ()=> updateAudioSettings());
 
     $("btnCopyLink").addEventListener("click", ()=>{
       copy($("shareLinkInput").value);
-      uiPhaseSound();
+      sfxPhase();
+      toast("Lien copié");
     });
 
     $("btnCreateOnline").addEventListener("click", async ()=>{
@@ -2079,12 +2368,8 @@
         voteSeconds: clamp(Number($("createVote").value || 45), 10, 300),
         undercoverCount: clamp(Number($("createUndercover").value || 1), 1, 4)
       };
-
       if(!nickname) return alert("Entre un pseudo.");
-      if(!state.firebaseReady){
-        return alert("Firebase n’est pas prêt. Vérifie Firestore et la config.");
-      }
-
+      if(!state.firebaseReady) return alert("Firebase n’est pas prêt.");
       try{
         await createFirebaseRoom(nickname, settings);
       }catch(err){
@@ -2108,13 +2393,9 @@
       await enableAudioNow();
       const roomId = $("joinRoomCode").value.trim().toUpperCase();
       const nickname = $("joinNickname").value.trim();
-
       if(!roomId) return alert("Entre le code de room.");
       if(!nickname) return alert("Entre un pseudo.");
-      if(!state.firebaseReady){
-        return alert("Firebase n’est pas configuré. La jointure par lien nécessite Firestore.");
-      }
-
+      if(!state.firebaseReady) return alert("Firebase n’est pas configuré.");
       try{
         await joinFirebaseRoom(roomId, nickname);
       }catch(err){
@@ -2164,7 +2445,7 @@
       if(!name) return;
       offlineAddPlayer(name);
       $("offlinePlayerName").value = "";
-      uiPhaseSound();
+      sfxPhase();
     });
 
     /******************************************************************
@@ -2172,19 +2453,15 @@
      ******************************************************************/
     async function boot(){
       loadSoundPrefs();
+      setText("wordsCount", WORD_PAIRS.length);
       await initFirebaseIfConfigured();
       updateModeBadge();
 
       const roomFromUrl = (qs.get("room") || "").trim().toUpperCase();
-      if(roomFromUrl){
-        $("joinRoomCode").value = roomFromUrl;
-      }
+      if(roomFromUrl) $("joinRoomCode").value = roomFromUrl;
 
       loadOfflineRoom();
-
-      if(roomFromUrl && state.firebaseReady){
-        // préremplit seulement
-      }else if(state.offline){
+      if(!roomFromUrl && state.offline){
         mountOfflineRoom();
       }
 
