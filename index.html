@@ -399,8 +399,7 @@
     .phase-step.active { border-color: rgba(108,92,231,.5); background: rgba(108,92,231,.15); color: #d2caff; }
     .phase-step.done { border-color: rgba(0,229,160,.3); background: rgba(0,229,160,.08); color: #80ffd4; }
 
-    .stats-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 10px; }
-    @media(max-width:700px){ .stats-grid { grid-template-columns: repeat(3,1fr); } }
+    .stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
     @media(max-width:450px){ .stats-grid { grid-template-columns: repeat(2,1fr); } }
     .stat { padding: 14px; border-radius: var(--r2); border: 1px solid var(--border2); background: var(--surface3); }
     .stat-k { font-size: .74rem; font-weight: 700; color: #b3bfdf; text-transform: uppercase; letter-spacing: .05em; }
@@ -831,6 +830,10 @@
               <div class="num-head"><span class="num-label">Manches</span><span id="createRoundsValue" class="num-value">3</span></div>
               <div class="num-ctrl"><button type="button" onclick="adjInput('createRounds',-1)">−</button><input id="createRounds" type="number" min="1" max="20" value="3" /><button type="button" onclick="adjInput('createRounds',1)">+</button></div>
             </div>
+            <div class="num-card" style="grid-column:1/-1">
+              <div class="num-head"><span class="num-label">Tours par manche</span><span id="createTurnsValue" class="num-value">3</span></div>
+              <div class="num-ctrl"><button type="button" onclick="adjInput('createTurns',-1)">−</button><input id="createTurns" type="number" min="1" max="20" value="3" /><button type="button" onclick="adjInput('createTurns',1)">+</button></div>
+            </div>
           </div>
           <div class="action-row">
             <button id="btnCreateOnline" class="btn btn-cyan btn-cta">🌐 Créer en ligne</button>
@@ -921,6 +924,7 @@
             <div class="stat"><div class="stat-k">Discussion</div><div class="stat-v" id="settingsDiscussion">90s</div></div>
             <div class="stat"><div class="stat-k">Vote</div><div class="stat-v" id="settingsVote">45s</div></div>
             <div class="stat"><div class="stat-k">Manches</div><div class="stat-v" id="settingsRounds">3</div></div>
+            <div class="stat"><div class="stat-k">Tours</div><div class="stat-v" id="settingsTurns">3</div></div>
             <div class="stat"><div class="stat-k">Vivants</div><div class="stat-v" id="aliveCount">0</div></div>
           </div>
           <div class="row" id="hostActions">
@@ -970,7 +974,7 @@
             <div class="speaker-dot"></div>
             <div>
               <div id="currentSpeakerText" class="speaker-name">—</div>
-              <div id="speakerProgressBadge" class="speaker-sub">Passage 0 / 0</div>
+              <div id="speakerProgressBadge" class="speaker-sub">Tour 0 / 0</div>
             </div>
           </div>
           <div id="discussionOrder" class="turn-order"></div>
@@ -1180,6 +1184,7 @@
     setText("createVoteValue",`${$("createVote").value}s`);
     setText("createUndercoverValue",`${$("createUndercover").value}`);
     setText("createRoundsValue",`${$("createRounds").value}`);
+    setText("createTurnsValue",`${$("createTurns").value}`);
   }
 
   function adjInput(id,delta) {
@@ -1386,7 +1391,16 @@
   }
 
   function pickPairIndex() { const max=WORD_PAIRS.length; let idx=randInt(max),tries=0; while(state.recentPairIndexes.includes(idx)&&tries<20){idx=randInt(max);tries++;} state.recentPairIndexes.push(idx); if(state.recentPairIndexes.length>12) state.recentPairIndexes.shift(); return idx; }
-  const buildTurnOrder=alive=>shuffle(alive.map(p=>p.id));
+  function buildTurnOrder(alive, turnsPerRound) {
+    const total = turnsPerRound || alive.length;
+    const ids = alive.map(p => p.id);
+    const shuffled = shuffle(ids);
+    const order = [];
+    for(let i = 0; i < total; i++) {
+      order.push(shuffled[i % shuffled.length]);
+    }
+    return order;
+  }
   const getPlayerName=id=>getPlayers().find(p=>p.id===id)?.nickname||"—";
   const hasSeenCurrentWord=()=>getPlayers().find(p=>p.id===state.myId)?.revealedRound===currentRoundNumber();
 
@@ -1483,7 +1497,7 @@
     $("btnNextSpeaker").disabled=idx>=Math.max(0,order.length-1);
     show($("btnForceVote"),state.isHost&&phase==="discussion");
     show($("btnResolveVote"),state.isHost&&phase==="vote");
-    show($("btnNextRound"),state.isHost&&phase==="result"&&!room?.winner);
+    show($("btnNextRound"),state.isHost&&phase==="result"&&currentRoundNumber()<(room?.settings?.roundsTotal||1));
     show($("btnResetGame"),state.isHost);
     show($("timerAdjust"),state.isHost&&phase==="discussion");
     show($("voteTimerAdjust"),state.isHost&&phase==="vote");
@@ -1499,6 +1513,7 @@
     setText("settingsDiscussion",`${settings.discussionSeconds||90}s`);
     setText("settingsVote",`${settings.voteSeconds||45}s`);
     setText("settingsRounds",settings.roundsTotal||1);
+    setText("settingsTurns",settings.turnsPerRound||3);
     $("shareLinkInput").value=state.mode==="firebase"?`${location.origin}${location.pathname}?room=${encodeURIComponent(state.roomId||"")}`:`${location.origin}${location.pathname}`;
     show($("hostBadge"),state.isHost);
     setText("chatOnlineIndicator",state.mode==="firebase"?"En ligne":"Local");
@@ -1548,10 +1563,10 @@
     const order=room.current?.turnOrder||[]; const idx=room.current?.speakerIndex||0;
     const curId=order[idx]||"";
     setText("currentSpeakerText",curId?getPlayerName(curId):"—");
-    setText("speakerProgressBadge",`Passage ${Math.min(idx+1,Math.max(1,order.length))} / ${order.length||0}`);
+    setText("speakerProgressBadge",`Tour ${Math.min(idx+1,Math.max(1,order.length))} / ${order.length||0}`);
     $("discussionOrder").innerHTML=order.map((id,i)=>{
       const cls = i===idx ? "active" : (i<idx ? "done-turn" : "");
-      return `<div class="turn-card ${cls}"><div class="t-num">${i<idx?"✓":"Passage "+(i+1)}</div><div class="t-name">${escHtml(getPlayerName(id))}</div></div>`;
+      return `<div class="turn-card ${cls}"><div class="t-num">${i<idx?"✓":"Tour "+(i+1)}</div><div class="t-name">${escHtml(getPlayerName(id))}</div></div>`;
     }).join("");
   }
 
@@ -1591,7 +1606,9 @@
       const isCivil=room.winner==="civils";
       wb.className=`winner-banner ${isCivil?"civils":"undercover"}`;
       wb.innerHTML=`<div class="winner-icon">${isCivil?"🏆":"🕵️"}</div><div><div class="winner-label">${isCivil?"Victoire des civils !":"Victoire des undercovers !"}</div><div class="winner-desc">${isCivil?"Tous les undercovers ont été démasqués.":"Les undercovers ont atteint la parité."}</div></div>`;
-      setText("resultSub","");
+      const total=room.settings?.roundsTotal||1;
+      const cur=currentRoundNumber();
+      setText("resultSub",cur<total?`Manche ${cur}/${total} — l'hôte peut lancer la suivante.`:`Dernière manche terminée !`);
       // Trigger role reveal animation
       setTimeout(() => showRolesReveal(), 600);
     } else {
@@ -1671,7 +1688,7 @@
 
   async function firebaseMarkSeen(){const room=getRoom();if(!room||room.phase!=="reveal"||hasSeenCurrentWord()) return;await firebaseFns.setDoc(playerRef(state.roomId,state.myId),{revealedRound:currentRoundNumber()},{merge:true});await firebaseFns.setDoc(privateRef(state.roomId,state.mySecret),{seen:true},{merge:true});sfxSeen();hideRevealOverlay();toast("Mot vu","Tu es prêt !");}
 
-  async function firebaseStartDiscussion(){const room=getRoom();if(!state.isHost||room.phase!=="reveal") return;const alive=getAlivePlayers();if(!alive.every(p=>p.revealedRound===currentRoundNumber())) return;const end=Date.now()+Number(room.settings.discussionSeconds||90)*1000;const turnOrder=buildTurnOrder(alive);await firebaseFns.updateDoc(roomRef(state.roomId),{phase:"discussion",updatedAt:firebaseFns.serverTimestamp(),"current.discussionEndsAt":end,"current.turnOrder":turnOrder,"current.speakerIndex":0});toast("Discussion lancée","Premier : "+getPlayerName(turnOrder[0]));}
+  async function firebaseStartDiscussion(){const room=getRoom();if(!state.isHost||room.phase!=="reveal") return;const alive=getAlivePlayers();if(!alive.every(p=>p.revealedRound===currentRoundNumber())) return;const end=Date.now()+Number(room.settings.discussionSeconds||90)*1000;const turnOrder=buildTurnOrder(alive,room.settings.turnsPerRound);await firebaseFns.updateDoc(roomRef(state.roomId),{phase:"discussion",updatedAt:firebaseFns.serverTimestamp(),"current.discussionEndsAt":end,"current.turnOrder":turnOrder,"current.speakerIndex":0});toast("Discussion lancée","Premier : "+getPlayerName(turnOrder[0]));}
 
   async function firebaseNextSpeaker(){const room=getRoom();if(!state.isHost||room.phase!=="discussion") return;const order=room.current?.turnOrder||[],idx=room.current?.speakerIndex||0;if(idx>=order.length-1) return;await firebaseFns.updateDoc(roomRef(state.roomId),{updatedAt:firebaseFns.serverTimestamp(),"current.speakerIndex":idx+1});toast("Passage suivant",getPlayerName(order[idx+1]));sfxPhase();}
 
@@ -1681,7 +1698,7 @@
 
   async function firebaseResolveVotes(){const room=getRoom();if(!state.isHost||room.phase!=="vote") return;const votesSnap=await firebaseFns.getDocs(votesCol(state.roomId));const votes=votesSnap.docs.map(d=>d.data()).filter(v=>v.roundNumber===currentRoundNumber());const alive=getAlivePlayers();const tally={};for(const p of alive)tally[p.id]=0;for(const v of votes){if(v.targetId in tally)tally[v.targetId]++;}const maxV=Math.max(0,...Object.values(tally));const top=Object.keys(tally).filter(id=>tally[id]===maxV);const elimId=top.length?top[randInt(top.length)]:null;const elimPlayer=getPlayers().find(p=>p.id===elimId);const ucIds=room.current?.undercoverIds||[];const batch=firebaseFns.writeBatch(state.db);if(elimId)batch.set(playerRef(state.roomId,elimId),{alive:false},{merge:true});const survivors=getPlayers().map(p=>p.id===elimId?{...p,alive:false}:p).filter(p=>p.alive);const aliveUC=survivors.filter(p=>ucIds.includes(p.id)).length;const aliveCivil=survivors.length-aliveUC;let winner="";if(aliveUC===0)winner="civils";else if(aliveUC>=aliveCivil)winner="undercover";const resultText=elimPlayer?`${elimPlayer.nickname} a été éliminé.`:"Personne n'a été éliminé.";batch.update(roomRef(state.roomId),{phase:"result",updatedAt:firebaseFns.serverTimestamp(),resultText,winner,"current.aliveIds":survivors.map(p=>p.id),"current.turnOrder":[],"current.speakerIndex":0,...(elimId?{"current.eliminatedIds":firebaseFns.arrayUnion(elimId)}:{})});await batch.commit();toast("Résultat prêt");}
 
-  async function firebaseNextRound(){const room=getRoom();if(!state.isHost||room.phase!=="result"||room.winner) return;rolesShownForRound=-1;closeRolesReveal();const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches");return;}const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));batch.update(roomRef(state.roomId),{phase:"lobby",updatedAt:firebaseFns.serverTimestamp(),resultText:"","current.discussionEndsAt":0,"current.voteEndsAt":0,"current.turnOrder":[],"current.speakerIndex":0});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{votedRound:-1},{merge:true});await batch.commit();toast("Retour au lobby");}
+  async function firebaseNextRound(){const room=getRoom();if(!state.isHost||room.phase!=="result") return;rolesShownForRound=-1;closeRolesReveal();const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches","Toutes les manches ont été jouées !");return;}const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));batch.update(roomRef(state.roomId),{phase:"lobby",winner:"",updatedAt:firebaseFns.serverTimestamp(),resultText:"","current.discussionEndsAt":0,"current.voteEndsAt":0,"current.turnOrder":[],"current.speakerIndex":0});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1},{merge:true});await batch.commit();toast("Retour au lobby","Manche suivante prête !");}
 
   async function firebaseResetGame(){if(!state.isHost) return;rolesShownForRound=-1;closeRolesReveal();chatState.messages=[];renderChat();const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1,revealedRound:-1},{merge:true});batch.update(roomRef(state.roomId),{phase:"lobby",roundNumber:0,winner:"",resultText:"",chatMessages:[],updatedAt:firebaseFns.serverTimestamp(),current:{aliveIds:getPlayers().map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],civilianWord:"",discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0}});await batch.commit();toast("Partie réinitialisée");}
 
@@ -1717,7 +1734,7 @@
 
   function offlineMarkSeen(){const room=state.offline;if(!room||room.phase!=="reveal") return;const player=offlineCurrentRevealPlayer();if(!player) return;player.revealedRound=room.roundNumber;room.privateWords[player.id].seen=true;room.offlineRevealIndex+=1;state.myPrivateWord=room.offlineRevealIndex<room.offlineRevealQueue.length?room.privateWords[room.offlineRevealQueue[room.offlineRevealIndex]]:null;persistOffline();renderPlayers();updateRoomHeader();sfxSeen();const next=offlineCurrentRevealPlayer();toast("Mot vu",next?`Passe à ${next.nickname}`:"Tous ont vu !");}
 
-  function offlineStartDiscussion(){const room=state.offline;if(!room||!state.isHost||room.phase!=="reveal") return;const alive=room.players.filter(p=>p.alive);if(!alive.every(p=>p.revealedRound===room.roundNumber)) return;room.phase="discussion";room.current.discussionEndsAt=now()+Number(room.settings.discussionSeconds||90)*1000;room.current.turnOrder=buildTurnOrder(alive);room.current.speakerIndex=0;persistOffline();updateRoomHeader();toast("Discussion lancée",`Premier : ${getPlayerName(room.current.turnOrder[0])}`);}
+  function offlineStartDiscussion(){const room=state.offline;if(!room||!state.isHost||room.phase!=="reveal") return;const alive=room.players.filter(p=>p.alive);if(!alive.every(p=>p.revealedRound===room.roundNumber)) return;room.phase="discussion";room.current.discussionEndsAt=now()+Number(room.settings.discussionSeconds||90)*1000;room.current.turnOrder=buildTurnOrder(alive,room.settings.turnsPerRound);room.current.speakerIndex=0;persistOffline();updateRoomHeader();toast("Discussion lancée",`Premier : ${getPlayerName(room.current.turnOrder[0])}`);}
 
   function offlineNextSpeaker(){const room=state.offline;if(!room||!state.isHost||room.phase!=="discussion") return;const order=room.current.turnOrder||[],idx=room.current.speakerIndex||0;if(idx>=order.length-1) return;room.current.speakerIndex+=1;persistOffline();updateRoomHeader();toast("Passage suivant",getPlayerName(order[room.current.speakerIndex]));sfxPhase();}
 
@@ -1729,7 +1746,7 @@
 
   function offlineResolveVotes(){const room=state.offline;if(!room||!state.isHost||room.phase!=="vote") return;const alive=room.players.filter(p=>p.alive);const tally={};for(const p of alive)tally[p.id]=0;Object.values(room.votes).forEach(v=>{if(v.targetId in tally)tally[v.targetId]++;});const maxV=Math.max(0,...Object.values(tally));const top=Object.keys(tally).filter(id=>tally[id]===maxV);const elimId=top.length?top[randInt(top.length)]:null;const elimPlayer=room.players.find(p=>p.id===elimId);const ucIds=room.current.undercoverIds||[];if(elimPlayer)elimPlayer.alive=false;const survivors=room.players.filter(p=>p.alive);const aliveUC=survivors.filter(p=>ucIds.includes(p.id)).length;const aliveCivil=survivors.length-aliveUC;room.phase="result";room.resultText=elimPlayer?`${elimPlayer.nickname} a été éliminé.`:"Personne n'a été éliminé.";if(aliveUC===0)room.winner="civils";else if(aliveUC>=aliveCivil)room.winner="undercover";else room.winner="";room.current.aliveIds=survivors.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;if(elimId)room.current.eliminatedIds.push(elimId);persistOffline();renderPlayers();updateRoomHeader();toast("Résultat prêt");}
 
-  function offlineNextRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="result"||room.winner) return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches");return;}room.phase="lobby";room.resultText="";room.votes={};room.current.discussionEndsAt=0;room.current.voteEndsAt=0;room.current.turnOrder=[];room.current.speakerIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players)p.votedRound=-1;rolesShownForRound=-1;closeRolesReveal();persistOffline();updateRoomHeader();toast("Retour au lobby");}
+  function offlineNextRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="result") return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches","Toutes les manches ont été jouées !");return;}room.phase="lobby";room.winner="";room.resultText="";room.votes={};room.current.discussionEndsAt=0;room.current.voteEndsAt=0;room.current.turnOrder=[];room.current.speakerIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.alive=true;p.votedRound=-1;}room.current.aliveIds=room.players.map(p=>p.id);room.current.eliminatedIds=[];rolesShownForRound=-1;closeRolesReveal();persistOffline();renderPlayers();updateRoomHeader();toast("Retour au lobby","Manche suivante prête !");}
 
   function offlineResetGame(){const room=state.offline;if(!room||!state.isHost) return;room.phase="lobby";room.roundNumber=0;room.winner="";room.resultText="";room.current={aliveIds:room.players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0};room.privateWords={};room.votes={};room.offlineRevealQueue=[];room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;room.chatMessages=[];for(const p of room.players){p.alive=true;p.votedRound=-1;p.revealedRound=-1;}rolesShownForRound=-1;closeRolesReveal();persistOffline();renderPlayers();updateRoomHeader();toast("Partie réinitialisée");}
 
@@ -1838,9 +1855,9 @@
   $("soundVolume").addEventListener("input",updateAudioSettings);
   $("btnCopyLink").addEventListener("click",()=>{navigator.clipboard.writeText($("shareLinkInput").value).catch(()=>{});sfxPhase();toast("Lien copié !");});
 
-  $("btnCreateOnline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");if(!state.firebaseReady)return alert("Firebase non disponible.");const settings={discussionSeconds:clamp(parseInt($("createDiscussion").value,10)||90,20,600),voteSeconds:clamp(parseInt($("createVote").value,10)||45,10,300),undercoverCount:clamp(parseInt($("createUndercover").value,10)||1,1,4),roundsTotal:clamp(parseInt($("createRounds").value,10)||3,1,20)};console.log("Creating room with settings:",JSON.stringify(settings));try{await createFirebaseRoom(nickname,settings);}catch(e){alert(e.message||"Erreur.");}});
+  $("btnCreateOnline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");if(!state.firebaseReady)return alert("Firebase non disponible.");const settings={discussionSeconds:clamp(parseInt($("createDiscussion").value,10)||90,20,600),voteSeconds:clamp(parseInt($("createVote").value,10)||45,10,300),undercoverCount:clamp(parseInt($("createUndercover").value,10)||1,1,4),roundsTotal:clamp(parseInt($("createRounds").value,10)||3,1,20),turnsPerRound:clamp(parseInt($("createTurns").value,10)||3,1,20)};console.log("Creating room with settings:",JSON.stringify(settings));try{await createFirebaseRoom(nickname,settings);}catch(e){alert(e.message||"Erreur.");}});
 
-  $("btnCreateOffline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");const settings={discussionSeconds:clamp(parseInt($("createDiscussion").value,10)||90,20,600),voteSeconds:clamp(parseInt($("createVote").value,10)||45,10,300),undercoverCount:clamp(parseInt($("createUndercover").value,10)||1,1,4),roundsTotal:clamp(parseInt($("createRounds").value,10)||3,1,20)};createOfflineRoom(nickname,settings);});
+  $("btnCreateOffline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");const settings={discussionSeconds:clamp(parseInt($("createDiscussion").value,10)||90,20,600),voteSeconds:clamp(parseInt($("createVote").value,10)||45,10,300),undercoverCount:clamp(parseInt($("createUndercover").value,10)||1,1,4),roundsTotal:clamp(parseInt($("createRounds").value,10)||3,1,20),turnsPerRound:clamp(parseInt($("createTurns").value,10)||3,1,20)};createOfflineRoom(nickname,settings);});
 
   $("btnJoinRoom").addEventListener("click",async()=>{await enableAudio();const roomId=$("joinRoomCode").value.trim().toUpperCase();const nickname=$("joinNickname").value.trim();if(!roomId)return alert("Entre le code de la salle.");if(!nickname)return alert("Entre un pseudo.");if(!state.firebaseReady)return alert("Firebase non disponible.");try{await joinFirebaseRoom(roomId,nickname);}catch(e){alert(e.message||"Erreur.");}});
 
@@ -1854,7 +1871,7 @@
   $("btnResetGame").addEventListener("click",async()=>{await enableAudio();if(state.mode==="firebase")firebaseResetGame();else offlineResetGame();});
   $("btnAddOfflinePlayer").addEventListener("click",async()=>{await enableAudio();const name=$("offlinePlayerName").value.trim();if(!name) return;offlineAddPlayer(name);$("offlinePlayerName").value="";sfxPhase();});
   $("offlinePlayerName").addEventListener("keydown",e=>{if(e.key==="Enter")$("btnAddOfflinePlayer").click();});
-  ["createDiscussion","createVote","createUndercover","createRounds"].forEach(id=>{$(id).addEventListener("input",syncSetupValues);});
+  ["createDiscussion","createVote","createUndercover","createRounds","createTurns"].forEach(id=>{$(id).addEventListener("input",syncSetupValues);});
 
   async function boot(){loadSoundPrefs();setText("wordsCount",WORD_PAIRS.length);syncSetupValues();await initFirebase();updateBadges();const roomFromUrl=(qs.get("room")||"").trim().toUpperCase();if(roomFromUrl)$("joinRoomCode").value=roomFromUrl;loadOfflineRoom();if(!roomFromUrl&&state.offline)mountOfflineRoom();updateBadges();}
   boot();
