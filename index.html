@@ -281,9 +281,7 @@
     @media(max-width: 500px){ .action-row { grid-template-columns: 1fr; } }
 
     /* ── DIVIDER ── */
-    .divider {
-      height: 1px; background: var(--border2); margin: 4px 0;
-    }
+    .divider { height: 1px; background: var(--border2); margin: 4px 0; }
 
     /* ── HELP TEXT ── */
     .hint-note {
@@ -294,9 +292,7 @@
     }
 
     /* ── RULES PANEL ── */
-    .rules-compact {
-      display: flex; flex-direction: column; gap: 9px;
-    }
+    .rules-compact { display: flex; flex-direction: column; gap: 9px; }
     .rule-row {
       display: flex; align-items: flex-start; gap: 10px;
       font-size: .9rem; color: var(--muted); line-height: 1.5;
@@ -315,15 +311,12 @@
       justify-content: space-between; gap: 8px; user-select: none;
     }
     details.more summary::-webkit-details-marker { display: none; }
-    .summary-label {
-      font-size: .85rem; font-weight: 700; color: var(--muted);
-    }
+    .summary-label { font-size: .85rem; font-weight: 700; color: var(--muted); }
     details.more summary:hover .summary-label { color: var(--text); }
     .summary-arrow { color: var(--dim); font-size: .85rem; transition: transform .2s ease; }
     details[open] .summary-arrow { transform: rotate(180deg); }
     .more-body { margin-top: 14px; }
 
-    /* ── CATEGORIES ── */
     .pills-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
     .pill {
       padding: 5px 11px; border-radius: 999px;
@@ -331,7 +324,6 @@
       font-size: .82rem; color: #c0caea;
     }
 
-    /* ── FEATURES MINI ── */
     .features-list { display: flex; flex-direction: column; gap: 9px; margin-top: 12px; }
     .feature-row {
       display: flex; align-items: center; gap: 10px;
@@ -353,16 +345,6 @@
     }
     label.toggle-wrap:hover { color: var(--text); }
     input[type=checkbox] { accent-color: var(--accent); width: 14px; height: 14px; cursor: pointer; }
-
-    /* ── STAT STRIP ── */
-    .stat-strip {
-      display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;
-    }
-    .stat-pill {
-      padding: 6px 11px; border-radius: 999px;
-      background: rgba(255,255,255,.04); border: 1px solid var(--border2);
-      color: var(--muted); font-size: .83rem; font-weight: 600;
-    }
 
     /* ── TOAST ── */
     .toast-wrap {
@@ -392,8 +374,8 @@
     .badge-ok { background: rgba(0,229,160,.12); color: #80ffd4; border: 1px solid rgba(0,229,160,.25); }
     .badge-warn { background: rgba(255,209,102,.12); color: #ffe580; border: 1px solid rgba(255,209,102,.25); }
     .badge-info { background: rgba(0,212,255,.1); color: #80eaff; border: 1px solid rgba(0,212,255,.2); }
+    .badge-purple { background: rgba(108,92,231,.15); color: #c4baff; border: 1px solid rgba(108,92,231,.3); }
 
-    /* GAME SCREEN — kept intact from original */
     .chips-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
     .chip {
       font-family: 'Space Mono', monospace; font-size: .74rem;
@@ -403,78 +385,163 @@
     }
     .chip.active { border-color: rgba(108,92,231,.5); color: #d2caff; background: rgba(108,92,231,.14); }
 
-    /* ... full game screen styles inherited via inline overrides below ... */
     .card-sm { background: var(--surface3); border: 1px solid var(--border2); border-radius: var(--r2); padding: 14px; }
     .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     .small { font-size: .86rem; line-height: 1.45; }
     .muted { color: var(--muted); }
     .mono { font-family: 'Space Mono', monospace; }
     .sep { height: 1px; background: var(--border2); margin: 4px 0; }
-
     h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 800; color: #d2dbf6; margin-bottom: 4px; letter-spacing: -.01em; }
 
-    /* GAME PANELS */
+    /* ═══════ GAME SCREEN ═══════ */
     .phasebar { display: flex; gap: 6px; flex-wrap: wrap; }
     .phase-step { font-family: 'Space Mono', monospace; font-size: .76rem; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border2); color: var(--dim); transition: all .3s; }
     .phase-step.active { border-color: rgba(108,92,231,.5); background: rgba(108,92,231,.15); color: #d2caff; }
+    .phase-step.done { border-color: rgba(0,229,160,.3); background: rgba(0,229,160,.08); color: #80ffd4; }
+
     .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
     @media(max-width:600px){ .stats-grid { grid-template-columns: repeat(2,1fr); } }
     .stat { padding: 14px; border-radius: var(--r2); border: 1px solid var(--border2); background: var(--surface3); }
     .stat-k { font-size: .74rem; font-weight: 700; color: #b3bfdf; text-transform: uppercase; letter-spacing: .05em; }
     .stat-v { font-size: 1.3rem; font-weight: 900; font-family: 'Syne', sans-serif; margin-top: 5px; }
-    .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 10px; }
-    .player-card { border: 1px solid var(--border2); background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); border-radius: var(--r2); padding: 12px 14px; transition: all .2s; position: relative; overflow: hidden; }
+
+    .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px,1fr)); gap: 10px; }
+    .player-card {
+      border: 1px solid var(--border2);
+      background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border-radius: var(--r2); padding: 12px 14px; transition: all .3s;
+      position: relative; overflow: hidden;
+    }
     .player-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--cyan)); opacity: 0; transition: opacity .2s; }
     .player-card:hover::before { opacity: 1; }
     .player-card.is-me { border-color: rgba(108,92,231,.4); }
     .player-card.is-me::before { opacity: .6; }
-    .player-card.dead { opacity: .45; filter: grayscale(.4); }
+    .player-card.dead { opacity: .4; filter: grayscale(.5); }
     .player-card.speaking { border-color: rgba(255,209,102,.5); box-shadow: 0 0 0 2px rgba(255,209,102,.15); }
     .player-card.speaking::before { background: linear-gradient(90deg, var(--yellow), #f97316); opacity: 1; }
-    .player-name { font-weight: 800; font-size: 1rem; }
-    .player-meta { font-size: .84rem; color: var(--muted); margin-top: 3px; line-height: 1.35; }
-    .player-avatar { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; font-weight: 900; font-size: .9rem; margin-bottom: 8px; flex-shrink: 0; }
-    .word-stage { border-radius: 24px; padding: 40px 28px; text-align: center; background: radial-gradient(circle at 20% 20%, rgba(108,92,231,.3), transparent 40%), radial-gradient(circle at 80% 80%, rgba(0,212,255,.2), transparent 40%), rgba(255,255,255,.03); border: 1px solid rgba(108,92,231,.25); position: relative; overflow: hidden; }
-    .word-stage::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.04), transparent); pointer-events: none; }
-    .reveal-label { font-family: 'Space Mono', monospace; font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 14px; }
-    .big-word { font-family: 'Syne', sans-serif; font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 900; letter-spacing: -.03em; background: linear-gradient(135deg, #fff 30%, #c4baff 70%, var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
-    .reveal-warn { margin-top: 14px; font-size: .88rem; color: rgba(255,209,102,.9); display: flex; align-items: center; justify-content: center; gap: 6px; }
-    .timer-display { font-family: 'Space Mono', monospace; font-size: clamp(2rem,5vw,3.5rem); font-weight: 700; letter-spacing: .05em; transition: color .3s; }
+    .player-name { font-weight: 800; font-size: .95rem; }
+    .player-meta { font-size: .8rem; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+    .player-avatar { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; font-weight: 900; font-size: .9rem; flex-shrink: 0; }
+
+    /* ── FULLSCREEN WORD REVEAL OVERLAY ── */
+    .reveal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: rgba(5,7,15,.97);
+      backdrop-filter: blur(30px);
+      opacity: 0; pointer-events: none;
+      transition: opacity .4s ease;
+    }
+    .reveal-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .reveal-overlay .reveal-player-name {
+      font-family: 'Space Mono', monospace;
+      font-size: .9rem; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .15em;
+      margin-bottom: 12px;
+      opacity: 0; transform: translateY(20px);
+      animation: revealSlide .5s ease .2s forwards;
+    }
+    .reveal-overlay .reveal-word-big {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 10vw, 6rem);
+      font-weight: 900; letter-spacing: -.04em;
+      background: linear-gradient(135deg, #fff 20%, #c4baff 60%, var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1; text-align: center; padding: 0 20px;
+      opacity: 0; transform: scale(.7);
+      animation: revealPop .6s cubic-bezier(.34,1.56,.64,1) .4s forwards;
+    }
+    .reveal-overlay .reveal-role-tag {
+      margin-top: 20px; padding: 8px 20px; border-radius: 999px;
+      font-family: 'Space Mono', monospace; font-size: .8rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      opacity: 0; transform: translateY(20px);
+      animation: revealSlide .5s ease .7s forwards;
+    }
+    .reveal-overlay .reveal-role-tag.civil {
+      background: rgba(0,229,160,.12); color: #80ffd4; border: 1px solid rgba(0,229,160,.3);
+    }
+    .reveal-overlay .reveal-role-tag.undercover {
+      background: rgba(255,77,109,.12); color: #ff8fa3; border: 1px solid rgba(255,77,109,.3);
+    }
+    .reveal-overlay .reveal-warning {
+      margin-top: 32px; font-size: .85rem; color: rgba(255,209,102,.7);
+      display: flex; align-items: center; gap: 8px;
+      opacity: 0; animation: revealSlide .5s ease .9s forwards;
+    }
+    .reveal-overlay .reveal-btn {
+      margin-top: 28px;
+      opacity: 0; animation: revealSlide .5s ease 1s forwards;
+    }
+    .reveal-overlay .reveal-counter {
+      position: absolute; top: 28px; right: 28px;
+      font-family: 'Space Mono', monospace;
+      font-size: .8rem; color: var(--dim);
+      opacity: 0; animation: revealSlide .5s ease .3s forwards;
+    }
+
+    /* Glow ring behind word */
+    .reveal-overlay .glow-ring {
+      position: absolute; width: 320px; height: 320px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(108,92,231,.25), transparent 70%);
+      filter: blur(60px);
+      animation: glowPulse 2s ease-in-out infinite alternate;
+    }
+    @keyframes glowPulse { from { transform: scale(.9); opacity:.6; } to { transform: scale(1.1); opacity:1; } }
+    @keyframes revealSlide { to { opacity:1; transform:translateY(0); } }
+    @keyframes revealPop { to { opacity:1; transform:scale(1); } }
+
+    /* ── TIMER ── */
+    .timer-display {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(2rem,5vw,3.5rem);
+      font-weight: 700; letter-spacing: .05em; transition: color .3s;
+    }
     .timer-display.urgent { color: #ff4d6d; animation: urgent-pulse .6s ease infinite alternate; text-shadow: 0 0 30px rgba(255,77,109,.4); }
     @keyframes urgent-pulse { from { transform: scale(1); } to { transform: scale(1.04); } }
-    .progress-bar { height: 6px; border-radius: 999px; background: rgba(255,255,255,.06); overflow: hidden; margin-top: 10px; }
+
+    .progress-bar { height: 6px; border-radius: 999px; background: rgba(255,255,255,.06); overflow: hidden; }
     .progress-fill { height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), var(--cyan)); transition: width .25s linear; }
+
     .timer-adj { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
     .timer-adj .btn { min-width: 36px; padding: 6px 10px; font-size: .85rem; }
-    .chat-panel { display: flex; flex-direction: column; height: 380px; border-radius: var(--r); border: 1px solid var(--border); background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); overflow: hidden; position: relative; box-shadow: var(--shadow); }
-    .chat-header { padding: 12px 16px; border-bottom: 1px solid var(--border2); font-weight: 800; font-size: .92rem; display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-    .chat-messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 6px; scroll-behavior: smooth; }
-    .chat-messages::-webkit-scrollbar { width: 4px; }
-    .chat-messages::-webkit-scrollbar-track { background: transparent; }
-    .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 2px; }
-    .chat-msg { padding: 8px 12px; border-radius: 12px; font-size: .9rem; line-height: 1.45; max-width: 85%; position: relative; }
-    .chat-msg.mine { background: rgba(108,92,231,.2); border: 1px solid rgba(108,92,231,.25); align-self: flex-end; }
-    .chat-msg.other { background: rgba(255,255,255,.06); border: 1px solid var(--border2); align-self: flex-start; }
-    .chat-msg.system { background: rgba(255,209,102,.08); border: 1px solid rgba(255,209,102,.15); align-self: center; text-align: center; font-size: .84rem; color: rgba(255,209,102,.78); font-style: italic; max-width: 100%; }
-    .chat-msg.word-submitted { background: rgba(0,229,160,.1); border: 1px solid rgba(0,229,160,.2); }
-    .msg-author { font-size: .73rem; font-weight: 800; color: var(--muted); margin-bottom: 3px; font-family: 'Space Mono', monospace; }
-    .msg-word-tag { display: inline-flex; align-items: center; gap: 5px; background: rgba(0,229,160,.15); border: 1px solid rgba(0,229,160,.3); border-radius: 8px; padding: 3px 9px; font-size: .82rem; color: var(--green); font-weight: 800; margin-top: 4px; }
-    .pending-confirm { padding: 10px 14px; border-top: 1px solid var(--border2); background: rgba(0,229,160,.06); border-radius: 0 0 var(--r) var(--r); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .pending-word { font-weight: 700; font-size: .92rem; flex: 1; min-width: 0; }
-    .pending-word span { color: var(--green); font-family: 'Space Mono', monospace; }
-    .chat-input-area { padding: 10px 12px; border-top: 1px solid var(--border2); display: flex; gap: 8px; flex-shrink: 0; }
-    .chat-input { flex: 1; padding: 10px 13px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,.05); color: var(--text); font-family: 'Outfit', sans-serif; font-size: .92rem; outline: none; transition: all .2s; }
-    .chat-input:focus { border-color: rgba(108,92,231,.6); background: rgba(108,92,231,.07); }
+
+    /* ── SPEAKER INDICATOR ── */
+    .speaker-now {
+      display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+      border-radius: var(--r2); background: rgba(255,209,102,.07);
+      border: 1px solid rgba(255,209,102,.2);
+    }
+    .speaker-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--yellow); box-shadow: 0 0 10px rgba(255,209,102,.6);
+      animation: dot-pulse 1s ease infinite alternate; flex-shrink: 0;
+    }
+    .speaker-name { font-weight: 800; font-size: 1.05rem; }
+    .speaker-sub { font-size: .84rem; color: var(--muted); }
+
     .turn-order { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin-top: 10px; }
     .turn-card { padding: 10px 12px; border-radius: var(--r2); border: 1px solid var(--border2); background: var(--surface3); transition: all .2s; }
     .turn-card.active { border-color: rgba(255,209,102,.5); background: rgba(255,209,102,.08); box-shadow: 0 0 0 2px rgba(255,209,102,.1); }
+    .turn-card.done-turn { border-color: rgba(0,229,160,.3); background: rgba(0,229,160,.05); }
     .turn-card .t-num { font-size: .72rem; color: var(--dim); font-family: 'Space Mono', monospace; }
     .turn-card .t-name { font-weight: 800; font-size: .95rem; margin-top: 3px; }
+
+    /* ── VOTE ── */
     .vote-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-    .vote-item { padding: 12px 14px; border-radius: var(--r2); border: 1px solid var(--border2); background: var(--surface3); display: flex; align-items: center; justify-content: space-between; gap: 10px; transition: all .2s; }
+    .vote-item {
+      padding: 12px 14px; border-radius: var(--r2);
+      border: 1px solid var(--border2); background: var(--surface3);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; transition: all .2s;
+    }
     .vote-item:hover { border-color: var(--border); background: var(--surface); }
     .vote-name { font-weight: 800; }
     .vote-sub { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+
+    /* ── RESULT ── */
     .result-big { font-family: 'Syne', sans-serif; font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 900; line-height: 1.1; }
     .winner-banner { border-radius: var(--r); padding: 20px 24px; display: flex; align-items: center; gap: 14px; margin-top: 12px; }
     .winner-banner.civils { background: linear-gradient(135deg, rgba(0,229,160,.15), rgba(0,229,160,.05)); border: 1px solid rgba(0,229,160,.3); }
@@ -482,33 +549,89 @@
     .winner-icon { font-size: 2.5rem; }
     .winner-label { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 900; }
     .winner-desc { font-size: .9rem; color: var(--muted); margin-top: 3px; }
+
     .rounds-display { display: flex; align-items: center; gap: 6px; }
     .round-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border2); transition: all .3s; }
     .round-dot.done { background: var(--accent); border-color: rgba(108,92,231,.5); }
     .round-dot.current { background: var(--yellow); border-color: rgba(255,209,102,.5); box-shadow: 0 0 8px rgba(255,209,102,.4); animation: dot-pulse 1s ease infinite alternate; }
     @keyframes dot-pulse { from { transform: scale(1); } to { transform: scale(1.3); } }
+
     .copy-row { display: flex; gap: 8px; }
     .copy-row input { flex: 1; }
+
     .game-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 14px; margin-top: 14px; }
     @media(max-width:960px){ .game-grid { grid-template-columns: 1fr !important; } }
+
     .game-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
-    .speaker-now { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: var(--r2); background: rgba(255,209,102,.07); border: 1px solid rgba(255,209,102,.2); }
-    .speaker-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 10px rgba(255,209,102,.6); animation: dot-pulse 1s ease infinite alternate; flex-shrink: 0; }
-    .speaker-name { font-weight: 800; font-size: 1.05rem; }
-    .speaker-sub { font-size: .84rem; color: var(--muted); }
-    .badge-purple { background: rgba(108,92,231,.15); color: #c4baff; border: 1px solid rgba(108,92,231,.3); }
+
+    /* ── CHAT ── */
+    .chat-panel {
+      display: flex; flex-direction: column; height: 400px;
+      border-radius: var(--r); border: 1px solid var(--border);
+      background: linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      overflow: hidden; position: relative; box-shadow: var(--shadow);
+    }
+    .chat-header {
+      padding: 12px 16px; border-bottom: 1px solid var(--border2);
+      font-weight: 800; font-size: .92rem; display: flex; align-items: center;
+      gap: 8px; flex-shrink: 0;
+    }
+    .chat-messages {
+      flex: 1; overflow-y: auto; padding: 12px;
+      display: flex; flex-direction: column; gap: 6px; scroll-behavior: smooth;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-track { background: transparent; }
+    .chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 2px; }
+
+    .chat-msg {
+      padding: 8px 12px; border-radius: 12px;
+      font-size: .9rem; line-height: 1.45; max-width: 85%; position: relative;
+      animation: msgIn .25s ease;
+    }
+    @keyframes msgIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+    .chat-msg.mine { background: rgba(108,92,231,.2); border: 1px solid rgba(108,92,231,.25); align-self: flex-end; }
+    .chat-msg.other { background: rgba(255,255,255,.06); border: 1px solid var(--border2); align-self: flex-start; }
+    .chat-msg.system {
+      background: rgba(255,209,102,.08); border: 1px solid rgba(255,209,102,.15);
+      align-self: center; text-align: center; font-size: .82rem;
+      color: rgba(255,209,102,.78); font-style: italic; max-width: 100%;
+    }
+    .msg-author { font-size: .72rem; font-weight: 800; color: var(--muted); margin-bottom: 3px; font-family: 'Space Mono', monospace; }
+
+    .chat-input-area {
+      padding: 10px 12px; border-top: 1px solid var(--border2);
+      display: flex; gap: 8px; flex-shrink: 0;
+    }
+    .chat-input {
+      flex: 1; padding: 10px 13px; border-radius: 12px;
+      border: 1px solid var(--border); background: rgba(255,255,255,.05);
+      color: var(--text); font-family: 'Outfit', sans-serif; font-size: .92rem;
+      outline: none; transition: all .2s;
+    }
+    .chat-input:focus { border-color: rgba(108,92,231,.6); background: rgba(108,92,231,.07); }
+    .chat-input:disabled { opacity: .4; cursor: not-allowed; }
+
+    .chat-lock-notice {
+      padding: 8px 12px; border-top: 1px solid var(--border2);
+      background: rgba(255,209,102,.04);
+      font-size: .8rem; color: var(--dim); text-align: center;
+      display: none;
+    }
+    .chat-lock-notice.active { display: block; }
+
+    /* ── BUTTON COLORS ── */
     .btn-green { background: linear-gradient(135deg, #009f6b, var(--green)); color: #001a0f; box-shadow: 0 8px 24px rgba(0,229,160,.25); }
     .btn-yellow { background: linear-gradient(135deg, #e6a800, var(--yellow)); color: #1a0e00; box-shadow: 0 8px 24px rgba(255,209,102,.2); }
     .btn-red { background: linear-gradient(135deg, #c4003d, var(--red)); color: #fff; box-shadow: 0 8px 24px rgba(255,77,109,.25); }
-    .btn-icon { width: 40px; height: 40px; padding: 0; border-radius: 12px; font-size: 1rem; }
-    .btn-confirm { background: linear-gradient(135deg, #009f6b, var(--green)); color: #001a0f; box-shadow: 0 4px 16px rgba(0,229,160,.3); animation: pulse-confirm 1.4s ease infinite; }
-    @keyframes pulse-confirm { 0%,100% { box-shadow: 0 4px 16px rgba(0,229,160,.3); } 50% { box-shadow: 0 6px 24px rgba(0,229,160,.55); } }
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }
+
     .text-green { color: var(--green); }
     .text-yellow { color: var(--yellow); }
     .text-red { color: var(--red); }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }
   </style>
 </head>
 <body>
@@ -530,13 +653,10 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       SETUP SCREEN — nouvelle hiérarchie
-  ═══════════════════════════════════════════════════════════ -->
+  <!-- ═══ SETUP SCREEN ═══ -->
   <div id="screen-setup">
     <div class="main-grid">
-
-      <!-- ── COLONNE GAUCHE : CREATE ── -->
+      <!-- LEFT COL: CREATE -->
       <div class="card card-primary">
         <div class="section-tag">Action principale</div>
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:18px; flex-wrap:wrap">
@@ -546,165 +666,86 @@
           </div>
           <span class="badge badge-info">Conseillé</span>
         </div>
-
         <div class="stack">
-          <!-- Pseudo -->
           <div class="field">
             <label>Ton pseudo</label>
             <input id="createNickname" type="text" placeholder="Ex : Ulrich" maxlength="20" />
           </div>
-
-          <!-- Params -->
           <div class="params-grid">
             <div class="num-card">
-              <div class="num-head">
-                <span class="num-label">Discussion</span>
-                <span id="createDiscussionValue" class="num-value">90s</span>
-              </div>
-              <div class="num-ctrl">
-                <button type="button" onclick="adjInput('createDiscussion',-15)">−</button>
-                <input id="createDiscussion" type="number" min="20" max="600" value="90" />
-                <button type="button" onclick="adjInput('createDiscussion',15)">+</button>
-              </div>
+              <div class="num-head"><span class="num-label">Discussion</span><span id="createDiscussionValue" class="num-value">90s</span></div>
+              <div class="num-ctrl"><button type="button" onclick="adjInput('createDiscussion',-15)">−</button><input id="createDiscussion" type="number" min="20" max="600" value="90" /><button type="button" onclick="adjInput('createDiscussion',15)">+</button></div>
             </div>
-
             <div class="num-card">
-              <div class="num-head">
-                <span class="num-label">Vote</span>
-                <span id="createVoteValue" class="num-value">45s</span>
-              </div>
-              <div class="num-ctrl">
-                <button type="button" onclick="adjInput('createVote',-10)">−</button>
-                <input id="createVote" type="number" min="10" max="300" value="45" />
-                <button type="button" onclick="adjInput('createVote',10)">+</button>
-              </div>
+              <div class="num-head"><span class="num-label">Vote</span><span id="createVoteValue" class="num-value">45s</span></div>
+              <div class="num-ctrl"><button type="button" onclick="adjInput('createVote',-10)">−</button><input id="createVote" type="number" min="10" max="300" value="45" /><button type="button" onclick="adjInput('createVote',10)">+</button></div>
             </div>
-
             <div class="num-card">
-              <div class="num-head">
-                <span class="num-label">Undercovers</span>
-                <span id="createUndercoverValue" class="num-value">1</span>
-              </div>
-              <div class="num-ctrl">
-                <button type="button" onclick="adjInput('createUndercover',-1)">−</button>
-                <input id="createUndercover" type="number" min="1" max="4" value="1" />
-                <button type="button" onclick="adjInput('createUndercover',1)">+</button>
-              </div>
+              <div class="num-head"><span class="num-label">Undercovers</span><span id="createUndercoverValue" class="num-value">1</span></div>
+              <div class="num-ctrl"><button type="button" onclick="adjInput('createUndercover',-1)">−</button><input id="createUndercover" type="number" min="1" max="4" value="1" /><button type="button" onclick="adjInput('createUndercover',1)">+</button></div>
             </div>
-
             <div class="num-card">
-              <div class="num-head">
-                <span class="num-label">Manches</span>
-                <span id="createRoundsValue" class="num-value">3</span>
-              </div>
-              <div class="num-ctrl">
-                <button type="button" onclick="adjInput('createRounds',-1)">−</button>
-                <input id="createRounds" type="number" min="1" max="20" value="3" />
-                <button type="button" onclick="adjInput('createRounds',1)">+</button>
-              </div>
+              <div class="num-head"><span class="num-label">Manches</span><span id="createRoundsValue" class="num-value">3</span></div>
+              <div class="num-ctrl"><button type="button" onclick="adjInput('createRounds',-1)">−</button><input id="createRounds" type="number" min="1" max="20" value="3" /><button type="button" onclick="adjInput('createRounds',1)">+</button></div>
             </div>
           </div>
-
-          <!-- CTAs -->
           <div class="action-row">
             <button id="btnCreateOnline" class="btn btn-cyan btn-cta">🌐 Créer en ligne</button>
             <button id="btnCreateOffline" class="btn btn-secondary btn-cta">📱 Local</button>
           </div>
-
           <div class="hint-note">En ligne = chaque joueur rejoint avec un code. Local = tout sur un seul écran.</div>
-
-          <!-- Audio — compact, en bas -->
           <div class="audio-strip">
             <span class="audio-label">🔊</span>
-            <label class="toggle-wrap">
-              <input id="soundEnabled" type="checkbox" checked>
-              Son activé
-            </label>
+            <label class="toggle-wrap"><input id="soundEnabled" type="checkbox" checked> Son activé</label>
             <input id="soundVolume" type="range" min="0" max="100" value="45" style="width:90px" />
             <button id="btnStartAudio" class="btn btn-ghost btn-sm" style="margin-left:auto">Ambiance</button>
           </div>
         </div>
       </div>
 
-      <!-- ── COLONNE DROITE ── -->
+      <!-- RIGHT COL -->
       <div class="stack" style="gap:14px">
-
-        <!-- REJOINDRE -->
         <div class="card">
           <div class="section-tag cyan">Rejoindre</div>
           <h2 style="margin-bottom:4px">Rejoindre une salle</h2>
           <div class="section-sub" style="margin-bottom:16px">Entre le code reçu et ton pseudo.</div>
-
           <div class="stack" style="gap:12px">
-            <div class="field">
-              <label>Code de la salle</label>
-              <input id="joinRoomCode" type="text" placeholder="ABCD" maxlength="8" />
-            </div>
-            <div class="field">
-              <label>Ton pseudo</label>
-              <input id="joinNickname" type="text" placeholder="Ex : Maya" maxlength="20" />
-            </div>
+            <div class="field"><label>Code de la salle</label><input id="joinRoomCode" type="text" placeholder="ABCD" maxlength="8" /></div>
+            <div class="field"><label>Ton pseudo</label><input id="joinNickname" type="text" placeholder="Ex : Maya" maxlength="20" /></div>
             <button id="btnJoinRoom" class="btn btn-primary btn-cta">🔗 Rejoindre</button>
-            <div class="small muted">L'URL peut aussi contenir le code&nbsp;: <span class="mono">?room=ABCD</span></div>
+            <div class="small muted">L'URL peut aussi contenir le code : <span class="mono">?room=ABCD</span></div>
           </div>
         </div>
-
-        <!-- COMMENT JOUER — compact + accordion -->
         <div class="card">
           <h3 style="margin-bottom:12px">Comment jouer</h3>
           <div class="rules-compact">
             <div class="rule-row"><span class="rule-num">1</span> La majorité reçoit le mot A — les undercovers reçoivent un mot proche B.</div>
-            <div class="rule-row"><span class="rule-num">2</span> Chaque joueur décrit son mot sans le dire.</div>
-            <div class="rule-row"><span class="rule-num">3</span> Tout le monde vote pour éliminer un suspect.</div>
-            <div class="rule-row"><span class="rule-num">✓</span> Civils gagnent si tous les undercovers sont éliminés. Undercovers gagnent à parité favorable.</div>
+            <div class="rule-row"><span class="rule-num">2</span> Chaque joueur décrit son mot à son tour sans le dire.</div>
+            <div class="rule-row"><span class="rule-num">3</span> Débat libre puis vote pour éliminer un suspect.</div>
+            <div class="rule-row"><span class="rule-num">✓</span> Civils gagnent si tous les undercovers sont éliminés.</div>
           </div>
-
           <details class="more">
-            <summary>
-              <span class="summary-label">Catégories & détails</span>
-              <span class="summary-arrow">⌄</span>
-            </summary>
+            <summary><span class="summary-label">Catégories & détails</span><span class="summary-arrow">⌄</span></summary>
             <div class="more-body">
-              <div class="small muted" style="margin-bottom:8px"><span id="wordsCount">0</span> paires de mots disponibles, réparties en :</div>
+              <div class="small muted" style="margin-bottom:8px"><span id="wordsCount">0</span> paires de mots disponibles.</div>
               <div class="pills-row">
-                <span class="pill">🎬 Films</span>
-                <span class="pill">🎮 Jeux vidéo</span>
-                <span class="pill">🌍 Lieux</span>
-                <span class="pill">🍕 Nourriture</span>
-                <span class="pill">🦁 Animaux</span>
-                <span class="pill">🔧 Objets</span>
-                <span class="pill">🚗 Transports</span>
-                <span class="pill">⚡ Nature</span>
+                <span class="pill">🎬 Films</span><span class="pill">🎮 Jeux vidéo</span>
+                <span class="pill">🌍 Lieux</span><span class="pill">🍕 Nourriture</span>
+                <span class="pill">🦁 Animaux</span><span class="pill">🔧 Objets</span>
+                <span class="pill">🚗 Transports</span><span class="pill">⚡ Nature</span>
               </div>
             </div>
           </details>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <!-- NOUVEAUTÉS — tout en bas, discret -->
-        <details class="card" style="padding:16px 20px">
-          <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;user-select:none">
-            <summary style="list-style:none"></summary>
-            <div>
-              <div style="font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;color:var(--muted)">Nouveautés & infos</div>
-            </div>
-            <span style="color:var(--dim);font-size:.85rem;transition:transform .2s" class="details-arrow-info">⌄</span>
-          </summary>
-          <div class="features-list">
-            <div class="feature-row"><span class="feature-icon">💬</span> Chat intégré — les indices sont envoyés en partie</div>
-            <div class="feature-row"><span class="feature-icon">✅</span> Confirmation avant envoi — plus de missclick</div>
-            <div class="feature-row"><span class="feature-icon">🔢</span> Multi-manches de 1 à 20</div>
-            <div class="feature-row"><span class="feature-icon">⏱️</span> Timer ajustable par l'hôte en cours de partie</div>
-          </div>
-        </details>
-
-      </div><!-- /stack droite -->
-    </div><!-- /main-grid -->
-  </div><!-- /screen-setup -->
-
-  <!-- GAME SCREEN (identique à l'original, intact) -->
+  <!-- ═══ GAME SCREEN ═══ -->
   <div id="screen-room" class="hidden">
     <div class="game-grid">
       <div class="stack">
+        <!-- Room info card -->
         <div class="card">
           <div class="game-header">
             <div>
@@ -761,26 +802,12 @@
           </div>
         </div>
 
-        <div id="panel-reveal" class="card hidden">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px">
-            <h2>Révélation privée</h2>
-            <span id="revealProgress" class="badge badge-warn">0 / 0 vus</span>
-          </div>
-          <div class="word-stage">
-            <div id="revealRole" class="reveal-label">Ton mot</div>
-            <div id="revealWord" class="big-word">—</div>
-            <div class="reveal-warn">⚠️ Ne montre pas cet écran aux autres</div>
-          </div>
-          <div style="text-align:center; margin-top:16px">
-            <button id="btnSeenWord" class="btn btn-primary">👁 J'ai bien vu mon mot</button>
-          </div>
-        </div>
-
+        <!-- Discussion panel -->
         <div id="panel-discussion" class="card hidden">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; flex-wrap:wrap; gap:10px">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px">
             <div>
               <h2>Discussion</h2>
-              <div class="small muted">Décris ton mot dans le chat sans le dire directement.</div>
+              <div class="small muted">Décris ton mot à ton tour — débat libre au vote.</div>
             </div>
             <div style="text-align:right">
               <div id="discussionTimer" class="timer-display">00:00</div>
@@ -794,7 +821,7 @@
               </div>
             </div>
           </div>
-          <div class="progress-bar"><div id="discussionProgress" class="progress-fill"></div></div>
+          <div class="progress-bar" style="margin-top:10px"><div id="discussionProgress" class="progress-fill"></div></div>
           <div id="speakerNow" class="speaker-now" style="margin-top:14px">
             <div class="speaker-dot"></div>
             <div>
@@ -805,11 +832,12 @@
           <div id="discussionOrder" class="turn-order"></div>
         </div>
 
+        <!-- Vote panel -->
         <div id="panel-vote" class="card hidden">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; flex-wrap:wrap; gap:10px">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px">
             <div>
               <h2>Vote</h2>
-              <div class="small muted">Un seul vote par joueur vivant.</div>
+              <div class="small muted">Débat libre — puis votez !</div>
             </div>
             <div style="text-align:right">
               <div id="voteTimer" class="timer-display" style="font-size:1.8rem">00:00</div>
@@ -821,12 +849,13 @@
               </div>
             </div>
           </div>
-          <div class="progress-bar" style="margin-bottom:14px"><div id="voteProgress" class="progress-fill"></div></div>
+          <div class="progress-bar" style="margin:10px 0 14px"><div id="voteProgress" class="progress-fill"></div></div>
           <div id="voteInfo" class="badge badge-warn" style="margin-bottom:12px; display:inline-flex">En attente du vote…</div>
           <div id="offlineVoteVoter" class="hidden card-sm small muted" style="margin-bottom:10px"></div>
           <div id="voteGrid" class="vote-grid"></div>
         </div>
 
+        <!-- Result panel -->
         <div id="panel-result" class="card hidden">
           <h2 style="margin-bottom:14px">Résultat du vote</h2>
           <div id="resultText" class="result-big">—</div>
@@ -835,6 +864,7 @@
         </div>
       </div>
 
+      <!-- RIGHT COLUMN: Players + Chat -->
       <div class="stack">
         <div class="card">
           <h2 style="margin-bottom:12px">Joueurs</h2>
@@ -847,13 +877,9 @@
             <span id="chatOnlineIndicator" class="badge badge-info" style="margin-left:auto; font-size:.72rem">Local</span>
           </div>
           <div class="chat-messages" id="chatMessages">
-            <div class="chat-msg system">Bienvenue ! Le chat sera actif pendant la discussion.</div>
+            <div class="chat-msg system">Bienvenue ! Le chat sera actif pendant la discussion et le vote.</div>
           </div>
-          <div id="pendingConfirm" class="pending-confirm hidden">
-            <div class="pending-word">Envoyer : <span id="pendingWordText">—</span> ?</div>
-            <button id="btnCancelPending" class="btn btn-ghost btn-sm">✕ Annuler</button>
-            <button id="btnConfirmSend" class="btn btn-confirm btn-sm">✓ Confirmer</button>
-          </div>
+          <div id="chatLockNotice" class="chat-lock-notice">🔒 Ce n'est pas ton tour — attends pour écrire</div>
           <div class="chat-input-area">
             <input id="chatInput" class="chat-input" type="text" placeholder="Décris ton mot..." maxlength="80" />
             <button id="btnSendChat" class="btn btn-primary btn-sm">↑</button>
@@ -865,17 +891,28 @@
 
 </div>
 
+<!-- FULLSCREEN WORD REVEAL OVERLAY -->
+<div id="revealOverlay" class="reveal-overlay">
+  <div class="glow-ring"></div>
+  <div id="revealCounter" class="reveal-counter">0 / 0</div>
+  <div id="revealPlayerName" class="reveal-player-name">—</div>
+  <div id="revealWordBig" class="reveal-word-big">—</div>
+  <div id="revealRoleTag" class="reveal-role-tag civil">Civil</div>
+  <div class="reveal-warning">⚠️ Ne montre pas cet écran aux autres</div>
+  <div class="reveal-btn">
+    <button id="btnSeenWord" class="btn btn-primary" style="min-width:200px;min-height:52px;font-size:1rem;font-weight:900">👁 J'ai bien vu mon mot</button>
+  </div>
+</div>
+
 <div id="toastWrap" class="toast-wrap"></div>
 
 <script>
-  /* ─── open details arrow rotation ─── */
+  /* ─── Arrow rotation for details ─── */
   document.querySelectorAll('details').forEach(d => {
-    const arrow = d.querySelector('.details-arrow-info, .summary-arrow, .details-arrow');
+    const arrow = d.querySelector('.summary-arrow');
     if(!arrow) return;
     d.addEventListener('toggle', () => arrow.style.transform = d.open ? 'rotate(180deg)' : '');
   });
-
-  /*** ALL ORIGINAL JS PRESERVED BELOW — unchanged ***/
 
   const FIREBASE_CONFIG = {
     apiKey: "AIzaSyC0Z78enCaHs2Ao3HQdSGAMNxHBbHdGchs",
@@ -958,7 +995,7 @@
     const wrap=$("toastWrap");
     const el=document.createElement("div");
     el.className="toast";
-    el.innerHTML=`<div class="toast-t">${escHtml(title)}</div><div class="toast-s">${escHtml(text)}</div>`;
+    el.innerHTML=`<div class="toast-t">${escHtml(title)}</div>${text?`<div class="toast-s">${escHtml(text)}</div>`:""}`;
     wrap.appendChild(el);
     setTimeout(()=>{ el.style.opacity="0"; el.style.transform="translateY(8px)"; el.style.transition=".3s"; },2800);
     setTimeout(()=>el.remove(),3200);
@@ -979,7 +1016,7 @@
   }
   window.adjInput=adjInput;
 
-  const STORAGE = { profile:"uc_profile_v4", offline:"uc_offline_v4", sound:"uc_sound_v4", chat:"uc_chat_v4" };
+  const STORAGE = { profile:"uc_profile_v5", offline:"uc_offline_v5", sound:"uc_sound_v5" };
   function getProfile() { let p=loadLocal(STORAGE.profile); if(!p){ p={playerId:uid("p"),secretId:uid("s")}; saveLocal(STORAGE.profile,p); } return p; }
   const PROFILE=getProfile();
 
@@ -992,6 +1029,7 @@
   function avatarColor(id) { let h=0; for(let i=0;i<(id||"").length;i++) h=(h*31+id.charCodeAt(i))&0xffffffff; return AVATAR_COLORS[Math.abs(h)%AVATAR_COLORS.length]; }
   function avatarInitial(name) { return (name||"?")[0].toUpperCase(); }
 
+  /* ─── AUDIO ─── */
   const audio={ctx:null,master:null,ambGain:null,ambStarted:false,enabled:true,vol:.45,lastCountKey:null};
   function loadSoundPrefs() { const p=loadLocal(STORAGE.sound,{enabled:true,volume:45}); audio.enabled=!!p.enabled; audio.vol=Number(p.volume||45)/100; $("soundEnabled").checked=audio.enabled; $("soundVolume").value=Math.round(audio.vol*100); }
   function saveSoundPrefs() { saveLocal(STORAGE.sound,{enabled:$("soundEnabled").checked,volume:Number($("soundVolume").value)}); }
@@ -1009,14 +1047,113 @@
   function startAmbience() { if(audio.ambStarted||!audio.ctx) return; const ctx=audio.ctx; const lo=ctx.createOscillator(),lg=ctx.createGain(); lo.type="sine"; lo.frequency.value=52; lg.gain.value=.008; lo.connect(lg); lg.connect(audio.ambGain); lo.start(); const mo=ctx.createOscillator(),mg=ctx.createGain(); mo.type="triangle"; mo.frequency.value=96; mg.gain.value=.004; mo.connect(mg); mg.connect(audio.ambGain); mo.start(); const buf=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate); const d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*.3; const ns=ctx.createBufferSource(); ns.buffer=buf; ns.loop=true; const bp=ctx.createBiquadFilter(); bp.type="bandpass"; bp.frequency.value=620; bp.Q.value=.6; const ng=ctx.createGain(); ng.gain.value=.005; ns.connect(bp); bp.connect(ng); ng.connect(audio.ambGain); ns.start(); audio.ambStarted=true; const t=ctx.currentTime; audio.ambGain.gain.cancelScheduledValues(t); audio.ambGain.gain.linearRampToValueAtTime(.026,t+1.5); }
   async function enableAudio() { const ctx=await ensureAudio(); if(!ctx) return; if(ctx.state==="suspended") await ctx.resume(); updateAudioSettings(); startAmbience(); sfxPhase(); }
 
-  const chatState={messages:[],pendingText:null};
-  function addChatMessage(author,text,type="other",isWordSubmit=false) { const msg={id:uid("m"),author,text,type,isWordSubmit,ts:Date.now()}; chatState.messages.push(msg); renderChat(); sfxChat(); saveLocal(STORAGE.chat,chatState.messages.slice(-80)); }
-  function renderChat() { const container=$("chatMessages"); container.innerHTML=chatState.messages.map(m=>{ const cls=m.type==="system"?"system":(m.type==="mine"?"mine":"other"); const wordTag=m.isWordSubmit?`<div class="msg-word-tag">✓ Mot soumis</div>`:""; const author=m.type!=="system"?`<div class="msg-author">${escHtml(m.author)}</div>`:""; return `<div class="chat-msg ${cls} ${m.isWordSubmit?"word-submitted":""}">${author}${escHtml(m.text)}${wordTag}</div>`; }).join(""); container.scrollTop=container.scrollHeight; }
-  function initChat() { chatState.messages=[]; addChatMessage("","Partie lancée — bonne chance !","system"); $("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter") handleChatSend();}); $("btnSendChat").addEventListener("click",handleChatSend); $("btnConfirmSend").addEventListener("click",confirmChatSend); $("btnCancelPending").addEventListener("click",cancelChatSend); }
-  function handleChatSend() { const input=$("chatInput"); const text=(input.value||"").trim(); if(!text) return; chatState.pendingText=text; $("pendingWordText").textContent=text; show($("pendingConfirm"),true); input.value=""; input.focus(); sfxPhase(); }
-  function confirmChatSend() { if(!chatState.pendingText) return; const text=chatState.pendingText; chatState.pendingText=null; show($("pendingConfirm"),false); addChatMessage(state.myName||"Joueur",text,"mine",false); sfxConfirm(); }
-  function cancelChatSend() { chatState.pendingText=null; show($("pendingConfirm"),false); }
+  /* ─── CHAT — SHARED, TURN-BASED ─── */
+  const chatState={messages:[]};
 
+  function addChatMessage(author, text, type="other") {
+    const msg={id:uid("m"),author,text,type,ts:Date.now()};
+    chatState.messages.push(msg);
+    // For offline: store in room state so all can see
+    if(state.mode==="offline" && state.offline) {
+      if(!state.offline.chatMessages) state.offline.chatMessages=[];
+      state.offline.chatMessages.push(msg);
+      persistOffline();
+    }
+    renderChat();
+    if(type!=="system") sfxChat();
+  }
+
+  function renderChat() {
+    const container=$("chatMessages");
+    // In offline mode, render from shared room state
+    const msgs = (state.mode==="offline" && state.offline?.chatMessages) ? state.offline.chatMessages : chatState.messages;
+    container.innerHTML=msgs.map(m=>{
+      const cls=m.type==="system"?"system":(m.author===state.myName?"mine":"other");
+      const author=m.type!=="system"?`<div class="msg-author">${escHtml(m.author)}</div>`:"";
+      return `<div class="chat-msg ${cls}">${author}${escHtml(m.text)}</div>`;
+    }).join("");
+    container.scrollTop=container.scrollHeight;
+  }
+
+  /* Determine if the current player can type in chat */
+  function canChat() {
+    const room = getRoom();
+    if(!room) return false;
+    const phase = room.phase;
+
+    // During vote phase: free chat for all alive players
+    if(phase === "vote") return true;
+
+    // During discussion: only the current speaker can type
+    if(phase === "discussion") {
+      const speakerId = currentSpeakerId();
+      if(state.mode === "offline") {
+        // In offline, the host controls, so always allow (host passes phone)
+        return true;
+      }
+      return speakerId === state.myId;
+    }
+
+    return false;
+  }
+
+  function updateChatLock() {
+    const room = getRoom();
+    const phase = room?.phase || "lobby";
+    const input = $("chatInput");
+    const lockNotice = $("chatLockNotice");
+    const sendBtn = $("btnSendChat");
+
+    if(phase === "vote") {
+      // Free chat during vote
+      input.disabled = false;
+      input.placeholder = "Débattez librement...";
+      lockNotice.classList.remove("active");
+      sendBtn.disabled = false;
+    } else if(phase === "discussion") {
+      const allowed = canChat();
+      input.disabled = !allowed;
+      sendBtn.disabled = !allowed;
+      if(allowed) {
+        input.placeholder = "Décris ton mot...";
+        lockNotice.classList.remove("active");
+      } else {
+        input.placeholder = "";
+        lockNotice.classList.add("active");
+        lockNotice.textContent = `🔒 C'est au tour de ${getPlayerName(currentSpeakerId())} — attends ton tour`;
+      }
+    } else {
+      // Lobby, reveal, result: chat disabled
+      input.disabled = true;
+      input.placeholder = "Chat désactivé pour l'instant";
+      lockNotice.classList.remove("active");
+      sendBtn.disabled = true;
+    }
+  }
+
+  function handleChatSend() {
+    if(!canChat()) return;
+    const input=$("chatInput");
+    const text=(input.value||"").trim();
+    if(!text) return;
+    input.value="";
+    // Send directly — no confirmation needed
+    addChatMessage(state.myName||"Joueur", text, "other");
+    sfxConfirm();
+  }
+
+  function initChat() {
+    chatState.messages=[];
+    if(state.mode==="offline" && state.offline) {
+      state.offline.chatMessages = [];
+      persistOffline();
+    }
+    addChatMessage("","Partie lancée — bonne chance !","system");
+    $("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter") handleChatSend();});
+    $("btnSendChat").addEventListener("click",handleChatSend);
+  }
+
+  /* ─── STATE ─── */
   const state={mode:"offline",db:null,firebaseReady:false,roomId:null,myId:PROFILE.playerId,mySecret:PROFILE.secretId,isHost:false,myName:"",roomData:null,players:[],myPrivateWord:null,unsubRoom:null,unsubPlayers:null,tickInterval:null,offline:null,lastPhase:"",lastWinner:"",recentPairIndexes:[]};
 
   const getRoom=()=>state.mode==="firebase"?state.roomData:state.offline;
@@ -1042,33 +1179,262 @@
   const getPlayerName=id=>getPlayers().find(p=>p.id===id)?.nickname||"—";
   const hasSeenCurrentWord=()=>getPlayers().find(p=>p.id===state.myId)?.revealedRound===currentRoundNumber();
 
-  function maybePlayPhaseAudio() { const room=getRoom(); if(!room) return; if(state.lastPhase!==room.phase){if(room.phase==="reveal")sfxReveal();else if(["discussion","vote","result"].includes(room.phase))sfxPhase();state.lastPhase=room.phase;if(room.phase==="discussion")addChatMessage("","Phase de discussion — à vos descriptions !","system");if(room.phase==="vote")addChatMessage("","Phase de vote — choisissez votre suspect !","system");if(room.phase==="result")addChatMessage("","Le résultat est tombé…","system");} if(room.winner&&state.lastWinner!==room.winner){sfxWin(room.winner==="civils");state.lastWinner=room.winner;} if(!room.winner)state.lastWinner=""; }
+  /* ─── FULLSCREEN REVEAL ─── */
+  function showRevealOverlay(playerName, word, isUndercover, seenCount, totalCount) {
+    const overlay=$("revealOverlay");
+    $("revealPlayerName").textContent=`${playerName} — regarde ton mot`;
+    $("revealWordBig").textContent=word||"—";
+    $("revealCounter").textContent=`${seenCount+1} / ${totalCount}`;
+
+    const tag=$("revealRoleTag");
+    // Don't reveal role — just show "Ton mot secret"
+    tag.textContent="Ton mot secret";
+    tag.className="reveal-role-tag civil";
+
+    // Re-trigger animations by cloning
+    overlay.querySelectorAll('[class*="reveal-"]').forEach(el=>{
+      el.style.animation='none';
+      el.offsetHeight; // reflow
+      el.style.animation='';
+    });
+
+    overlay.classList.add("active");
+    sfxReveal();
+  }
+
+  function hideRevealOverlay() {
+    $("revealOverlay").classList.remove("active");
+  }
+
+  function maybePlayPhaseAudio() {
+    const room=getRoom(); if(!room) return;
+    if(state.lastPhase!==room.phase){
+      if(room.phase==="reveal") {} // handled by overlay
+      else if(["discussion","vote","result"].includes(room.phase)) sfxPhase();
+      state.lastPhase=room.phase;
+      if(room.phase==="discussion") addChatMessage("","Phase de discussion — décrivez vos mots à tour de rôle !","system");
+      if(room.phase==="vote") addChatMessage("","Phase de vote — débattez librement puis votez !","system");
+      if(room.phase==="result") addChatMessage("","Le résultat est tombé…","system");
+    }
+    if(room.winner&&state.lastWinner!==room.winner){sfxWin(room.winner==="civils");state.lastWinner=room.winner;}
+    if(!room.winner)state.lastWinner="";
+  }
 
   function renderRoundDots() { const room=getRoom(); const total=room?.settings?.roundsTotal||1; const cur=currentRoundNumber(); const dots=$("roundsDots"); dots.innerHTML=""; for(let i=1;i<=total;i++){const d=document.createElement("div");d.className="round-dot"+(i<cur?" done":i===cur?" current":"");dots.appendChild(d);} setText("roundsLabel",`${cur} / ${total}`); }
 
-  function renderPlayers() { const players=getPlayers(); const speakerId=currentSpeakerId(); setText("aliveCount",players.filter(p=>p.alive).length); $("playersList").innerHTML=players.map(p=>{const tags=[];if(p.id===state.myId)tags.push("Toi");if(p.host)tags.push("Hôte");if(!p.alive)tags.push("Éliminé");if(p.id===speakerId)tags.push("🎙 Parole");return`<div class="player-card ${p.id===state.myId?"is-me":""} ${!p.alive?"dead":""} ${p.id===speakerId?"speaking":""}"><div style="display:flex;align-items:center;gap:8px"><div class="player-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div><div class="player-name">${escHtml(p.nickname||"?")}</div><div class="player-meta">${tags.join(" · ")||"En jeu"}</div></div></div></div>`;}).join("")||`<div class="small muted">Aucun joueur</div>`; }
+  function renderPlayers() {
+    const players=getPlayers(); const speakerId=currentSpeakerId();
+    setText("aliveCount",players.filter(p=>p.alive).length);
+    $("playersList").innerHTML=players.map(p=>{
+      const tags=[];
+      if(p.id===state.myId) tags.push("Toi");
+      if(p.host) tags.push("Hôte");
+      if(!p.alive) tags.push("Éliminé");
+      if(p.id===speakerId && getRoom()?.phase==="discussion") tags.push("🎙");
+      return `<div class="player-card ${p.id===state.myId?"is-me":""} ${!p.alive?"dead":""} ${p.id===speakerId&&getRoom()?.phase==="discussion"?"speaking":""}">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="player-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div>
+          <div>
+            <div class="player-name">${escHtml(p.nickname||"?")}</div>
+            <div class="player-meta">${tags.join(" · ")||"En jeu"}</div>
+          </div>
+        </div>
+      </div>`;
+    }).join("")||`<div class="small muted">Aucun joueur</div>`;
+  }
 
-  function updateStepUI(phase) { ["lobby","reveal","discussion","vote","result"].forEach(p=>{$("step-"+p)?.classList.toggle("active",p===phase);}); setText("phaseBadge",phaseLabel(phase)); show($("panel-reveal"),phase==="reveal"); show($("panel-discussion"),phase==="discussion"); show($("panel-vote"),phase==="vote"); show($("panel-result"),phase==="result"); }
+  const PHASE_ORDER=["lobby","reveal","discussion","vote","result"];
+  function updateStepUI(phase) {
+    const idx=PHASE_ORDER.indexOf(phase);
+    PHASE_ORDER.forEach((p,i)=>{
+      const el=$("step-"+p);
+      if(!el) return;
+      el.classList.remove("active","done");
+      if(i<idx) el.classList.add("done");
+      else if(i===idx) el.classList.add("active");
+    });
+    setText("phaseBadge",phaseLabel(phase));
+    // Show/hide panels
+    show($("panel-discussion"),phase==="discussion");
+    show($("panel-vote"),phase==="vote");
+    show($("panel-result"),phase==="result");
+  }
 
-  function updateButtons() { const room=getRoom(); const phase=room?.phase||"lobby"; const alive=getAlivePlayers(); const allSeen=alive.every(p=>p.revealedRound===currentRoundNumber()); const order=room?.current?.turnOrder||[]; const idx=room?.current?.speakerIndex||0; show($("btnStartRound"),state.isHost&&phase==="lobby"&&alive.length>=3); show($("btnForceDiscussion"),state.isHost&&phase==="reveal"); $("btnForceDiscussion").disabled=!allSeen; show($("btnNextSpeaker"),state.isHost&&phase==="discussion"); $("btnNextSpeaker").disabled=idx>=Math.max(0,order.length-1); show($("btnForceVote"),state.isHost&&phase==="discussion"); show($("btnResolveVote"),state.isHost&&phase==="vote"); show($("btnNextRound"),state.isHost&&phase==="result"&&!room?.winner); show($("btnResetGame"),state.isHost); show($("timerAdjust"),state.isHost&&phase==="discussion"); show($("voteTimerAdjust"),state.isHost&&phase==="vote"); if($("btnSeenWord")){$("btnSeenWord").disabled=state.mode==="firebase"?hasSeenCurrentWord():!offlineCurrentRevealPlayer();} }
+  function updateButtons() {
+    const room=getRoom(); const phase=room?.phase||"lobby";
+    const alive=getAlivePlayers();
+    const allSeen=alive.every(p=>p.revealedRound===currentRoundNumber());
+    const order=room?.current?.turnOrder||[]; const idx=room?.current?.speakerIndex||0;
+    show($("btnStartRound"),state.isHost&&phase==="lobby"&&alive.length>=3);
+    show($("btnForceDiscussion"),state.isHost&&phase==="reveal");
+    $("btnForceDiscussion").disabled=!allSeen;
+    show($("btnNextSpeaker"),state.isHost&&phase==="discussion");
+    $("btnNextSpeaker").disabled=idx>=Math.max(0,order.length-1);
+    show($("btnForceVote"),state.isHost&&phase==="discussion");
+    show($("btnResolveVote"),state.isHost&&phase==="vote");
+    show($("btnNextRound"),state.isHost&&phase==="result"&&!room?.winner);
+    show($("btnResetGame"),state.isHost);
+    show($("timerAdjust"),state.isHost&&phase==="discussion");
+    show($("voteTimerAdjust"),state.isHost&&phase==="vote");
+    if($("btnSeenWord")){$("btnSeenWord").disabled=state.mode==="firebase"?hasSeenCurrentWord():!offlineCurrentRevealPlayer();}
+    show($("panel-offline-admin"),state.mode==="offline"&&state.isHost&&phase==="lobby");
+  }
 
-  function updateRoomHeader() { const room=getRoom(); const settings=room?.settings||{}; setText("roomTitle",`Salle ${state.roomId||"—"}`); setText("roomMeta",state.mode==="firebase"?"Multijoueur en ligne (Firebase)":"Partie locale sur un seul appareil"); setText("settingsUndercover",settings.undercoverCount||1); setText("settingsDiscussion",`${settings.discussionSeconds||90}s`); setText("settingsVote",`${settings.voteSeconds||45}s`); $("shareLinkInput").value=state.mode==="firebase"?`${location.origin}${location.pathname}?room=${encodeURIComponent(state.roomId||"")}`:`${location.origin}${location.pathname}`; show($("hostBadge"),state.isHost); show($("panel-offline-admin"),state.mode==="offline"&&state.isHost); setText("chatOnlineIndicator",state.mode==="firebase"?"En ligne":"Local"); updateBadges(); renderRoundDots(); updateStepUI(room?.phase||"lobby"); updateRevealPanel(); updateDiscussionPanel(); updateVotePanel(); updateResultPanel(); updateButtons(); maybePlayPhaseAudio(); }
+  function updateRoomHeader() {
+    const room=getRoom(); const settings=room?.settings||{};
+    setText("roomTitle",`Salle ${state.roomId||"—"}`);
+    setText("roomMeta",state.mode==="firebase"?"Multijoueur en ligne":"Partie locale");
+    setText("settingsUndercover",settings.undercoverCount||1);
+    setText("settingsDiscussion",`${settings.discussionSeconds||90}s`);
+    setText("settingsVote",`${settings.voteSeconds||45}s`);
+    $("shareLinkInput").value=state.mode==="firebase"?`${location.origin}${location.pathname}?room=${encodeURIComponent(state.roomId||"")}`:`${location.origin}${location.pathname}`;
+    show($("hostBadge"),state.isHost);
+    setText("chatOnlineIndicator",state.mode==="firebase"?"En ligne":"Local");
+    updateBadges(); renderRoundDots();
+    updateStepUI(room?.phase||"lobby");
+    updateRevealPanel();
+    updateDiscussionPanel();
+    updateVotePanel();
+    updateResultPanel();
+    updateButtons();
+    updateChatLock();
+    maybePlayPhaseAudio();
+  }
 
-  function updateRevealPanel() { const room=getRoom(); if(room?.phase!=="reveal") return; if(state.mode==="firebase"){const alive=getAlivePlayers();const seen=alive.filter(p=>p.revealedRound===currentRoundNumber()).length;setText("revealProgress",`${seen} / ${alive.length} vus`);if(state.myPrivateWord){setText("revealRole","Ton mot");setText("revealWord",state.myPrivateWord.word||"—");}else{setText("revealRole","En attente…");setText("revealWord","—");}}else{const cur=offlineCurrentRevealPlayer();const alive=getAlivePlayers();const seen=alive.filter(p=>p.revealedRound===currentRoundNumber()).length;setText("revealProgress",`${seen} / ${alive.length} vus`);if(cur){const pw=state.offline.privateWords[cur.id];setText("revealRole",`${cur.nickname} — ton mot`);setText("revealWord",pw?.word||"—");}else{setText("revealRole","Tous ont vu");setText("revealWord","—");}} updateButtons(); }
+  function updateRevealPanel() {
+    const room=getRoom();
+    if(room?.phase!=="reveal") { hideRevealOverlay(); return; }
 
-  function updateDiscussionPanel() { const room=getRoom(); if(room?.phase!=="discussion") return; const order=room.current?.turnOrder||[]; const idx=room.current?.speakerIndex||0; const curId=order[idx]||""; setText("currentSpeakerText",curId?getPlayerName(curId):"—"); setText("speakerProgressBadge",`Tour ${Math.min(idx+1,Math.max(1,order.length))} / ${order.length||0}`); $("discussionOrder").innerHTML=order.map((id,i)=>`<div class="turn-card ${i===idx?"active":""}"><div class="t-num">Passage ${i+1}</div><div class="t-name">${escHtml(getPlayerName(id))}</div></div>`).join(""); }
+    if(state.mode==="firebase") {
+      const alive=getAlivePlayers();
+      const seen=alive.filter(p=>p.revealedRound===currentRoundNumber()).length;
+      if(state.myPrivateWord && !hasSeenCurrentWord()) {
+        showRevealOverlay(state.myName, state.myPrivateWord.word, false, seen, alive.length);
+      } else {
+        hideRevealOverlay();
+        // Show waiting status
+        setStatus("Révélation",`${seen}/${alive.length} joueurs ont vu leur mot`);
+      }
+    } else {
+      const cur=offlineCurrentRevealPlayer();
+      const alive=getAlivePlayers();
+      const seen=alive.filter(p=>p.revealedRound===currentRoundNumber()).length;
+      if(cur) {
+        const pw=state.offline.privateWords[cur.id];
+        showRevealOverlay(cur.nickname, pw?.word||"—", false, seen, alive.length);
+      } else {
+        hideRevealOverlay();
+        setStatus("Tous ont vu","L'hôte peut lancer la discussion.");
+      }
+    }
+    updateButtons();
+  }
 
-  function updateVotePanel() { const room=getRoom(); if(room?.phase!=="vote") return; const alive=getAlivePlayers(); const grid=$("voteGrid"); if(state.mode==="firebase"){const me=getPlayers().find(p=>p.id===state.myId);const voted=me?.votedRound===currentRoundNumber();$("voteInfo").textContent=voted?"✓ Vote enregistré":"⚡ Tu n'as pas encore voté";$("voteInfo").className="badge "+(voted?"badge-ok":"badge-warn");show($("offlineVoteVoter"),false);grid.innerHTML=alive.filter(p=>p.id!==state.myId).map(p=>`<div class="vote-item"><div><div class="vote-name">${escHtml(p.nickname)}</div><div class="vote-sub">${p.alive?"En jeu":"Éliminé"}</div></div><button class="btn btn-red btn-sm" data-vote="${escHtml(p.id)}" ${(!me?.alive||voted)?"disabled":""}>Voter</button></div>`).join("");}else{const voter=offlineCurrentVoter();const done=!voter;$("voteInfo").textContent=done?"✓ Tous ont voté":`🗳 C'est au tour de : ${voter?.nickname}`;$("voteInfo").className="badge "+(done?"badge-ok":"badge-warn");show($("offlineVoteVoter"),!done);if(!done)$("offlineVoteVoter").textContent=`Passe le téléphone à ${voter.nickname}`;grid.innerHTML=done?`<div class="small muted">En attente du résultat…</div>`:alive.filter(p=>p.id!==voter.id).map(p=>`<div class="vote-item"><div><div class="vote-name">${escHtml(p.nickname)}</div><div class="vote-sub">${p.alive?"En jeu":"Éliminé"}</div></div><button class="btn btn-red btn-sm" data-vote="${escHtml(p.id)}">Voter</button></div>`).join("");} [...grid.querySelectorAll("[data-vote]")].forEach(btn=>{btn.addEventListener("click",()=>{const id=btn.getAttribute("data-vote");if(state.mode==="firebase")firebaseCastVote(id);else offlineCastVote(id);});}); }
+  function updateDiscussionPanel() {
+    const room=getRoom(); if(room?.phase!=="discussion") return;
+    const order=room.current?.turnOrder||[]; const idx=room.current?.speakerIndex||0;
+    const curId=order[idx]||"";
+    setText("currentSpeakerText",curId?getPlayerName(curId):"—");
+    setText("speakerProgressBadge",`Tour ${Math.min(idx+1,Math.max(1,order.length))} / ${order.length||0}`);
+    $("discussionOrder").innerHTML=order.map((id,i)=>{
+      const cls = i===idx ? "active" : (i<idx ? "done-turn" : "");
+      return `<div class="turn-card ${cls}"><div class="t-num">${i<idx?"✓":"Passage "+(i+1)}</div><div class="t-name">${escHtml(getPlayerName(id))}</div></div>`;
+    }).join("");
+  }
 
-  function updateResultPanel() { const room=getRoom(); if(!room) return; setText("resultText",room.resultText||"—"); const wb=$("winnerBanner"); if(room.winner){show(wb,true);const isCivil=room.winner==="civils";wb.className=`winner-banner ${isCivil?"civils":"undercover"}`;wb.innerHTML=`<div class="winner-icon">${isCivil?"🏆":"🕵️"}</div><div><div class="winner-label">${isCivil?"Victoire des civils !":"Victoire des undercovers !"}</div><div class="winner-desc">${isCivil?"Tous les undercovers ont été démasqués.":"Les undercovers ont atteint une parité favorable."}</div></div>`;setText("resultSub","");}else{show(wb,false);setText("resultSub",room.resultText?"L'hôte peut lancer la manche suivante.":"");} }
+  function updateVotePanel() {
+    const room=getRoom(); if(room?.phase!=="vote") return;
+    const alive=getAlivePlayers(); const grid=$("voteGrid");
+    if(state.mode==="firebase"){
+      const me=getPlayers().find(p=>p.id===state.myId);
+      const voted=me?.votedRound===currentRoundNumber();
+      $("voteInfo").textContent=voted?"✓ Vote enregistré":"⚡ Tu n'as pas encore voté";
+      $("voteInfo").className="badge "+(voted?"badge-ok":"badge-warn");
+      show($("offlineVoteVoter"),false);
+      grid.innerHTML=alive.filter(p=>p.id!==state.myId).map(p=>`<div class="vote-item"><div><div class="vote-name">${escHtml(p.nickname)}</div><div class="vote-sub">${p.alive?"En jeu":"Éliminé"}</div></div><button class="btn btn-red btn-sm" data-vote="${escHtml(p.id)}" ${(!me?.alive||voted)?"disabled":""}>Voter</button></div>`).join("");
+    } else {
+      const voter=offlineCurrentVoter();
+      const done=!voter;
+      $("voteInfo").textContent=done?"✓ Tous ont voté":`🗳 C'est au tour de : ${voter?.nickname}`;
+      $("voteInfo").className="badge "+(done?"badge-ok":"badge-warn");
+      show($("offlineVoteVoter"),!done);
+      if(!done)$("offlineVoteVoter").textContent=`Passe le téléphone à ${voter.nickname}`;
+      grid.innerHTML=done?`<div class="small muted">En attente du résultat…</div>`:alive.filter(p=>p.id!==voter.id).map(p=>`<div class="vote-item"><div><div class="vote-name">${escHtml(p.nickname)}</div><div class="vote-sub">${p.alive?"En jeu":"Éliminé"}</div></div><button class="btn btn-red btn-sm" data-vote="${escHtml(p.id)}">Voter</button></div>`).join("");
+    }
+    [...grid.querySelectorAll("[data-vote]")].forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const id=btn.getAttribute("data-vote");
+        if(state.mode==="firebase") firebaseCastVote(id); else offlineCastVote(id);
+      });
+    });
+  }
 
-  function updateTimerVisual(timerId,progressId,endAt,totalSecs) { const ms=Math.max(0,(endAt||0)-Date.now());const totalMs=Math.max(1000,(totalSecs||1)*1000);const ratio=((totalMs-ms)/totalMs)*100;const total=Math.max(0,Math.ceil(ms/1000));const m=String(Math.floor(total/60)).padStart(2,"0");const s=String(total%60).padStart(2,"0");const el=$(timerId);el.textContent=`${m}:${s}`;el.classList.toggle("urgent",ms<=5000&&ms>0);$(progressId).style.width=`${Math.max(0,Math.min(100,ratio))}%`;const secLeft=Math.ceil(ms/1000);const room=getRoom();if(ms>0&&secLeft<=5&&secLeft>=1){const key=`${room?.phase}_${secLeft}`;if(audio.lastCountKey!==key){audio.lastCountKey=key;sfxCountdown();}}if(ms<=0)audio.lastCountKey=null; }
+  function updateResultPanel() {
+    const room=getRoom(); if(!room) return;
+    setText("resultText",room.resultText||"—");
+    const wb=$("winnerBanner");
+    if(room.winner){
+      show(wb,true);
+      const isCivil=room.winner==="civils";
+      wb.className=`winner-banner ${isCivil?"civils":"undercover"}`;
+      wb.innerHTML=`<div class="winner-icon">${isCivil?"🏆":"🕵️"}</div><div><div class="winner-label">${isCivil?"Victoire des civils !":"Victoire des undercovers !"}</div><div class="winner-desc">${isCivil?"Tous les undercovers ont été démasqués.":"Les undercovers ont atteint la parité."}</div></div>`;
+      setText("resultSub","");
+    } else {
+      show(wb,false);
+      setText("resultSub",room.resultText?"L'hôte peut lancer la manche suivante.":"");
+    }
+  }
 
-  function adjustTimer(type,delta) { const room=getRoom(); if(!room||!state.isHost) return; if(type==="discussion"&&room.phase==="discussion"&&room.current?.discussionEndsAt){const newEnd=room.current.discussionEndsAt+delta*1000;if(state.mode==="offline"){state.offline.current.discussionEndsAt=Math.max(Date.now()+2000,newEnd);persistOffline();}else if(state.mode==="firebase"&&state.db&&firebaseFns){firebaseFns.updateDoc(roomRef(state.roomId),{"current.discussionEndsAt":Math.max(Date.now()+2000,newEnd)});}toast("Timer ajusté",`${delta>0?"+":""}${delta}s`);} if(type==="vote"&&room.phase==="vote"&&room.current?.voteEndsAt){const newEnd=room.current.voteEndsAt+delta*1000;if(state.mode==="offline"){state.offline.current.voteEndsAt=Math.max(Date.now()+2000,newEnd);persistOffline();}else if(state.mode==="firebase"&&state.db&&firebaseFns){firebaseFns.updateDoc(roomRef(state.roomId),{"current.voteEndsAt":Math.max(Date.now()+2000,newEnd)});}toast("Timer ajusté",`${delta>0?"+":""}${delta}s`);} }
+  function updateTimerVisual(timerId,progressId,endAt,totalSecs) {
+    const ms=Math.max(0,(endAt||0)-Date.now());
+    const totalMs=Math.max(1000,(totalSecs||1)*1000);
+    const ratio=((totalMs-ms)/totalMs)*100;
+    const total=Math.max(0,Math.ceil(ms/1000));
+    const m=String(Math.floor(total/60)).padStart(2,"0");
+    const s=String(total%60).padStart(2,"0");
+    const el=$(timerId);
+    el.textContent=`${m}:${s}`;
+    el.classList.toggle("urgent",ms<=5000&&ms>0);
+    $(progressId).style.width=`${Math.max(0,Math.min(100,ratio))}%`;
+    const secLeft=Math.ceil(ms/1000);
+    const room=getRoom();
+    if(ms>0&&secLeft<=5&&secLeft>=1){
+      const key=`${room?.phase}_${secLeft}`;
+      if(audio.lastCountKey!==key){audio.lastCountKey=key;sfxCountdown();}
+    }
+    if(ms<=0)audio.lastCountKey=null;
+  }
+
+  function adjustTimer(type,delta) {
+    const room=getRoom(); if(!room||!state.isHost) return;
+    if(type==="discussion"&&room.phase==="discussion"&&room.current?.discussionEndsAt){
+      const newEnd=room.current.discussionEndsAt+delta*1000;
+      if(state.mode==="offline"){state.offline.current.discussionEndsAt=Math.max(Date.now()+2000,newEnd);persistOffline();}
+      else if(state.mode==="firebase"&&state.db&&firebaseFns){firebaseFns.updateDoc(roomRef(state.roomId),{"current.discussionEndsAt":Math.max(Date.now()+2000,newEnd)});}
+      toast("Timer ajusté",`${delta>0?"+":""}${delta}s`);
+    }
+    if(type==="vote"&&room.phase==="vote"&&room.current?.voteEndsAt){
+      const newEnd=room.current.voteEndsAt+delta*1000;
+      if(state.mode==="offline"){state.offline.current.voteEndsAt=Math.max(Date.now()+2000,newEnd);persistOffline();}
+      else if(state.mode==="firebase"&&state.db&&firebaseFns){firebaseFns.updateDoc(roomRef(state.roomId),{"current.voteEndsAt":Math.max(Date.now()+2000,newEnd)});}
+      toast("Timer ajusté",`${delta>0?"+":""}${delta}s`);
+    }
+  }
   window.adjustTimer=adjustTimer;
 
-  function startTick() { if(state.tickInterval) clearInterval(state.tickInterval); state.tickInterval=setInterval(()=>{const room=getRoom();if(!room) return;if(room.phase==="discussion")updateTimerVisual("discussionTimer","discussionProgress",room.current?.discussionEndsAt||0,room.settings?.discussionSeconds||90);if(room.phase==="vote")updateTimerVisual("voteTimer","voteProgress",room.current?.voteEndsAt||0,room.settings?.voteSeconds||45);if(state.mode==="firebase")autoPhaseProgress();else offlineAutoProgress();},250); }
+  function startTick() {
+    if(state.tickInterval) clearInterval(state.tickInterval);
+    state.tickInterval=setInterval(()=>{
+      const room=getRoom(); if(!room) return;
+      if(room.phase==="discussion") updateTimerVisual("discussionTimer","discussionProgress",room.current?.discussionEndsAt||0,room.settings?.discussionSeconds||90);
+      if(room.phase==="vote") updateTimerVisual("voteTimer","voteProgress",room.current?.voteEndsAt||0,room.settings?.voteSeconds||45);
+      if(state.mode==="firebase") autoPhaseProgress(); else offlineAutoProgress();
+      // Keep chat lock in sync
+      updateChatLock();
+    },250);
+  }
 
+  /* ─── FIREBASE ─── */
   let firebaseFns=null;
   async function initFirebase() { if(!FIREBASE_CONFIG.apiKey||!FIREBASE_CONFIG.projectId) return false; try{const[appM,fsM]=await Promise.all([import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"),import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js")]);const app=appM.initializeApp(FIREBASE_CONFIG);state.db=fsM.getFirestore(app);firebaseFns=fsM;state.firebaseReady=true;updateBadges();return true;}catch(e){console.error(e);return false;} }
   const roomRef=id=>firebaseFns.doc(state.db,"rooms",id);
@@ -1084,11 +1450,11 @@
 
   async function subscribeFirebaseRoom(roomId){if(state.unsubRoom)state.unsubRoom();if(state.unsubPlayers)state.unsubPlayers();show($("screen-setup"),false);show($("screen-room"),true);updateBadges();initChat();state.unsubRoom=firebaseFns.onSnapshot(roomRef(roomId),async snap=>{if(!snap.exists()){alert("Salle supprimée.");location.href=location.pathname;return;}state.roomData=snap.data();state.isHost=state.roomData.hostId===state.myId;updateRoomHeader();renderPlayers();await fetchMyPrivateWord();autoPhaseProgress();});state.unsubPlayers=firebaseFns.onSnapshot(playersCol(roomId),qsnap=>{state.players=qsnap.docs.map(d=>d.data()).sort((a,b)=>(a.joinedAt||0)-(b.joinedAt||0));renderPlayers();updateRoomHeader();});startTick();}
 
-  async function fetchMyPrivateWord(){if(state.mode!=="firebase"||!state.roomId) return;const room=getRoom();if(!["reveal","discussion","vote","result"].includes(room?.phase)){state.myPrivateWord=null;updateRevealPanel();return;}const snap=await firebaseFns.getDoc(privateRef(state.roomId,state.mySecret));if(snap.exists()){const d=snap.data();if(d.roundNumber===currentRoundNumber())state.myPrivateWord=d;}updateRevealPanel();}
+  async function fetchMyPrivateWord(){if(state.mode!=="firebase"||!state.roomId) return;const room=getRoom();if(!["reveal","discussion","vote","result"].includes(room?.phase)){state.myPrivateWord=null;return;}const snap=await firebaseFns.getDoc(privateRef(state.roomId,state.mySecret));if(snap.exists()){const d=snap.data();if(d.roundNumber===currentRoundNumber())state.myPrivateWord=d;}updateRevealPanel();}
 
-  async function firebaseStartRound(){const room=getRoom();if(!state.isHost||!room||room.phase!=="lobby") return;const alive=getAlivePlayers();const ucCount=clamp(Number(room.settings.undercoverCount||1),1,Math.max(1,alive.length-1));if(alive.length<ucCount+2) return alert("Pas assez de joueurs.");const pairIndex=pickPairIndex(),pair=WORD_PAIRS[pairIndex];const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);const roundNumber=(room.roundNumber||0)+1;const batch=firebaseFns.writeBatch(state.db);batch.update(roomRef(state.roomId),{phase:"reveal",roundNumber,updatedAt:firebaseFns.serverTimestamp(),winner:"",resultText:"",current:{...room.current,aliveIds:alive.map(p=>p.id),pairIndex,undercoverIds,civilianWord:pair.a,discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0}});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{...p,revealedRound:p.alive?-999999:p.revealedRound,votedRound:-1},{merge:true});for(const p of alive)batch.set(privateRef(state.roomId,p.secretId),{roundNumber,pairIndex,word:undercoverIds.includes(p.id)?pair.b:pair.a,playerId:p.id,seen:false});await batch.commit();setStatus("Révélation","Chaque joueur voit son mot puis confirme qu'il l'a bien vu.");toast("Manche "+roundNumber+" lancée");}
+  async function firebaseStartRound(){const room=getRoom();if(!state.isHost||!room||room.phase!=="lobby") return;const alive=getAlivePlayers();const ucCount=clamp(Number(room.settings.undercoverCount||1),1,Math.max(1,alive.length-1));if(alive.length<ucCount+2) return alert("Pas assez de joueurs.");const pairIndex=pickPairIndex(),pair=WORD_PAIRS[pairIndex];const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);const roundNumber=(room.roundNumber||0)+1;const batch=firebaseFns.writeBatch(state.db);batch.update(roomRef(state.roomId),{phase:"reveal",roundNumber,updatedAt:firebaseFns.serverTimestamp(),winner:"",resultText:"",current:{...room.current,aliveIds:alive.map(p=>p.id),pairIndex,undercoverIds,civilianWord:pair.a,discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0}});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{...p,revealedRound:p.alive?-999999:p.revealedRound,votedRound:-1},{merge:true});for(const p of alive)batch.set(privateRef(state.roomId,p.secretId),{roundNumber,pairIndex,word:undercoverIds.includes(p.id)?pair.b:pair.a,playerId:p.id,seen:false});await batch.commit();toast("Manche "+roundNumber+" lancée");}
 
-  async function firebaseMarkSeen(){const room=getRoom();if(!room||room.phase!=="reveal"||hasSeenCurrentWord()) return;await firebaseFns.setDoc(playerRef(state.roomId,state.myId),{revealedRound:currentRoundNumber()},{merge:true});await firebaseFns.setDoc(privateRef(state.roomId,state.mySecret),{seen:true},{merge:true});sfxSeen();toast("Mot vu","Tu es prêt !");}
+  async function firebaseMarkSeen(){const room=getRoom();if(!room||room.phase!=="reveal"||hasSeenCurrentWord()) return;await firebaseFns.setDoc(playerRef(state.roomId,state.myId),{revealedRound:currentRoundNumber()},{merge:true});await firebaseFns.setDoc(privateRef(state.roomId,state.mySecret),{seen:true},{merge:true});sfxSeen();hideRevealOverlay();toast("Mot vu","Tu es prêt !");}
 
   async function firebaseStartDiscussion(){const room=getRoom();if(!state.isHost||room.phase!=="reveal") return;const alive=getAlivePlayers();if(!alive.every(p=>p.revealedRound===currentRoundNumber())) return;const end=Date.now()+Number(room.settings.discussionSeconds||90)*1000;const turnOrder=buildTurnOrder(alive);await firebaseFns.updateDoc(roomRef(state.roomId),{phase:"discussion",updatedAt:firebaseFns.serverTimestamp(),"current.discussionEndsAt":end,"current.turnOrder":turnOrder,"current.speakerIndex":0});toast("Discussion lancée","Premier : "+getPlayerName(turnOrder[0]));}
 
@@ -1100,19 +1466,34 @@
 
   async function firebaseResolveVotes(){const room=getRoom();if(!state.isHost||room.phase!=="vote") return;const votesSnap=await firebaseFns.getDocs(votesCol(state.roomId));const votes=votesSnap.docs.map(d=>d.data()).filter(v=>v.roundNumber===currentRoundNumber());const alive=getAlivePlayers();const tally={};for(const p of alive)tally[p.id]=0;for(const v of votes){if(v.targetId in tally)tally[v.targetId]++;}const maxV=Math.max(0,...Object.values(tally));const top=Object.keys(tally).filter(id=>tally[id]===maxV);const elimId=top.length?top[randInt(top.length)]:null;const elimPlayer=getPlayers().find(p=>p.id===elimId);const ucIds=room.current?.undercoverIds||[];const batch=firebaseFns.writeBatch(state.db);if(elimId)batch.set(playerRef(state.roomId,elimId),{alive:false},{merge:true});const survivors=getPlayers().map(p=>p.id===elimId?{...p,alive:false}:p).filter(p=>p.alive);const aliveUC=survivors.filter(p=>ucIds.includes(p.id)).length;const aliveCivil=survivors.length-aliveUC;let winner="";if(aliveUC===0)winner="civils";else if(aliveUC>=aliveCivil)winner="undercover";const resultText=elimPlayer?`${elimPlayer.nickname} a été éliminé.`:"Personne n'a été éliminé.";batch.update(roomRef(state.roomId),{phase:"result",updatedAt:firebaseFns.serverTimestamp(),resultText,winner,"current.aliveIds":survivors.map(p=>p.id),"current.turnOrder":[],"current.speakerIndex":0,...(elimId?{"current.eliminatedIds":firebaseFns.arrayUnion(elimId)}:{})});await batch.commit();toast("Résultat prêt");}
 
-  async function firebaseNextRound(){const room=getRoom();if(!state.isHost||room.phase!=="result"||room.winner) return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches","Toutes les manches ont été jouées !");return;}const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));batch.update(roomRef(state.roomId),{phase:"lobby",updatedAt:firebaseFns.serverTimestamp(),resultText:"","current.discussionEndsAt":0,"current.voteEndsAt":0,"current.turnOrder":[],"current.speakerIndex":0});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{votedRound:-1},{merge:true});await batch.commit();toast("Retour au lobby");}
+  async function firebaseNextRound(){const room=getRoom();if(!state.isHost||room.phase!=="result"||room.winner) return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches");return;}const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));batch.update(roomRef(state.roomId),{phase:"lobby",updatedAt:firebaseFns.serverTimestamp(),resultText:"","current.discussionEndsAt":0,"current.voteEndsAt":0,"current.turnOrder":[],"current.speakerIndex":0});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{votedRound:-1},{merge:true});await batch.commit();toast("Retour au lobby");}
 
   async function firebaseResetGame(){if(!state.isHost) return;const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1,revealedRound:-1},{merge:true});batch.update(roomRef(state.roomId),{phase:"lobby",roundNumber:0,winner:"",resultText:"",updatedAt:firebaseFns.serverTimestamp(),current:{aliveIds:getPlayers().map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],civilianWord:"",discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0}});await batch.commit();toast("Partie réinitialisée");}
 
   function autoPhaseProgress(){if(state.mode!=="firebase"||!state.isHost) return;const room=getRoom();if(!room) return;if(room.phase==="discussion"&&room.current?.discussionEndsAt&&Date.now()>=room.current.discussionEndsAt)firebaseStartVote();if(room.phase==="vote"&&room.current?.voteEndsAt&&Date.now()>=room.current.voteEndsAt)firebaseResolveVotes();}
 
-  function createOfflineRoom(nickname,settings){state.offline={mode:"offline",roomId:"LOCAL",hostId:state.myId,phase:"lobby",roundNumber:0,winner:"",resultText:"",settings,players:[{id:state.myId,secretId:state.mySecret,nickname,host:true,alive:true,joinedAt:now(),revealedRound:-1,votedRound:-1}],current:{aliveIds:[state.myId],eliminatedIds:[],pairIndex:-1,undercoverIds:[],discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0},privateWords:{},votes:{},offlineRevealQueue:[],offlineRevealIndex:0,offlineVoteQueue:[],offlineVoteIndex:0};state.mode="offline";state.roomId="LOCAL";state.myName=nickname;state.isHost=true;state.myPrivateWord=null;persistOffline();mountOfflineRoom();toast("Partie locale créée");}
+  /* ─── OFFLINE ─── */
+  function createOfflineRoom(nickname,settings){
+    state.offline={mode:"offline",roomId:"LOCAL",hostId:state.myId,phase:"lobby",roundNumber:0,winner:"",resultText:"",settings,
+      players:[{id:state.myId,secretId:state.mySecret,nickname,host:true,alive:true,joinedAt:now(),revealedRound:-1,votedRound:-1}],
+      current:{aliveIds:[state.myId],eliminatedIds:[],pairIndex:-1,undercoverIds:[],discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0},
+      privateWords:{},votes:{},offlineRevealQueue:[],offlineRevealIndex:0,offlineVoteQueue:[],offlineVoteIndex:0,chatMessages:[]};
+    state.mode="offline";state.roomId="LOCAL";state.myName=nickname;state.isHost=true;state.myPrivateWord=null;
+    persistOffline();mountOfflineRoom();toast("Partie locale créée");
+  }
   const persistOffline=()=>saveLocal(STORAGE.offline,state.offline);
+
   function loadOfflineRoom(){state.offline=loadLocal(STORAGE.offline);if(state.offline){state.mode="offline";state.roomId=state.offline.roomId||"LOCAL";state.isHost=state.offline.hostId===state.myId;state.myName=state.offline.players?.find(p=>p.id===state.myId)?.nickname||"";}}
-  function mountOfflineRoom(){show($("screen-setup"),false);show($("screen-room"),true);updateBadges();renderPlayers();updateRoomHeader();initChat();startTick();}
+
+  function mountOfflineRoom(){show($("screen-setup"),false);show($("screen-room"),true);updateBadges();renderPlayers();updateRoomHeader();initChat();
+    // Restore chat from saved state
+    if(state.offline?.chatMessages?.length) renderChat();
+    startTick();
+  }
+
   function offlineAddPlayer(name){if(!state.isHost||!state.offline) return;const clean=String(name||"").trim();if(!clean) return;state.offline.players.push({id:uid("p"),secretId:uid("s"),nickname:clean,host:false,alive:true,joinedAt:now(),revealedRound:-1,votedRound:-1});state.offline.current.aliveIds=state.offline.players.filter(p=>p.alive).map(p=>p.id);persistOffline();renderPlayers();updateRoomHeader();toast("Joueur ajouté",clean);}
 
-  function offlineStartRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="lobby") return;const alive=room.players.filter(p=>p.alive);const ucCount=clamp(Number(room.settings.undercoverCount||1),1,Math.max(1,alive.length-1));if(alive.length<ucCount+2) return alert("Pas assez de joueurs.");const pairIndex=pickPairIndex(),pair=WORD_PAIRS[pairIndex];const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);room.roundNumber+=1;room.phase="reveal";room.winner="";room.resultText="";room.current.pairIndex=pairIndex;room.current.undercoverIds=undercoverIds;room.current.aliveIds=alive.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;room.privateWords={};room.votes={};room.offlineRevealQueue=alive.map(p=>p.id);room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.votedRound=-1;p.revealedRound=p.alive?-999999:p.revealedRound;}for(const p of alive)room.privateWords[p.id]={roundNumber:room.roundNumber,word:undercoverIds.includes(p.id)?pair.b:pair.a,playerId:p.id,seen:false};state.myPrivateWord=room.privateWords[room.offlineRevealQueue[0]]||null;persistOffline();renderPlayers();updateRoomHeader();toast(`Manche ${room.roundNumber} lancée`);sfxReveal();}
+  function offlineStartRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="lobby") return;const alive=room.players.filter(p=>p.alive);const ucCount=clamp(Number(room.settings.undercoverCount||1),1,Math.max(1,alive.length-1));if(alive.length<ucCount+2) return alert("Pas assez de joueurs (min 3).");const pairIndex=pickPairIndex(),pair=WORD_PAIRS[pairIndex];const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);room.roundNumber+=1;room.phase="reveal";room.winner="";room.resultText="";room.current.pairIndex=pairIndex;room.current.undercoverIds=undercoverIds;room.current.aliveIds=alive.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;room.privateWords={};room.votes={};room.offlineRevealQueue=alive.map(p=>p.id);room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;room.chatMessages=[];for(const p of room.players){p.votedRound=-1;p.revealedRound=p.alive?-999999:p.revealedRound;}for(const p of alive)room.privateWords[p.id]={roundNumber:room.roundNumber,word:undercoverIds.includes(p.id)?pair.b:pair.a,playerId:p.id,seen:false};state.myPrivateWord=room.privateWords[room.offlineRevealQueue[0]]||null;persistOffline();renderPlayers();updateRoomHeader();toast(`Manche ${room.roundNumber} lancée`);}
 
   const offlineCurrentRevealPlayer=()=>{const room=state.offline;if(!room||room.phase!=="reveal") return null;const id=room.offlineRevealQueue[room.offlineRevealIndex];return room.players.find(p=>p.id===id)||null;};
 
@@ -1130,19 +1511,24 @@
 
   function offlineResolveVotes(){const room=state.offline;if(!room||!state.isHost||room.phase!=="vote") return;const alive=room.players.filter(p=>p.alive);const tally={};for(const p of alive)tally[p.id]=0;Object.values(room.votes).forEach(v=>{if(v.targetId in tally)tally[v.targetId]++;});const maxV=Math.max(0,...Object.values(tally));const top=Object.keys(tally).filter(id=>tally[id]===maxV);const elimId=top.length?top[randInt(top.length)]:null;const elimPlayer=room.players.find(p=>p.id===elimId);const ucIds=room.current.undercoverIds||[];if(elimPlayer)elimPlayer.alive=false;const survivors=room.players.filter(p=>p.alive);const aliveUC=survivors.filter(p=>ucIds.includes(p.id)).length;const aliveCivil=survivors.length-aliveUC;room.phase="result";room.resultText=elimPlayer?`${elimPlayer.nickname} a été éliminé.`:"Personne n'a été éliminé.";if(aliveUC===0)room.winner="civils";else if(aliveUC>=aliveCivil)room.winner="undercover";else room.winner="";room.current.aliveIds=survivors.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;if(elimId)room.current.eliminatedIds.push(elimId);persistOffline();renderPlayers();updateRoomHeader();toast("Résultat prêt");}
 
-  function offlineNextRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="result"||room.winner) return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches","Toutes les manches sont jouées !");return;}room.phase="lobby";room.resultText="";room.votes={};room.current.discussionEndsAt=0;room.current.voteEndsAt=0;room.current.turnOrder=[];room.current.speakerIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players)p.votedRound=-1;persistOffline();updateRoomHeader();toast("Retour au lobby");}
+  function offlineNextRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="result"||room.winner) return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches");return;}room.phase="lobby";room.resultText="";room.votes={};room.current.discussionEndsAt=0;room.current.voteEndsAt=0;room.current.turnOrder=[];room.current.speakerIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players)p.votedRound=-1;persistOffline();updateRoomHeader();toast("Retour au lobby");}
 
-  function offlineResetGame(){const room=state.offline;if(!room||!state.isHost) return;room.phase="lobby";room.roundNumber=0;room.winner="";room.resultText="";room.current={aliveIds:room.players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0};room.privateWords={};room.votes={};room.offlineRevealQueue=[];room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.alive=true;p.votedRound=-1;p.revealedRound=-1;}persistOffline();renderPlayers();updateRoomHeader();toast("Partie réinitialisée");}
+  function offlineResetGame(){const room=state.offline;if(!room||!state.isHost) return;room.phase="lobby";room.roundNumber=0;room.winner="";room.resultText="";room.current={aliveIds:room.players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0};room.privateWords={};room.votes={};room.offlineRevealQueue=[];room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;room.chatMessages=[];for(const p of room.players){p.alive=true;p.votedRound=-1;p.revealedRound=-1;}persistOffline();renderPlayers();updateRoomHeader();toast("Partie réinitialisée");}
 
   function offlineAutoProgress(){const room=state.offline;if(!room||!state.isHost) return;if(room.phase==="discussion"&&room.current.discussionEndsAt&&now()>=room.current.discussionEndsAt)offlineStartVote();if(room.phase==="vote"&&room.current.voteEndsAt&&now()>=room.current.voteEndsAt)offlineResolveVotes();}
 
+  /* ─── EVENT LISTENERS ─── */
   $("btnStartAudio").addEventListener("click",async()=>{await enableAudio();toast("Ambiance activée");});
   $("soundEnabled").addEventListener("change",updateAudioSettings);
   $("soundVolume").addEventListener("input",updateAudioSettings);
   $("btnCopyLink").addEventListener("click",()=>{navigator.clipboard.writeText($("shareLinkInput").value).catch(()=>{});sfxPhase();toast("Lien copié !");});
-  $("btnCreateOnline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");if(!state.firebaseReady)return alert("Firebase non disponible.");const settings={discussionSeconds:clamp(Number($("createDiscussion").value||90),20,600),voteSeconds:clamp(Number($("createVote").value||45),10,300),undercoverCount:clamp(Number($("createUndercover").value||1),1,4),roundsTotal:clamp(Number($("createRounds").value||3),1,20)};try{await createFirebaseRoom(nickname,settings);}catch(e){alert(e.message||"Erreur de création de salle.");}});
+
+  $("btnCreateOnline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");if(!state.firebaseReady)return alert("Firebase non disponible.");const settings={discussionSeconds:clamp(Number($("createDiscussion").value||90),20,600),voteSeconds:clamp(Number($("createVote").value||45),10,300),undercoverCount:clamp(Number($("createUndercover").value||1),1,4),roundsTotal:clamp(Number($("createRounds").value||3),1,20)};try{await createFirebaseRoom(nickname,settings);}catch(e){alert(e.message||"Erreur.");}});
+
   $("btnCreateOffline").addEventListener("click",async()=>{await enableAudio();const nickname=$("createNickname").value.trim();if(!nickname)return alert("Entre un pseudo.");const settings={discussionSeconds:clamp(Number($("createDiscussion").value||90),20,600),voteSeconds:clamp(Number($("createVote").value||45),10,300),undercoverCount:clamp(Number($("createUndercover").value||1),1,4),roundsTotal:clamp(Number($("createRounds").value||3),1,20)};createOfflineRoom(nickname,settings);});
-  $("btnJoinRoom").addEventListener("click",async()=>{await enableAudio();const roomId=$("joinRoomCode").value.trim().toUpperCase();const nickname=$("joinNickname").value.trim();if(!roomId)return alert("Entre le code de la salle.");if(!nickname)return alert("Entre un pseudo.");if(!state.firebaseReady)return alert("Firebase non disponible.");try{await joinFirebaseRoom(roomId,nickname);}catch(e){alert(e.message||"Erreur pour rejoindre la salle.");}});
+
+  $("btnJoinRoom").addEventListener("click",async()=>{await enableAudio();const roomId=$("joinRoomCode").value.trim().toUpperCase();const nickname=$("joinNickname").value.trim();if(!roomId)return alert("Entre le code de la salle.");if(!nickname)return alert("Entre un pseudo.");if(!state.firebaseReady)return alert("Firebase non disponible.");try{await joinFirebaseRoom(roomId,nickname);}catch(e){alert(e.message||"Erreur.");}});
+
   $("btnStartRound").addEventListener("click",async()=>{await enableAudio();if(state.mode==="firebase")firebaseStartRound();else offlineStartRound();});
   $("btnSeenWord").addEventListener("click",async()=>{await enableAudio();if(state.mode==="firebase")firebaseMarkSeen();else offlineMarkSeen();});
   $("btnForceDiscussion").addEventListener("click",async()=>{await enableAudio();if(state.mode==="firebase")firebaseStartDiscussion();else offlineStartDiscussion();});
