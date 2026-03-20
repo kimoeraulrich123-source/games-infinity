@@ -597,6 +597,7 @@
 <div id="toastWrap" class="toast-wrap"></div>
 
 <script>
+"use strict";
 document.querySelectorAll('details').forEach(d=>{const arrow=d.querySelector('.summary-arrow');if(!arrow)return;d.addEventListener('toggle',()=>arrow.style.transform=d.open?'rotate(180deg)':'');});
 
 const FIREBASE_CONFIG={apiKey:"AIzaSyC0Z78enCaHs2Ao3HQdSGAMNxHBbHdGchs",authDomain:"sous-cacher.firebaseapp.com",projectId:"sous-cacher",storageBucket:"sous-cacher.firebasestorage.app",messagingSenderId:"107778956752",appId:"1:107778956752:web:8858751ba4e8d7c5ffedd5"};
@@ -607,7 +608,6 @@ const FIREBASE_CONFIG={apiKey:"AIzaSyC0Z78enCaHs2Ao3HQdSGAMNxHBbHdGchs",authDoma
 const WORD_PAIRS_BY_THEME = {
 
 "🎬 Films & Cinéma": [
-  // Films spécifiques / proches
   {a:"Titanic",b:"Naufrage"},{a:"Avatar",b:"Pandora"},{a:"Jurassic Park",b:"Jurassic World"},
   {a:"Le Parrain",b:"Scarface"},{a:"Star Wars",b:"Star Trek"},{a:"Harry Potter",b:"Le Seigneur des Anneaux"},
   {a:"Batman",b:"Superman"},{a:"Iron Man",b:"Captain America"},{a:"Toy Story",b:"Shrek"},
@@ -627,7 +627,6 @@ const WORD_PAIRS_BY_THEME = {
   {a:"Friends",b:"How I Met Your Mother"},{a:"Stranger Things",b:"Dark"},
   {a:"La Casa de Papel",b:"Lupin"},{a:"Peaky Blinders",b:"Boardwalk Empire"},
   {a:"Black Mirror",b:"Westworld"},{a:"The Mandalorian",b:"Andor"},
-  // Genres / termes cinéma
   {a:"Blockbuster",b:"Film indépendant"},{a:"Comédie romantique",b:"Drame sentimental"},
   {a:"Thriller",b:"Film policier"},{a:"Film d'horreur",b:"Film fantastique"},
   {a:"Documentaire",b:"Reportage"},{a:"Sequel",b:"Prequel"},
@@ -645,7 +644,7 @@ const WORD_PAIRS_BY_THEME = {
   {a:"Scénario",b:"Synopsis"},{a:"Storyboard",b:"Animatique"},
   {a:"Spin-off",b:"Crossover"},{a:"Flashback",b:"Flash-forward"},
   {a:"Saison",b:"Épisode"},{a:"Pilote (série)",b:"Finale (série)"},
-  {a:"Génériqued'ouverture",b:"Crédits de fin"},{a:"Voice-over",b:"Sous-titre"},
+  {a:"Générique d'ouverture",b:"Crédits de fin"},{a:"Voice-over",b:"Sous-titre"},
   {a:"Figurant",b:"Doublure"},{a:"Cascadeur",b:"Acrobate de cinéma"},
   {a:"Travelling",b:"Panoramique"},{a:"Fondu au noir",b:"Transition"},
   {a:"Maquillage FX",b:"Prothèses cinéma"}
@@ -688,7 +687,6 @@ const WORD_PAIRS_BY_THEME = {
 ],
 
 "🌍 Pays & Lieux": [
-  // Pays proches culturellement
   {a:"France",b:"Belgique"},{a:"Espagne",b:"Portugal"},{a:"Italie",b:"Grèce"},
   {a:"Allemagne",b:"Autriche"},{a:"Suède",b:"Norvège"},{a:"Japon",b:"Corée du Sud"},
   {a:"Chine",b:"Taiwan"},{a:"Inde",b:"Pakistan"},{a:"Brésil",b:"Argentine"},
@@ -697,7 +695,6 @@ const WORD_PAIRS_BY_THEME = {
   {a:"Australie",b:"Nouvelle-Zélande"},{a:"Turquie",b:"Iran"},
   {a:"Suisse",b:"Luxembourg"},{a:"Irlande",b:"Écosse"},
   {a:"Thaïlande",b:"Vietnam"},{a:"Pérou",b:"Bolivie"},
-  // Villes proches
   {a:"Paris",b:"Lyon"},{a:"Tokyo",b:"Osaka"},{a:"New York",b:"Los Angeles"},
   {a:"Londres",b:"Manchester"},{a:"Madrid",b:"Barcelone"},
   {a:"Rome",b:"Milan"},{a:"Berlin",b:"Munich"},{a:"São Paulo",b:"Rio de Janeiro"},
@@ -714,7 +711,6 @@ const WORD_PAIRS_BY_THEME = {
   {a:"Séoul",b:"Busan"},{a:"Hong Kong",b:"Macao"},
   {a:"Singapour",b:"Kuala Lumpur"},{a:"Bangkok",b:"Hanoï"},
   {a:"Mexico",b:"Guadalajara"},{a:"Jakarta",b:"Manille"},
-  // Lieux symboliques / monuments
   {a:"Tour Eiffel",b:"Tour de Pise"},{a:"Big Ben",b:"Tour de Londres"},
   {a:"Colisée",b:"Acropole"},{a:"Pyramides de Gizeh",b:"Sphinx"},
   {a:"Taj Mahal",b:"Alhambra"},{a:"Machu Picchu",b:"Angkor Vat"},
@@ -725,7 +721,6 @@ const WORD_PAIRS_BY_THEME = {
   {a:"Versailles",b:"Schönbrunn"},{a:"Buckingham",b:"Élysée"},
   {a:"Hollywood",b:"Bollywood"},{a:"Silicon Valley",b:"Wall Street"},
   {a:"Broadway",b:"West End London"},{a:"Cannes",b:"Venise (festival)"},
-  // Lieux naturels
   {a:"Amazonie",b:"Congo (forêt)"},{a:"Sahara",b:"Désert de Gobi"},
   {a:"Himalaya",b:"Andes"},{a:"Alpes",b:"Pyrénées"},
   {a:"Nil",b:"Amazone (fleuve)"},{a:"Méditerranée",b:"Mer Rouge"},
@@ -734,18 +729,15 @@ const WORD_PAIRS_BY_THEME = {
   {a:"Fjord",b:"Canyon"},{a:"Récif corallien",b:"Atoll"}
 ],
 
-"🌟 Personnalités publiques & Historiques": [
-  // Scientifiques
+"🌟 Personnalités": [
   {a:"Einstein",b:"Oppenheimer"},{a:"Newton",b:"Galilée"},{a:"Darwin",b:"Mendel"},
   {a:"Curie (Marie)",b:"Curie (Pierre)"},{a:"Tesla (Nikola)",b:"Edison"},
   {a:"Hawking",b:"Feynman"},{a:"Pasteur",b:"Fleming"},
   {a:"Freud",b:"Jung"},{a:"Copernic",b:"Képler"},
-  // Artistes / Peintres
   {a:"Picasso",b:"Braque"},{a:"Van Gogh",b:"Gauguin"},{a:"Monet",b:"Manet"},
   {a:"Michel-Ange",b:"Raphaël"},{a:"Léonard de Vinci",b:"Botticelli"},
   {a:"Dalí",b:"Magritte"},{a:"Warhol",b:"Basquiat"},
   {a:"Frida Kahlo",b:"Diego Rivera"},{a:"Klimt",b:"Schiele"},
-  // Musiciens / Chanteurs
   {a:"Michael Jackson",b:"Prince"},{a:"Elvis Presley",b:"Chuck Berry"},
   {a:"The Beatles",b:"The Rolling Stones"},{a:"Madonna",b:"Beyoncé"},
   {a:"Bob Dylan",b:"Leonard Cohen"},{a:"David Bowie",b:"Freddie Mercury"},
@@ -754,22 +746,19 @@ const WORD_PAIRS_BY_THEME = {
   {a:"Eminem",b:"Jay-Z"},{a:"Rihanna",b:"Lady Gaga"},
   {a:"Taylor Swift",b:"Adele"},{a:"Daft Punk",b:"The Prodigy"},
   {a:"Bob Marley",b:"Tupac"},{a:"Nirvana (Kurt Cobain)",b:"Radiohead (Thom Yorke)"},
-  // Acteurs / Cinéastes
   {a:"Spielberg",b:"Scorsese"},{a:"Kubrick",b:"Hitchcock"},
   {a:"Tarantino",b:"Coen Brothers"},{a:"Nolan",b:"Fincher"},
   {a:"Chaplin",b:"Buster Keaton"},{a:"Marilyn Monroe",b:"Audrey Hepburn"},
   {a:"Marlon Brando",b:"James Dean"},{a:"Al Pacino",b:"Robert De Niro"},
   {a:"Tom Hanks",b:"Harrison Ford"},{a:"Meryl Streep",b:"Cate Blanchett"},
   {a:"Leonardo DiCaprio",b:"Brad Pitt"},{a:"Dwayne Johnson",b:"Vin Diesel"},
-  // Sportifs
   {a:"Pelé",b:"Maradona"},{a:"Cristiano Ronaldo",b:"Messi"},
   {a:"Mbappé",b:"Neymar"},{a:"Zidane",b:"Ronaldo (R9)"},
   {a:"Muhammad Ali",b:"Mike Tyson"},{a:"Serena Williams",b:"Steffi Graf"},
   {a:"Federer",b:"Nadal"},{a:"Michael Jordan",b:"LeBron James"},
   {a:"Usain Bolt",b:"Carl Lewis"},{a:"Michael Phelps",b:"Mark Spitz"},
   {a:"Tiger Woods",b:"Jack Nicklaus"},{a:"Ayrton Senna",b:"Michael Schumacher"},
-  {a:"Simone Biles",b:"Nadia Comaneci"},{a:"Muhammad Ali",b:"Floyd Mayweather"},
-  // Chefs d'état / Historiques
+  {a:"Simone Biles",b:"Nadia Comaneci"},
   {a:"Napoléon",b:"César"},{a:"Gandhi",b:"Mandela"},
   {a:"Martin Luther King",b:"Malcolm X"},{a:"Obama",b:"Biden"},
   {a:"Churchill",b:"De Gaulle"},{a:"Lincoln",b:"Washington"},
@@ -777,7 +766,6 @@ const WORD_PAIRS_BY_THEME = {
   {a:"Louis XIV",b:"Louis XVI"},{a:"Jeanne d'Arc",b:"Marie-Antoinette"},
   {a:"Mao Zedong",b:"Lénine"},{a:"Staline",b:"Hitler"},
   {a:"Nelson Mandela",b:"Desmond Tutu"},{a:"Che Guevara",b:"Fidel Castro"},
-  // Inventeurs / Entrepreneurs
   {a:"Elon Musk",b:"Jeff Bezos"},{a:"Steve Jobs",b:"Bill Gates"},
   {a:"Mark Zuckerberg",b:"Jack Dorsey"},{a:"Henry Ford",b:"Rockefeller"},
   {a:"Wright Brothers",b:"Lindbergh"}
@@ -977,7 +965,7 @@ const WORD_PAIRS_BY_THEME = {
   {a:"Penalty",b:"Coup franc"},{a:"Smash",b:"Ace (tennis)"},
   {a:"Médaille d'or",b:"Trophée"},{a:"Arbitre",b:"Juge de ligne"},
   {a:"Entraîneur",b:"Sélectionneur"},{a:"Transfert",b:"Recrutement"},
-  {a:"Stade",b:"Aréna"},{a:"Podium",b:"Cérémonie de remise"),
+  {a:"Stade",b:"Aréna"},{a:"Podium",b:"Cérémonie de remise"},
   {a:"Doping",b:"Contrôle antidopage"},{a:"Carton rouge",b:"Carton jaune"},
   {a:"Hors-jeu",b:"Faute"},{a:"Corner",b:"Touche"},
   {a:"Mêlée",b:"Touche (rugby)"},{a:"Try",b:"Transformation"},
@@ -1155,7 +1143,7 @@ const WORD_PAIRS_BY_THEME = {
 
 };
 
-// Flatten all pairs into a single array, keeping category info
+// Flatten all pairs
 const WORD_PAIRS = [];
 for(const [theme, pairs] of Object.entries(WORD_PAIRS_BY_THEME)) {
   for(const p of pairs) WORD_PAIRS.push({...p, theme});
@@ -1169,13 +1157,13 @@ const uid=pfx=>`${pfx||'id'}_${Math.random().toString(36).slice(2,10)}${Date.now
 const roomCode=()=>{const c="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let o="";for(let i=0;i<4;i++)o+=c[randInt(c.length)];return o;};
 const clamp=(n,mn,mx)=>Math.max(mn,Math.min(mx,n));
 const now=()=>Date.now();
-const saveLocal=(k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const saveLocal=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){console.warn("saveLocal error:",e);}};
 const loadLocal=(k,fb=null)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):fb;}catch{return fb;}};
 const escHtml=s=>String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
 const setText=(id,t)=>{const e=$(id);if(e)e.textContent=t;};
 const show=(el,yes=true)=>{if(!el)return;el.classList.toggle("hidden",!yes);};
 
-function toast(title,text=""){const wrap=$("toastWrap");const el=document.createElement("div");el.className="toast";el.innerHTML=`<div class="toast-t">${escHtml(title)}</div>${text?`<div class="toast-s">${escHtml(text)}</div>`:""}`;wrap.appendChild(el);setTimeout(()=>{el.style.opacity="0";el.style.transform="translateY(8px)";el.style.transition=".3s";},2800);setTimeout(()=>el.remove(),3200);}
+function toast(title,text=""){const wrap=$("toastWrap");if(!wrap)return;const el=document.createElement("div");el.className="toast";el.innerHTML=`<div class="toast-t">${escHtml(title)}</div>${text?`<div class="toast-s">${escHtml(text)}</div>`:""}`;wrap.appendChild(el);setTimeout(()=>{el.style.opacity="0";el.style.transform="translateY(8px)";el.style.transition=".3s";},2800);setTimeout(()=>el.remove(),3200);}
 
 function syncSetupValues(){setText("createDiscussionValue",`${$("createDiscussion").value}s`);setText("createVoteValue",`${$("createVote").value}s`);setText("createUndercoverValue",`${$("createUndercover").value}`);setText("createRoundsValue",`${$("createRounds").value}`);setText("createTurnsValue",`${$("createTurns").value}`);}
 function adjInput(id,delta){const el=$(id);if(!el)return;const min=Number(el.min)||1,max=Number(el.max)||9999;el.value=clamp(Number(el.value)+delta,min,max);syncSetupValues();}
@@ -1236,7 +1224,6 @@ function addSystemMessage(text){
   addChatMessageLocal(msg);
 }
 
-// Word announce with animation
 function addWordAnnounce(playerName, word){
   const msg={id:uid("m"),author:playerName,text:word,type:"word-announce",ts:Date.now(),playerId:""};
   addChatMessageLocal(msg);
@@ -1249,6 +1236,7 @@ function syncChatFromRoom(roomData){
 
 function renderChat(){
   const container=$("chatMessages");
+  if(!container)return;
   container.innerHTML=chatState.messages.map(m=>{
     if(m.type==="system")return`<div class="chat-msg system">${escHtml(m.text)}</div>`;
     if(m.type==="word-announce")return`<div class="chat-msg word-announce written-announce">✍️ <strong>${escHtml(m.author)}</strong> a écrit : <span class="msg-word">"${escHtml(m.text)}"</span></div>`;
@@ -1269,6 +1257,7 @@ function canChat(){
 function updateChatLock(){
   const room=getRoom();const phase=room?.phase||"lobby";
   const input=$("chatInput");const lockNotice=$("chatLockNotice");const sendBtn=$("btnSendChat");
+  if(!input||!lockNotice||!sendBtn)return;
   if(phase==="vote"){input.disabled=false;input.placeholder="Débattez librement...";lockNotice.classList.remove("active");sendBtn.disabled=false;}
   else if(phase==="discussion"){
     const allowed=canChat();
@@ -1284,11 +1273,9 @@ function handleChatSend(){
   const text=(input.value||"").trim();
   if(!text)return;
   input.value="";
-  // Send as word-announce in discussion, normal in vote
   const room=getRoom();
   if(room?.phase==="discussion"){
     addWordAnnounce(state.myName||"Joueur",text);
-    // Also send as real msg for firebase sync
     sendChatMessage(state.myName||"Joueur",text,"word-announce");
   }else{
     sendChatMessage(state.myName||"Joueur",text,"other");
@@ -1309,12 +1296,16 @@ function initChat(){
   chatState.messages=[];
   if(state.mode==="offline"&&state.offline){state.offline.chatMessages=[];persistOffline();}
   addSystemMessage("Partie lancée — bonne chance !");
-  $("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter")handleChatSend();});
-  $("btnSendChat").addEventListener("click",handleChatSend);
+  // FIX: Bind chat events only once
+  if(!state._chatBound){
+    state._chatBound=true;
+    $("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter")handleChatSend();});
+    $("btnSendChat").addEventListener("click",handleChatSend);
+  }
 }
 
 /* STATE */
-const state={mode:"offline",db:null,firebaseReady:false,roomId:null,myId:PROFILE.playerId,mySecret:PROFILE.secretId,isHost:false,myName:"",roomData:null,players:[],myPrivateWord:null,unsubRoom:null,unsubPlayers:null,tickInterval:null,offline:null,lastPhase:"",lastWinner:"",recentPairIndexes:[]};
+const state={mode:"offline",db:null,firebaseReady:false,roomId:null,myId:PROFILE.playerId,mySecret:PROFILE.secretId,isHost:false,myName:"",roomData:null,players:[],myPrivateWord:null,unsubRoom:null,unsubPlayers:null,tickInterval:null,offline:null,lastPhase:"",lastWinner:"",recentPairIndexes:[],_chatBound:false};
 
 const getRoom=()=>state.mode==="firebase"?state.roomData:state.offline;
 const getPlayers=()=>state.mode==="firebase"?state.players:(state.offline?.players||[]);
@@ -1391,6 +1382,7 @@ function executeSkipWordOffline(){
 
 function updateSkipBanner(){
   const room=getRoom();const banner=$("skipWordBanner");const btn=$("btnSkipWord");
+  if(!banner||!btn)return;
   if(!room||room.phase!=="reveal"){show(banner,false);return;}
   const skipCount=getSkipVoteCount();const threshold=getMajorityThreshold();const voted=hasVotedToSkip();
   show(banner,true);setText("skipVoteCount",`${skipCount} / ${threshold} votes pour changer`);
@@ -1422,12 +1414,14 @@ function maybePlayPhaseAudio(){
   if(!room.winner)state.lastWinner="";
 }
 
-function renderRoundDots(){const room=getRoom();const total=room?.settings?.roundsTotal||1;const cur=currentRoundNumber();const dots=$("roundsDots");dots.innerHTML="";for(let i=1;i<=total;i++){const d=document.createElement("div");d.className="round-dot"+(i<cur?" done":i===cur?" current":"");dots.appendChild(d);}setText("roundsLabel",`${cur} / ${total}`);}
+function renderRoundDots(){const room=getRoom();const total=room?.settings?.roundsTotal||1;const cur=currentRoundNumber();const dots=$("roundsDots");if(!dots)return;dots.innerHTML="";for(let i=1;i<=total;i++){const d=document.createElement("div");d.className="round-dot"+(i<cur?" done":i===cur?" current":"");dots.appendChild(d);}setText("roundsLabel",`${cur} / ${total}`);}
 
 function renderPlayers(){
   const players=getPlayers();const speakerId=currentSpeakerId();
   setText("aliveCount",players.filter(p=>p.alive).length);
-  $("playersList").innerHTML=players.map(p=>{
+  const list=$("playersList");
+  if(!list)return;
+  list.innerHTML=players.map(p=>{
     const tags=[];
     if(p.id===state.myId)tags.push("Toi");if(p.host)tags.push("Hôte");if(!p.alive)tags.push("Éliminé");
     if(p.id===speakerId&&getRoom()?.phase==="discussion")tags.push("🎙");
@@ -1452,10 +1446,10 @@ function updateButtons(){
   const order=room?.current?.turnOrder||[];const idx=room?.current?.speakerIndex||0;
   show($("btnStartRound"),state.isHost&&phase==="lobby"&&alive.length>=3);
   show($("btnForceDiscussion"),state.isHost&&phase==="reveal");
-  $("btnForceDiscussion").disabled=!allSeen;
+  if($("btnForceDiscussion"))$("btnForceDiscussion").disabled=!allSeen;
   const totalTurns=room?.settings?.turnsPerRound||order.length;
   show($("btnNextSpeaker"),state.isHost&&phase==="discussion");
-  $("btnNextSpeaker").disabled=idx>=Math.max(0,totalTurns-1);
+  if($("btnNextSpeaker"))$("btnNextSpeaker").disabled=idx>=Math.max(0,totalTurns-1);
   show($("btnForceVote"),state.isHost&&phase==="discussion");
   show($("btnResolveVote"),state.isHost&&phase==="vote");
   show($("btnNextRound"),state.isHost&&phase==="result"&&currentRoundNumber()<(room?.settings?.roundsTotal||1));
@@ -1468,7 +1462,8 @@ function updateButtons(){
 }
 
 function updateRoomHeader(){
-  const room=getRoom();const settings=room?.settings||{};
+  const room=getRoom();if(!room)return;
+  const settings=room.settings||{};
   setText("roomTitle",`Salle ${state.roomId||"—"}`);
   setText("roomMeta",state.mode==="firebase"?"Multijoueur en ligne":"Partie locale");
   setText("settingsUndercover",settings.undercoverCount||1);
@@ -1476,17 +1471,17 @@ function updateRoomHeader(){
   setText("settingsVote",`${settings.voteSeconds||45}s`);
   setText("settingsRounds",settings.roundsTotal||1);
   setText("settingsTurns",settings.turnsPerRound||3);
-  $("shareLinkInput").value=state.mode==="firebase"?`${location.origin}${location.pathname}?room=${encodeURIComponent(state.roomId||"")}`:`${location.origin}${location.pathname}`;
+  if($("shareLinkInput"))$("shareLinkInput").value=state.mode==="firebase"?`${location.origin}${location.pathname}?room=${encodeURIComponent(state.roomId||"")}`:`${location.origin}${location.pathname}`;
   show($("hostBadge"),state.isHost);
   setText("chatOnlineIndicator",state.mode==="firebase"?"En ligne":"Local");
   updateBadges();renderRoundDots();
-  updateStepUI(room?.phase||"lobby");
+  updateStepUI(room.phase||"lobby");
   updateRevealPanel();updateDiscussionPanel();updateVotePanel();updateResultPanel();
   updateButtons();updateChatLock();updatePeekButton();maybePlayPhaseAudio();
 }
 
 function updateRevealPanel(){
-  const room=getRoom();if(room?.phase!=="reveal"){hideRevealOverlay();return;}
+  const room=getRoom();if(!room||room.phase!=="reveal"){hideRevealOverlay();return;}
   if(state.mode==="firebase"){
     const alive=getAlivePlayers();const seen=alive.filter(p=>p.revealedRound===currentRoundNumber()).length;
     if(state.myPrivateWord&&!hasSeenCurrentWord())showRevealOverlay(state.myName,state.myPrivateWord.word,false,seen,alive.length);
@@ -1500,22 +1495,24 @@ function updateRevealPanel(){
 }
 
 function updateDiscussionPanel(){
-  const room=getRoom();if(room?.phase!=="discussion")return;
+  const room=getRoom();if(!room||room.phase!=="discussion")return;
   const order=room.current?.turnOrder||[];const idx=room.current?.speakerIndex||0;
   const totalTurns=room.settings?.turnsPerRound||order.length;
   const curId=order.length?order[idx%order.length]:"";
   setText("currentSpeakerText",curId?getPlayerName(curId):"—");
   setText("speakerProgressBadge",`Tour ${Math.min(idx+1,totalTurns)} / ${totalTurns}`);
   const currentPlayerIdx=order.length?(idx%order.length):-1;
-  $("discussionOrder").innerHTML=order.map((id,i)=>{
+  const orderEl=$("discussionOrder");
+  if(orderEl)orderEl.innerHTML=order.map((id,i)=>{
     const isCurrent=i===currentPlayerIdx;const isDone=!isCurrent&&(i<currentPlayerIdx||idx>=totalTurns);const cls=isCurrent?"active":(isDone?"done-turn":"");
     return`<div class="turn-card ${cls}"><div class="t-num">${isCurrent?"🎙 En cours":(isDone?"✓":"En attente")}</div><div class="t-name">${escHtml(getPlayerName(id))}</div></div>`;
   }).join("");
 }
 
 function updateVotePanel(){
-  const room=getRoom();if(room?.phase!=="vote")return;
+  const room=getRoom();if(!room||room.phase!=="vote")return;
   const alive=getAlivePlayers();const grid=$("voteGrid");
+  if(!grid)return;
   if(state.mode==="firebase"){
     const me=getPlayers().find(p=>p.id===state.myId);const voted=me?.votedRound===currentRoundNumber();
     $("voteInfo").textContent=voted?"✓ Vote enregistré":"⚡ Tu n'as pas encore voté";
@@ -1527,7 +1524,7 @@ function updateVotePanel(){
     $("voteInfo").textContent=done?"✓ Tous ont voté":`🗳 C'est au tour de : ${voter?.nickname}`;
     $("voteInfo").className="badge "+(done?"badge-ok":"badge-warn");
     show($("offlineVoteVoter"),!done);
-    if(!done)$("offlineVoteVoter").textContent=`Passe le téléphone à ${voter.nickname}`;
+    if(!done&&$("offlineVoteVoter"))$("offlineVoteVoter").textContent=`Passe le téléphone à ${voter.nickname}`;
     grid.innerHTML=done?`<div class="small muted">En attente du résultat…</div>`:alive.filter(p=>p.id!==voter.id).map(p=>`<div class="vote-item"><div><div class="vote-name">${escHtml(p.nickname)}</div><div class="vote-sub">${p.alive?"En jeu":"Éliminé"}</div></div><button class="btn btn-red btn-sm" data-vote="${escHtml(p.id)}">Voter</button></div>`).join("");
   }
   [...grid.querySelectorAll("[data-vote]")].forEach(btn=>{btn.addEventListener("click",()=>{const id=btn.getAttribute("data-vote");if(state.mode==="firebase")firebaseCastVote(id);else offlineCastVote(id);});});
@@ -1537,6 +1534,7 @@ function updateResultPanel(){
   const room=getRoom();if(!room)return;
   setText("resultText",room.resultText||"—");
   const wb=$("winnerBanner");
+  if(!wb)return;
   if(room.winner){
     show(wb,true);const isCivil=room.winner==="civils";
     wb.className=`winner-banner ${isCivil?"civils":"undercover"}`;
@@ -1551,8 +1549,9 @@ function updateTimerVisual(timerId,progressId,endAt,totalSecs){
   const ms=Math.max(0,(endAt||0)-Date.now());const totalMs=Math.max(1000,(totalSecs||1)*1000);
   const ratio=((totalMs-ms)/totalMs)*100;const total=Math.max(0,Math.ceil(ms/1000));
   const m=String(Math.floor(total/60)).padStart(2,"0");const s=String(total%60).padStart(2,"0");
-  const el=$(timerId);el.textContent=`${m}:${s}`;el.classList.toggle("urgent",ms<=5000&&ms>0);
-  $(progressId).style.width=`${Math.max(0,Math.min(100,ratio))}%`;
+  const el=$(timerId);if(!el)return;
+  el.textContent=`${m}:${s}`;el.classList.toggle("urgent",ms<=5000&&ms>0);
+  const prog=$(progressId);if(prog)prog.style.width=`${Math.max(0,Math.min(100,ratio))}%`;
   const secLeft=Math.ceil(ms/1000);const room=getRoom();
   if(ms>0&&secLeft<=5&&secLeft>=1){const key=`${room?.phase}_${secLeft}`;if(audio.lastCountKey!==key){audio.lastCountKey=key;sfxCountdown();}}
   if(ms<=0)audio.lastCountKey=null;
@@ -1632,17 +1631,46 @@ function createOfflineRoom(nickname,settings){
 }
 const persistOffline=()=>saveLocal(STORAGE.offline,state.offline);
 
-function loadOfflineRoom(){state.offline=loadLocal(STORAGE.offline);if(state.offline){state.mode="offline";state.roomId=state.offline.roomId||"LOCAL";state.isHost=state.offline.hostId===state.myId;state.myName=state.offline.players?.find(p=>p.id===state.myId)?.nickname||"";}}
+function loadOfflineRoom(){
+  state.offline=loadLocal(STORAGE.offline);
+  if(state.offline){
+    state.mode="offline";
+    state.roomId=state.offline.roomId||"LOCAL";
+    state.isHost=state.offline.hostId===state.myId;
+    // FIX: Properly restore myName from saved players
+    const me=state.offline.players?.find(p=>p.id===state.myId);
+    state.myName=me?.nickname||"";
+    // FIX: Restore myPrivateWord for peek functionality
+    if(state.offline.privateWords&&state.offline.privateWords[state.myId]){
+      state.myPrivateWord=state.offline.privateWords[state.myId];
+    }
+  }
+}
 
-function mountOfflineRoom(){show($("screen-setup"),false);show($("screen-room"),true);updateBadges();renderPlayers();updateRoomHeader();initChat();if(state.offline?.chatMessages?.length){chatState.messages=[...state.offline.chatMessages];renderChat();}startTick();}
+function mountOfflineRoom(){
+  show($("screen-setup"),false);
+  show($("screen-room"),true);
+  updateBadges();
+  renderPlayers();
+  updateRoomHeader();
+  initChat();
+  // FIX: Restore chat messages from saved state
+  if(state.offline?.chatMessages?.length){
+    chatState.messages=[];
+    for(const msg of state.offline.chatMessages){
+      addChatMessageLocal(msg);
+    }
+  }
+  startTick();
+}
 
 function offlineAddPlayer(name){if(!state.isHost||!state.offline)return;const clean=String(name||"").trim();if(!clean)return;state.offline.players.push({id:uid("p"),secretId:uid("s"),nickname:clean,host:false,alive:true,joinedAt:now(),revealedRound:-1,votedRound:-1});state.offline.current.aliveIds=state.offline.players.filter(p=>p.alive).map(p=>p.id);persistOffline();renderPlayers();updateRoomHeader();toast("Joueur ajouté",clean);}
 
-function offlineStartRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="lobby")return;const alive=room.players.filter(p=>p.alive);const ucCount=clamp(Number(room.settings.undercoverCount||1),1,Math.max(1,alive.length-1));if(alive.length<ucCount+2)return alert("Pas assez de joueurs (min 3).");const pairIndex=pickPairIndex(),pair=WORD_PAIRS[pairIndex];const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);room.roundNumber+=1;room.phase="reveal";room.winner="";room.resultText="";room.current.pairIndex=pairIndex;room.current.undercoverIds=undercoverIds;room.current.aliveIds=alive.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;room.current.skipVotes={};room.privateWords={};room.votes={};room.offlineRevealQueue=alive.map(p=>p.id);room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;room.chatMessages=[];for(const p of room.players){p.votedRound=-1;p.revealedRound=p.alive?-999999:p.revealedRound;}for(const p of alive)room.privateWords[p.id]={roundNumber:room.roundNumber,word:undercoverIds.includes(p.id)?pair.b:pair.a,playerId:p.id,seen:false};state.myPrivateWord=room.privateWords[room.offlineRevealQueue[0]]||null;persistOffline();renderPlayers();updateRoomHeader();toast(`Manche ${room.roundNumber} lancée`);}
+function offlineStartRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="lobby")return;const alive=room.players.filter(p=>p.alive);const ucCount=clamp(Number(room.settings.undercoverCount||1),1,Math.max(1,alive.length-1));if(alive.length<ucCount+2)return alert("Pas assez de joueurs (min 3).");const pairIndex=pickPairIndex(),pair=WORD_PAIRS[pairIndex];const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);room.roundNumber+=1;room.phase="reveal";room.winner="";room.resultText="";room.current.pairIndex=pairIndex;room.current.undercoverIds=undercoverIds;room.current.aliveIds=alive.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;room.current.skipVotes={};room.privateWords={};room.votes={};room.offlineRevealQueue=alive.map(p=>p.id);room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;room.chatMessages=[];for(const p of room.players){p.votedRound=-1;p.revealedRound=p.alive?-999999:p.revealedRound;}for(const p of alive)room.privateWords[p.id]={roundNumber:room.roundNumber,word:undercoverIds.includes(p.id)?pair.b:pair.a,playerId:p.id,seen:false};state.myPrivateWord=room.privateWords[room.offlineRevealQueue[0]]||null;persistOffline();chatState.messages=[];renderChat();renderPlayers();updateRoomHeader();toast(`Manche ${room.roundNumber} lancée`);}
 
-const offlineCurrentRevealPlayer=()=>{const room=state.offline;if(!room||room.phase!=="reveal")return null;const id=room.offlineRevealQueue[room.offlineRevealIndex];return room.players.find(p=>p.id===id)||null;};
+const offlineCurrentRevealPlayer=()=>{const room=state.offline;if(!room||room.phase!=="reveal")return null;const id=room.offlineRevealQueue?.[room.offlineRevealIndex];return room.players.find(p=>p.id===id)||null;};
 
-function offlineMarkSeen(){const room=state.offline;if(!room||room.phase!=="reveal")return;const player=offlineCurrentRevealPlayer();if(!player)return;player.revealedRound=room.roundNumber;room.privateWords[player.id].seen=true;room.offlineRevealIndex+=1;state.myPrivateWord=room.offlineRevealIndex<room.offlineRevealQueue.length?room.privateWords[room.offlineRevealQueue[room.offlineRevealIndex]]:null;persistOffline();renderPlayers();updateRoomHeader();sfxSeen();const next=offlineCurrentRevealPlayer();toast("Mot vu",next?`Passe à ${next.nickname}`:"Tous ont vu !");}
+function offlineMarkSeen(){const room=state.offline;if(!room||room.phase!=="reveal")return;const player=offlineCurrentRevealPlayer();if(!player)return;player.revealedRound=room.roundNumber;if(room.privateWords[player.id])room.privateWords[player.id].seen=true;room.offlineRevealIndex+=1;state.myPrivateWord=room.offlineRevealIndex<room.offlineRevealQueue.length?room.privateWords[room.offlineRevealQueue[room.offlineRevealIndex]]:null;persistOffline();renderPlayers();updateRoomHeader();sfxSeen();const next=offlineCurrentRevealPlayer();toast("Mot vu",next?`Passe à ${next.nickname}`:"Tous ont vu !");}
 
 function offlineStartDiscussion(){const room=state.offline;if(!room||!state.isHost||room.phase!=="reveal")return;const alive=room.players.filter(p=>p.alive);if(!alive.every(p=>p.revealedRound===room.roundNumber))return;room.phase="discussion";room.current.discussionEndsAt=now()+Number(room.settings.discussionSeconds||90)*1000;room.current.turnOrder=buildTurnOrder(alive);room.current.speakerIndex=0;room.current.skipVotes={};persistOffline();updateRoomHeader();toast("Discussion lancée",`Premier : ${getPlayerName(room.current.turnOrder[0])}`);}
 
@@ -1650,21 +1678,21 @@ function offlineNextSpeaker(){const room=state.offline;if(!room||!state.isHost||
 
 function offlineStartVote(){const room=state.offline;if(!room||!state.isHost||room.phase!=="discussion")return;room.phase="vote";room.current.voteEndsAt=now()+Number(room.settings.voteSeconds||45)*1000;room.votes={};room.offlineVoteQueue=room.players.filter(p=>p.alive).map(p=>p.id);room.offlineVoteIndex=0;room.current.turnOrder=[];room.current.speakerIndex=0;for(const p of room.players)p.votedRound=-1;persistOffline();updateRoomHeader();toast("Vote lancé");}
 
-const offlineCurrentVoter=()=>{const room=state.offline;if(!room||room.phase!=="vote")return null;const id=room.offlineVoteQueue[room.offlineVoteIndex];return room.players.find(p=>p.id===id)||null;};
+const offlineCurrentVoter=()=>{const room=state.offline;if(!room||room.phase!=="vote")return null;const id=room.offlineVoteQueue?.[room.offlineVoteIndex];return room.players.find(p=>p.id===id)||null;};
 
 function offlineCastVote(targetId){const room=state.offline;if(!room||room.phase!=="vote")return;const voter=offlineCurrentVoter();if(!voter||!voter.alive||voter.votedRound===room.roundNumber)return;if(targetId===voter.id)return;room.votes[voter.id]={playerId:voter.id,targetId,roundNumber:room.roundNumber};voter.votedRound=room.roundNumber;room.offlineVoteIndex+=1;persistOffline();renderPlayers();updateVotePanel();sfxVote();const nv=offlineCurrentVoter();toast("Vote enregistré",nv?`Passe à ${nv.nickname}`:"Tous ont voté !");}
 
-function offlineResolveVotes(){const room=state.offline;if(!room||!state.isHost||room.phase!=="vote")return;const alive=room.players.filter(p=>p.alive);const tally={};for(const p of alive)tally[p.id]=0;Object.values(room.votes).forEach(v=>{if(v.targetId in tally)tally[v.targetId]++;});const maxV=Math.max(0,...Object.values(tally));const top=Object.keys(tally).filter(id=>tally[id]===maxV);const elimId=top.length?top[randInt(top.length)]:null;const elimPlayer=room.players.find(p=>p.id===elimId);const ucIds=room.current.undercoverIds||[];if(elimPlayer)elimPlayer.alive=false;const survivors=room.players.filter(p=>p.alive);const aliveUC=survivors.filter(p=>ucIds.includes(p.id)).length;const aliveCivil=survivors.length-aliveUC;room.phase="result";room.resultText=elimPlayer?`${elimPlayer.nickname} a été éliminé.`:"Personne n'a été éliminé.";if(aliveUC===0)room.winner="civils";else if(aliveUC>=aliveCivil)room.winner="undercover";else room.winner="";room.current.aliveIds=survivors.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;if(elimId)room.current.eliminatedIds.push(elimId);persistOffline();renderPlayers();updateRoomHeader();toast("Résultat prêt");}
+function offlineResolveVotes(){const room=state.offline;if(!room||!state.isHost||room.phase!=="vote")return;const alive=room.players.filter(p=>p.alive);const tally={};for(const p of alive)tally[p.id]=0;Object.values(room.votes).forEach(v=>{if(v.targetId in tally)tally[v.targetId]++;});const maxV=Math.max(0,...Object.values(tally));const top=Object.keys(tally).filter(id=>tally[id]===maxV);const elimId=top.length?top[randInt(top.length)]:null;const elimPlayer=room.players.find(p=>p.id===elimId);const ucIds=room.current.undercoverIds||[];if(elimPlayer)elimPlayer.alive=false;const survivors=room.players.filter(p=>p.alive);const aliveUC=survivors.filter(p=>ucIds.includes(p.id)).length;const aliveCivil=survivors.length-aliveUC;room.phase="result";room.resultText=elimPlayer?`${elimPlayer.nickname} a été éliminé.`:"Personne n'a été éliminé.";if(aliveUC===0)room.winner="civils";else if(aliveUC>=aliveCivil)room.winner="undercover";else room.winner="";room.current.aliveIds=survivors.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;if(elimId){if(!room.current.eliminatedIds)room.current.eliminatedIds=[];room.current.eliminatedIds.push(elimId);}persistOffline();renderPlayers();updateRoomHeader();toast("Résultat prêt");}
 
 function offlineNextRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=="result")return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast("Fin des manches");return;}room.phase="lobby";room.winner="";room.resultText="";room.votes={};room.current.discussionEndsAt=0;room.current.voteEndsAt=0;room.current.turnOrder=[];room.current.speakerIndex=0;room.current.skipVotes={};room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.alive=true;p.votedRound=-1;}room.current.aliveIds=room.players.map(p=>p.id);room.current.eliminatedIds=[];rolesShownForRound=-1;closeRolesReveal();persistOffline();renderPlayers();updateRoomHeader();toast("Retour au lobby");}
 
-function offlineResetGame(){const room=state.offline;if(!room||!state.isHost)return;room.phase="lobby";room.roundNumber=0;room.winner="";room.resultText="";room.current={aliveIds:room.players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{}};room.privateWords={};room.votes={};room.offlineRevealQueue=[];room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;room.chatMessages=[];for(const p of room.players){p.alive=true;p.votedRound=-1;p.revealedRound=-1;}rolesShownForRound=-1;closeRolesReveal();persistOffline();renderPlayers();updateRoomHeader();toast("Partie réinitialisée");}
+function offlineResetGame(){const room=state.offline;if(!room||!state.isHost)return;room.phase="lobby";room.roundNumber=0;room.winner="";room.resultText="";room.current={aliveIds:room.players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{}};room.privateWords={};room.votes={};room.offlineRevealQueue=[];room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;room.chatMessages=[];for(const p of room.players){p.alive=true;p.votedRound=-1;p.revealedRound=-1;}rolesShownForRound=-1;closeRolesReveal();persistOffline();chatState.messages=[];renderPlayers();updateRoomHeader();toast("Partie réinitialisée");}
 
 function offlineAutoProgress(){const room=state.offline;if(!room||!state.isHost)return;if(room.phase==="discussion"&&room.current.discussionEndsAt&&now()>=room.current.discussionEndsAt)offlineStartVote();if(room.phase==="vote"&&room.current.voteEndsAt&&now()>=room.current.voteEndsAt)offlineResolveVotes();}
 
 /* PEEK WORD */
 let peekFlipped=false;
-function updatePeekButton(){const room=getRoom();const phase=room?.phase;const btn=$("peekWordBtn");const hasWord=state.mode==="firebase"?!!state.myPrivateWord?.word:(state.offline?.privateWords?.[state.myId]?.word);btn.classList.toggle("visible",hasWord&&["discussion","vote","result"].includes(phase));}
+function updatePeekButton(){const room=getRoom();const phase=room?.phase;const btn=$("peekWordBtn");if(!btn)return;const hasWord=state.mode==="firebase"?!!state.myPrivateWord?.word:(state.offline?.privateWords?.[state.myId]?.word);btn.classList.toggle("visible",!!hasWord&&["discussion","vote","result"].includes(phase));}
 function getMyCurrentWord(){if(state.mode==="firebase")return state.myPrivateWord?.word||"—";return state.offline?.privateWords?.[state.myId]?.word||"—";}
 function openPeek(){$("peekWordText").textContent=getMyCurrentWord();peekFlipped=false;$("flipCard").classList.remove("flipped");$("peekOverlay").classList.add("active");}
 function closePeek(){$("peekOverlay").classList.remove("active");peekFlipped=false;$("flipCard").classList.remove("flipped");}
@@ -1677,9 +1705,10 @@ function showRolesReveal(){
   const roundNum=currentRoundNumber();if(rolesShownForRound===roundNum)return;
   rolesShownForRound=roundNum;
   const ucIds=room.current?.undercoverIds||[];const allPlayers=getPlayers();
-  const pairIndex=room.current?.pairIndex??-1;const pair=pairIndex>=0?WORD_PAIRS[pairIndex]:null;
+  const pairIndex=room.current?.pairIndex??-1;const pair=pairIndex>=0&&pairIndex<WORD_PAIRS.length?WORD_PAIRS[pairIndex]:null;
   const sorted=[...allPlayers].sort((a,b)=>{const aUC=ucIds.includes(a.id)?1:0;const bUC=ucIds.includes(b.id)?1:0;return aUC-bUC;});
   const grid=$("rolesGrid");
+  if(!grid)return;
   grid.innerHTML=sorted.map((p,i)=>{
     const isUC=ucIds.includes(p.id);const word=isUC?(pair?.b||"?"):(pair?.a||"?");const delay=0.3+i*0.35;
     return`<div class="role-card-reveal ${isUC?"undercover":"civil"}" style="animation-delay:${delay}s"><div class="role-card-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div class="role-card-name">${escHtml(p.nickname)}</div><div class="role-card-role ${isUC?"uc-text":"civil-text"}">${isUC?"🕵️ Undercover":"✅ Civil"}</div><div class="role-card-word">${escHtml(word)}</div></div>`;
@@ -1687,16 +1716,20 @@ function showRolesReveal(){
   const isCivil=room.winner==="civils";
   $("rolesTitle").textContent=isCivil?"🏆 Victoire des Civils !":"🕵️ Victoire des Undercovers !";
   $("rolesTitle").style.color=isCivil?"#80ffd4":"#ff8fa3";
-  const closeDelay=0.3+sorted.length*0.35+0.5;$("btnCloseRoles").parentElement.style.animationDelay=`${closeDelay}s`;
+  const closeDelay=0.3+sorted.length*0.35+0.5;
+  const closeBtn=$("btnCloseRoles");
+  if(closeBtn&&closeBtn.parentElement)closeBtn.parentElement.style.animationDelay=`${closeDelay}s`;
   $("rolesOverlay").classList.add("active");setTimeout(()=>sfxWin(isCivil),500);
 }
 function closeRolesReveal(){$("rolesOverlay").classList.remove("active");}
 
-/* HOME BUTTON */
+/* HOME BUTTON — FIX: Clear offline state and properly reset */
 function goHome(){
   if(!confirm("Retourner à l'accueil ? La partie sera quittée."))return;
   if(state.unsubRoom)state.unsubRoom();if(state.unsubPlayers)state.unsubPlayers();
   if(state.tickInterval)clearInterval(state.tickInterval);
+  // FIX: Clear saved offline state so it doesn't auto-restore
+  localStorage.removeItem(STORAGE.offline);
   state.mode="offline";state.roomId=null;state.isHost=false;state.roomData=null;state.players=[];state.myPrivateWord=null;state.offline=null;state.lastPhase="";state.lastWinner="";
   chatState.messages=[];
   hideRevealOverlay();closeRolesReveal();closePeek();
@@ -1738,16 +1771,19 @@ $("offlinePlayerName").addEventListener("keydown",e=>{if(e.key==="Enter")$("btnA
 
 async function boot(){
   loadSoundPrefs();
-  // Count themes and pairs
   const themes = Object.keys(WORD_PAIRS_BY_THEME).length;
   setText("wordsCount",WORD_PAIRS.length);
   setText("catsCount",themes);
   syncSetupValues();
-  await initFirebase();updateBadges();
+  await initFirebase();
+  updateBadges();
   const roomFromUrl=(qs.get("room")||"").trim().toUpperCase();
   if(roomFromUrl)$("joinRoomCode").value=roomFromUrl;
+  // FIX: Load offline room and mount it properly
   loadOfflineRoom();
-  if(!roomFromUrl&&state.offline)mountOfflineRoom();
+  if(!roomFromUrl&&state.offline){
+    mountOfflineRoom();
+  }
   updateBadges();
 }
 boot();
