@@ -554,12 +554,12 @@
           <div class="progress-bar" style="margin-top:10px"><div id="discussionProgress" class="progress-fill"></div></div>
           <div id="speakerNow" class="speaker-now" style="margin-top:14px">
             <div class="speaker-dot"></div>
-            <div>
+            <div style="flex:1">
               <div id="currentSpeakerText" class="speaker-name">—</div>
               <div id="speakerProgressBadge" class="speaker-sub">Tour 0 / 0</div>
             </div>
+            <div id="speakerAvatar" class="player-avatar" style="width:40px;height:40px;border-radius:12px;font-size:1rem"></div>
           </div>
-          <div id="discussionOrder" class="turn-order"></div>
           <div id="clueInputSection" class="clue-input-section"></div>
         </div>
         <div id="panel-vote" class="card hidden">
@@ -1311,7 +1311,7 @@ async function submitClue(playerId, playerName, word){
     try{
       if(isLastTurn){
         // Last turn → add clue + switch to vote phase
-        const voteEnd=Date.now()+2600+Number(room.settings.voteSeconds||45)*1000;
+        const voteEnd=Date.now()+3500+Number(room.settings.voteSeconds||45)*1000;
         await firebaseFns.updateDoc(roomRef(state.roomId),{
           "current.clues":firebaseFns.arrayUnion(clueObj),
           "current.speakerIndex":idx+1,
@@ -1326,7 +1326,7 @@ async function submitClue(playerId, playerName, word){
               "current.voteEndsAt":Date.now()+Number(room.settings.voteSeconds||45)*1000
             });
             toast("Vote lancé");
-          },2600);
+          },3500);
         }
       }else{
         // Not last turn → add clue + advance speaker after animation delay
@@ -1343,7 +1343,7 @@ async function submitClue(playerId, playerName, word){
             });
             const nextId=order[idx+1]||"";
             toast("Tour suivant",getPlayerName(nextId));sfxPhase();
-          },2600);
+          },3500);
         }
       }
     }catch(e){console.error("Submit clue error:",e);toast("Erreur","Impossible d'envoyer l'indice");}
@@ -1355,7 +1355,7 @@ async function submitClue(playerId, playerName, word){
     persistOffline();
     showWordAnnounce(playerName, word);
     // Auto advance after animation
-    setTimeout(()=>{offlineNextSpeakerAuto();},2600);
+    setTimeout(()=>{offlineNextSpeakerAuto();},3500);
   }
 }
 
@@ -1381,7 +1381,7 @@ function showWordAnnounce(playerName, word){
   sfxReveal();
   // Auto-dismiss after 2.5s
   if(waTimeout)clearTimeout(waTimeout);
-  waTimeout=setTimeout(()=>{overlay.classList.remove("active");},2500);
+  waTimeout=setTimeout(()=>{overlay.classList.remove("active");},3000);
 }
 
 /* CLUE INPUT RENDERING */
@@ -1655,19 +1655,25 @@ function updateDiscussionPanel(){
   const curId=idx<totalTurns?order[idx]:"";
   const alivePlayers=getAlivePlayers();
   const playersCount=alivePlayers.length;
-  const currentRoundInTurns=playersCount>0?Math.floor(idx/playersCount)+1:1;
-  const totalRoundsInTurns=playersCount>0?Math.ceil(totalTurns/playersCount):1;
-  setText("currentSpeakerText",curId?getPlayerName(curId):"—");
-  setText("speakerProgressBadge",`Passage ${currentRoundInTurns}/${totalRoundsInTurns} · Joueur ${(idx%playersCount)+1}/${playersCount}`);
-  const orderEl=$("discussionOrder");
-  if(orderEl)orderEl.innerHTML=order.map((id,i)=>{
-    const isCurrent=i===idx;const isDone=i<idx;const cls=isCurrent?"active":(isDone?"done-turn":"");
-    const roundNum=playersCount>0?Math.floor(i/playersCount)+1:1;
-    const showRoundSep=playersCount>0&&i>0&&i%playersCount===0;
-    const sepHtml=showRoundSep?`<div style="grid-column:1/-1;height:1px;background:var(--border2);margin:2px 0"></div>`:"";
-    return`${sepHtml}<div class="turn-card ${cls}"><div class="t-num">${isCurrent?"🎙 En cours":(isDone?"✓":`P${roundNum}`)}</div><div class="t-name">${escHtml(getPlayerName(id))}</div></div>`;
-  }).join("");
+  const passNum=playersCount>0?Math.floor(idx/playersCount)+1:1;
+  const totalPasses=playersCount>0?Math.ceil(totalTurns/playersCount):1;
+  const playerNum=playersCount>0?(idx%playersCount)+1:0;
+  setText("currentSpeakerText",curId?getPlayerName(curId):"Terminé");
+  if(idx>=totalTurns){
+    setText("speakerProgressBadge","Tous les indices sont donnés !");
+  }else if(totalPasses>1){
+    setText("speakerProgressBadge",`Passage ${passNum}/${totalPasses} · Joueur ${playerNum}/${playersCount}`);
+  }else{
+    setText("speakerProgressBadge",`Joueur ${playerNum} sur ${playersCount}`);
+  }
+  // Update avatar
+  const av=$("speakerAvatar");
+  if(av&&curId){
+    av.style.background=avatarColor(curId);
+    av.textContent=avatarInitial(getPlayerName(curId));
+  }
   renderClueInput();
+  renderClueFeed();
 }
 
 function updateVotePanel(){
