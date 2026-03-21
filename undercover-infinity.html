@@ -368,22 +368,25 @@ details[open] .summary-arrow{transform:rotate(180deg)}
 .flip-back-word{font-family:"Syne",sans-serif;font-size:clamp(1.4rem,5vw,2.7rem);font-weight:900;background:linear-gradient(135deg,#fff 15%,var(--vi2) 55%,var(--cy));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;word-break:break-word}
 .flip-back-warn{font-size:.72rem;color:rgba(255,184,0,.6);margin-top:12px;display:flex;align-items:center;gap:5px}
 /* ROLES OVERLAY */
+.roles-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.confetti-piece{position:absolute;width:8px;height:8px;border-radius:2px;opacity:0;animation:confettiFall linear forwards}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(-20px) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
 .roles-overlay{position:fixed;inset:0;z-index:210;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(7,9,16,.97);backdrop-filter:blur(32px);opacity:0;pointer-events:none;transition:opacity .4s;overflow-y:auto;padding:40px 20px}
 .roles-overlay.active{opacity:1;pointer-events:auto}
-.roles-title{font-family:"Syne",sans-serif;font-size:clamp(1.4rem,4vw,2rem);font-weight:900;margin-bottom:26px;text-align:center;opacity:0;animation:rs .5s ease .2s forwards}
-.role-cards-grid{display:flex;flex-wrap:wrap;gap:13px;justify-content:center;max-width:680px;width:100%}
-.role-card-reveal{width:145px;padding:16px 12px;border-radius:18px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;opacity:0;transform:scale(.7) rotateY(90deg);animation:rcf .7s cubic-bezier(.34,1.56,.64,1) forwards}
-.role-card-reveal.civil{background:linear-gradient(160deg,rgba(0,224,154,.13),rgba(0,224,154,.04));border:2px solid rgba(0,224,154,.32)}
-.role-card-reveal.undercover{background:linear-gradient(160deg,rgba(255,61,107,.18),rgba(255,61,107,.06));border:2px solid rgba(255,61,107,.48);box-shadow:0 0 28px rgba(255,61,107,.22)}
-.role-card-reveal.mrwhite{background:linear-gradient(160deg,rgba(226,232,240,.12),rgba(226,232,240,.04));border:2px solid rgba(226,232,240,.35)}
-.role-card-avatar{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-weight:900;font-size:.9rem;color:#fff}
-.role-card-name{font-weight:900;font-size:.88rem}
-.role-card-role{font-family:"Space Mono",monospace;font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700}
-.role-card-role.civil-text{color:var(--em2)}
-.role-card-role.uc-text{color:var(--rs2)}
-.role-card-role.mw-text{color:var(--wh)}
-.role-card-word{font-size:.76rem;color:var(--mu);font-style:italic;margin-top:2px}
-@keyframes rcf{0%{opacity:0;transform:scale(.7) rotateY(90deg)}60%{opacity:1;transform:scale(1.05) rotateY(-5deg)}100%{opacity:1;transform:scale(1) rotateY(0)}}
+.roles-title{font-family:"Syne",sans-serif;font-size:clamp(1.4rem,4vw,2.2rem);font-weight:900;margin-bottom:28px;text-align:center;opacity:0;animation:rs .5s ease .1s forwards;text-shadow:0 0 40px currentColor}
+.role-cards-grid{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;max-width:800px;width:100%}
+.role-card-reveal{width:160px;padding:22px 16px;border-radius:20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;opacity:0;transform:scale(.5) rotateY(90deg);animation:rcf .75s cubic-bezier(.34,1.56,.64,1) forwards}
+.role-card-reveal.civil{background:linear-gradient(160deg,rgba(0,224,154,.15),rgba(0,224,154,.04));border:2px solid rgba(0,224,154,.35)}
+.role-card-reveal.undercover{background:linear-gradient(160deg,rgba(255,61,107,.22),rgba(255,61,107,.07));border:2px solid rgba(255,61,107,.55);box-shadow:0 0 32px rgba(255,61,107,.25)}
+.role-card-reveal.mrwhite{background:linear-gradient(160deg,rgba(226,232,240,.16),rgba(226,232,240,.05));border:2px solid rgba(226,232,240,.4);box-shadow:0 0 28px rgba(226,232,240,.15)}
+.role-card-avatar{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-weight:900;font-size:1.1rem;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.role-card-name{font-weight:900;font-size:.95rem;letter-spacing:-.01em}
+.role-card-role{font-family:"Space Mono",monospace;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;font-weight:700;padding:4px 10px;border-radius:999px;margin-top:2px}
+.role-card-role.civil-text{color:var(--em2);background:rgba(0,224,154,.12);border:1px solid rgba(0,224,154,.2)}
+.role-card-role.uc-text{color:var(--rs2);background:rgba(255,61,107,.12);border:1px solid rgba(255,61,107,.25)}
+.role-card-role.mw-text{color:var(--wh);background:rgba(226,232,240,.1);border:1px solid rgba(226,232,240,.2)}
+.role-card-word{font-size:.82rem;color:var(--mu);font-style:italic;margin-top:2px;font-family:"Syne",sans-serif;font-weight:700}
+@keyframes rcf{0%{opacity:0;transform:scale(.5) rotateY(90deg)}55%{opacity:1;transform:scale(1.08) rotateY(-6deg)}80%{transform:scale(.97) rotateY(2deg)}100%{opacity:1;transform:scale(1) rotateY(0)}}
 .roles-close-btn{margin-top:22px;opacity:0;animation:rs .5s ease 2s forwards}
 /* WORD ANNOUNCE */
 .word-announce-overlay{position:fixed;inset:0;z-index:190;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(7,9,16,.92);backdrop-filter:blur(32px);opacity:0;pointer-events:none;transition:opacity .3s;perspective:800px}
@@ -729,9 +732,9 @@ details[open] .summary-arrow{transform:rotate(180deg)}
   <div id="revealCounter" class="reveal-counter">0 / 0</div>
   <div id="revealPlayerName" class="reveal-player-name">—</div>
   <div id="revealWordBig" class="reveal-word-big">—</div>
-  <div id="revealRoleTag" class="reveal-role-tag civil">Ton rôle</div>
+  <div id="revealRoleTag" class="reveal-role-tag civil">🤫 Souviens-toi de ce mot !</div>
   <div class="reveal-warning">⚠️ Ne montre pas cet écran aux autres</div>
-  <div class="reveal-btn"><button id="btnSeenWord" class="btn btn-primary" style="min-width:196px;min-height:48px;font-size:.98rem;font-weight:900">👁 J'ai bien vu mon rôle</button></div>
+  <div class="reveal-btn"><button id="btnSeenWord" class="btn btn-primary" style="min-width:196px;min-height:48px;font-size:.98rem;font-weight:900">👁 J'ai bien vu mon mot</button></div>
 </div>
 <div id="peekWordBtn" class="peek-word-btn" title="Revoir mon mot">🔍</div>
 <div id="peekOverlay" class="peek-overlay">
@@ -743,6 +746,7 @@ details[open] .summary-arrow{transform:rotate(180deg)}
   </div>
 </div>
 <div id="rolesOverlay" class="roles-overlay">
+  <div class="roles-confetti" id="rolesConfetti"></div>
   <div class="roles-title" id="rolesTitle">Révélation des rôles</div>
   <div class="role-cards-grid" id="rolesGrid"></div>
   <div class="roles-close-btn"><button id="btnCloseRoles" class="btn btn-ghost" style="min-width:145px">✕ Fermer</button></div>
@@ -948,9 +952,9 @@ window.showScreen=showScreen;
 function switchSetupTab(name){['config','roles','themes','join'].forEach(t=>{show($('tab-'+t),t===name);});document.querySelectorAll('.tab-btn').forEach((btn,i)=>{btn.classList.toggle('active',['config','roles','themes','join'][i]===name);});if(name==='themes')buildThemeSelector();SFX.tap();}
 window.switchSetupTab=switchSetupTab;
 document.querySelectorAll('details').forEach(d=>{const a=d.querySelector('.summary-arrow');if(!a)return;d.addEventListener('toggle',()=>a.style.transform=d.open?'rotate(180deg)':'');});
-document.getElementById('btnNormalMode').addEventListener('click',()=>{SFX.tap();startNormalSearch();});
-document.getElementById('btnRankedMode').addEventListener('click',()=>{SFX.tap();showScreen('ranked');});
-document.getElementById('btnCustomMode').addEventListener('click',()=>{SFX.tap();showScreen('setup');});
+document.getElementById('btnNormalMode').addEventListener('click',(e)=>{e.stopPropagation();SFX.tap();startNormalSearch();});
+document.getElementById('btnRankedMode').addEventListener('click',(e)=>{e.stopPropagation();SFX.tap();showScreen('ranked');});
+document.getElementById('btnCustomMode').addEventListener('click',(e)=>{e.stopPropagation();SFX.tap();showScreen('setup');});
 document.getElementById('btnGoMenu').addEventListener('click',()=>{if(confirm('Retourner au menu ? La partie sera quittée.'))goMenu();});
 function goMenu(){if(state.unsubRoom)state.unsubRoom();if(state.unsubPlayers)state.unsubPlayers();if(state.tickInterval)clearInterval(state.tickInterval);localStorage.removeItem('uc_offline_v6');state.mode='offline';state.roomId=null;state.isHost=false;state.roomData=null;state.players=[];state.myPrivateWord=null;state.offline=null;state.lastPhase='';state.lastWinner='';lastSeenClueCount=0;mrWhiteGuessActive=false;rankedSessionResults=null;hideRevealOverlay();closeRolesReveal();closePeek();history.replaceState(null,'',location.pathname);showScreen('menu');SFX.close();}
 
@@ -1018,7 +1022,29 @@ $('btnJoinRanked').addEventListener('click',async()=>{SFX.tap();const code=promp
 let mrWhiteGuessActive=false,mrWhiteTimerInterval=null;
 function triggerMrWhiteGuess(mrWhitePlayerId,civilianWord){
   if(state.myId!==mrWhitePlayerId)return;
-  mrWhiteGuessActive=true;showScreen('mrwhite-guess');SFX.open();
+  mrWhiteGuessActive=true;
+  // D'abord montrer la révélation "Tu es Mr. White"
+  showMrWhiteReveal(civilianWord);
+}
+
+function showMrWhiteReveal(civilianWord){
+  // Afficher overlay spécial "Tu es Mr. White" avant l'écran de devinette
+  const overlay=$('revealOverlay');
+  $('revealPlayerName').textContent='🤵 Révélation — Tu as été éliminé';
+  $('revealWordBig').textContent='Mr. White';
+  $('revealCounter').textContent='';
+  const tag=$('revealRoleTag');
+  tag.textContent='Tu es Mr. White — essaye de deviner le mot des civils !';
+  tag.className='reveal-role-tag mrwhite';
+  overlay.querySelectorAll('[class*="reveal-"]').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation='';});
+  overlay.classList.add('active');SFX.reveal();
+  // Remplacer le bouton "J'ai vu" par "Deviner"
+  const btn=$('btnSeenWord');
+  if(btn){btn.textContent='🎯 Deviner le mot';btn.disabled=false;btn.onclick=()=>{hideRevealOverlay();startMrWhiteTimer(civilianWord);};}
+}
+
+function startMrWhiteTimer(civilianWord){
+  showScreen('mrwhite-guess');SFX.open();
   let t=30;$('mrWhiteTimer').textContent=t;$('mrWhiteProgress').style.width='100%';$('mrWhiteGuessInput').value='';$('mrWhiteGuessInput').focus();$('mrWhiteTimer').classList.remove('urgent');
   if(mrWhiteTimerInterval)clearInterval(mrWhiteTimerInterval);
   mrWhiteTimerInterval=setInterval(()=>{t--;const el=$('mrWhiteTimer');const pr=$('mrWhiteProgress');if(el)el.textContent=t;if(pr)pr.style.width=(t/30*100)+'%';if(el&&t<=5)el.classList.add('urgent');if(t<=0){clearInterval(mrWhiteTimerInterval);submitMrWhiteGuess(null,civilianWord);}},1000);
@@ -1096,7 +1122,12 @@ async function executeSkipWord(){const room=getRoom();if(!room||!state.isHost)re
 function executeSkipWordOffline(){const room=state.offline;if(!room)return;const alive=room.players.filter(p=>p.alive);const ucIds=room.current.undercoverIds||[];const mwIds=room.current.mrWhiteIds||[];const pairIndex=pickPairIndex();const pair=getPairAtIndex(pairIndex);room.current.pairIndex=pairIndex;room.current.skipVotes={};room.privateWords={};for(const p of alive){p.revealedRound=-999999;const isMW=mwIds.includes(p.id);const isUC=ucIds.includes(p.id);room.privateWords[p.id]={roundNumber:room.roundNumber,word:isMW?'':isUC?pair.b:pair.a,role:isMW?'mrwhite':isUC?'undercover':'civil',playerId:p.id,seen:false};}room.offlineRevealQueue=alive.map(p=>p.id);room.offlineRevealIndex=0;state.myPrivateWord=room.privateWords[room.offlineRevealQueue[0]]||null;persistOffline();toast('Mot changé !');sfxSkip();renderPlayers();updateRoomHeader();}
 function updateSkipBanner(){const room=getRoom();const banner=$('skipWordBanner');const btn=$('btnSkipWord');if(!banner||!btn)return;if(!room||room.phase!=='reveal'){show(banner,false);return;}show(banner,true);setText('skipVoteCount',`${Object.keys(getSkipVotes()).length} / ${getMajorityThreshold()} votes`);btn.disabled=hasVotedToSkip();btn.textContent=hasVotedToSkip()?'✓ Voté':'Changer';}
 
-function showRevealOverlay(playerName,word,role,seenCount,totalCount){const overlay=$('revealOverlay');$('revealPlayerName').textContent=`${playerName} — regarde ton rôle`;$('revealWordBig').textContent=word||'—';$('revealCounter').textContent=`${seenCount+1} / ${totalCount}`;const tag=$('revealRoleTag');if(role==='mrwhite'){tag.textContent='🤵 Mr. White — Aucun mot !';tag.className='reveal-role-tag mrwhite';}else if(role==='undercover'){tag.textContent='🕵️ Undercover';tag.className='reveal-role-tag undercover';}else{tag.textContent='👤 Civil';tag.className='reveal-role-tag civil';}overlay.querySelectorAll('[class*="reveal-"]').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation='';});overlay.classList.add('active');SFX.reveal();}
+function showRevealOverlay(playerName,word,role,seenCount,totalCount){const overlay=$('revealOverlay');$('revealPlayerName').textContent=`${playerName} — voici ton mot secret`;$('revealCounter').textContent=`${seenCount+1} / ${totalCount}`;const tag=$('revealRoleTag');
+// On cache toujours le rôle — seul le MOT est révélé
+// Mr. White ne voit aucun mot (son écran spécial arrive à l'élimination)
+$('revealWordBig').textContent=word||'—';
+tag.textContent='🤫 Souviens-toi de ce mot !';tag.className='reveal-role-tag civil';
+overlay.querySelectorAll('[class*="reveal-"]').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation='';});overlay.classList.add('active');SFX.reveal();}
 function hideRevealOverlay(){$('revealOverlay').classList.remove('active');}
 function maybePlayPhaseAudio(){const room=getRoom();if(!room)return;if(state.lastPhase!==room.phase){if(['discussion','vote','result'].includes(room.phase))sfxPhase();state.lastPhase=room.phase;}if(!room.winner)state.lastWinner='';}
 function renderRoundDots(){const room=getRoom();const total=room?.settings?.roundsTotal||1;const cur=currentRoundNumber();const dots=$('roundsDots');if(!dots)return;dots.innerHTML='';for(let i=1;i<=total;i++){const d=document.createElement('div');d.className='round-dot'+(i<cur?' done':i===cur?' current':'');dots.appendChild(d);}setText('roundsLabel',`${cur} / ${total}`);}
@@ -1111,7 +1142,9 @@ function updateButtons(){const room=getRoom();const phase=room?.phase||'lobby';c
 
 function updateRoomHeader(){const room=getRoom();if(!room)return;const settings=room.settings||{};setText('roomTitle',`Salle ${state.roomId||'—'}`);setText('roomMeta',state.mode==='firebase'?'Multijoueur en ligne':'Partie locale');setText('settingsUndercover',settings.undercoverCount||1);setText('settingsMrWhite',settings.mrWhiteCount||0);setText('settingsDiscussion',`${settings.discussionSeconds||90}s`);setText('settingsVote',`${settings.voteSeconds||45}s`);setText('settingsRounds',settings.roundsTotal||1);setText('settingsTurns',settings.turnsPerRound||2);if($('shareLinkInput'))$('shareLinkInput').value=state.mode==='firebase'?`${location.origin}${location.pathname}?room=${encodeURIComponent(state.roomId||'')}`:`${location.origin}${location.pathname}`;show($('hostBadge'),state.isHost);updateBadges();renderRoundDots();updateStepUI(room.phase||'lobby');updateRevealPanel();updateDiscussionPanel();updateVotePanel();updateResultPanel();updateButtons();updatePeekButton();maybePlayPhaseAudio();}
 
-function updateRevealPanel(){const room=getRoom();if(!room||room.phase!=='reveal'){hideRevealOverlay();return;}if(state.mode==='firebase'){const alive=getAlivePlayers();const seen=alive.filter(p=>p.revealedRound===currentRoundNumber()).length;if(state.myPrivateWord&&!hasSeenCurrentWord()){const role=state.myPrivateWord.role||'civil';const word=role==='mrwhite'?'AUCUN MOT':state.myPrivateWord.word;showRevealOverlay(state.myName,word,role,seen,alive.length);}else{hideRevealOverlay();setStatus('Révélation',`${seen}/${alive.length} joueurs ont vu leur rôle`);}}else{const cur=offlineCurrentRevealPlayer();const alive=getAlivePlayers();const seen=alive.filter(p=>p.revealedRound===currentRoundNumber()).length;if(cur){const pw=state.offline.privateWords[cur.id];const role=pw?.role||'civil';const word=role==='mrwhite'?'AUCUN MOT':pw?.word||'—';showRevealOverlay(cur.nickname,word,role,seen,alive.length);}else{hideRevealOverlay();setStatus('Tous ont vu','L\'hôte peut lancer la discussion.');}}updateButtons();}
+function updateRevealPanel(){const room=getRoom();if(!room||room.phase!=='reveal'){hideRevealOverlay();return;}if(state.mode==='firebase'){const alive=getAlivePlayers();const seen=alive.filter(p=>p.revealedRound===currentRoundNumber()).length;if(state.myPrivateWord&&!hasSeenCurrentWord()){const role=state.myPrivateWord.role||'civil';// On ne montre PAS le rôle — juste le mot. Mr White voit "???" (révélation à l'élim)
+const word=role==='mrwhite'?'???':state.myPrivateWord.word;showRevealOverlay(state.myName,word,role,seen,alive.length);}else{hideRevealOverlay();setStatus('Révélation',`${seen}/${alive.length} joueurs ont vu leur mot`);}}else{const cur=offlineCurrentRevealPlayer();const alive=getAlivePlayers();const seen=alive.filter(p=>p.revealedRound===currentRoundNumber()).length;if(cur){const pw=state.offline.privateWords[cur.id];const role=pw?.role||'civil';// Mr White voit "???" — son identité sera révélée seulement à l'élimination
+const word=role==='mrwhite'?'???':pw?.word||'—';showRevealOverlay(cur.nickname,word,role,seen,alive.length);}else{hideRevealOverlay();setStatus('Tous ont vu leur mot','L\'hôte peut lancer la discussion.');}}updateButtons();}
 
 function updateDiscussionPanel(){const room=getRoom();if(!room||room.phase!=='discussion')return;const order=room.current?.turnOrder||[];const idx=room.current?.speakerIndex||0;const totalTurns=order.length;const curId=idx<totalTurns?order[idx]:'';const alivePlayers=getAlivePlayers();const playersCount=alivePlayers.length;const passNum=playersCount>0?Math.floor(idx/playersCount)+1:1;const totalPasses=playersCount>0?Math.ceil(totalTurns/playersCount):1;const playerNum=playersCount>0?(idx%playersCount)+1:0;setText('currentSpeakerText',curId?getPlayerName(curId):'Terminé');if(idx>=totalTurns)setText('speakerProgressBadge','Tous les indices sont donnés !');else if(totalPasses>1)setText('speakerProgressBadge',`Passage ${passNum}/${totalPasses} · Joueur ${playerNum}/${playersCount}`);else setText('speakerProgressBadge',`Joueur ${playerNum} sur ${playersCount}`);const av=$('speakerAvatar');if(av&&curId){av.style.background=avatarColor(curId);av.textContent=avatarInitial(getPlayerName(curId));}renderClueInput();renderClueFeed();}
 
@@ -1144,7 +1177,7 @@ async function subscribeFirebaseRoom(roomId){if(state.unsubRoom)state.unsubRoom(
 async function fetchMyPrivateWord(){if(state.mode!=='firebase'||!state.roomId)return;const room=getRoom();if(!['reveal','discussion','vote','result'].includes(room?.phase)){state.myPrivateWord=null;return;}const snap=await firebaseFns.getDoc(privateRef(state.roomId,state.mySecret));if(snap.exists()){const d=snap.data();if(d.roundNumber===currentRoundNumber()){state.myPrivateWord=d;if(rankedSessionResults)rankedSessionResults.role=d.role||'civil';}}updateRevealPanel();}
 
 async function firebaseStartRound(){const room=getRoom();if(!state.isHost||!room||room.phase!=='lobby')return;const alive=getAlivePlayers();const ucCount=clamp(Number(room.settings.undercoverCount||1),0,Math.max(1,alive.length-2));const mwCount=clamp(Number(room.settings.mrWhiteCount||0),0,Math.max(0,alive.length-ucCount-1));if(alive.length<ucCount+mwCount+2)return alert('Pas assez de joueurs.');const pairIndex=pickPairIndex();const pair=getPairAtIndex(pairIndex);const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);const mrWhiteIds=shuffled.slice(ucCount,ucCount+mwCount);const roundNumber=(room.roundNumber||0)+1;const batch=firebaseFns.writeBatch(state.db);batch.update(roomRef(state.roomId),{phase:'reveal',roundNumber,updatedAt:firebaseFns.serverTimestamp(),winner:'',resultText:'',current:{...room.current,aliveIds:alive.map(p=>p.id),pairIndex,undercoverIds,mrWhiteIds,civilianWord:pair.a,discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{},clues:[]}});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{...p,revealedRound:p.alive?-999999:p.revealedRound,votedRound:-1},{merge:true});for(const p of alive){const isMW=mrWhiteIds.includes(p.id);const isUC=undercoverIds.includes(p.id);batch.set(privateRef(state.roomId,p.secretId),{roundNumber,pairIndex,word:isMW?'':isUC?pair.b:pair.a,role:isMW?'mrwhite':isUC?'undercover':'civil',playerId:p.id,seen:false});}await batch.commit();toast('Manche '+roundNumber+' lancée');}
-async function firebaseMarkSeen(){const room=getRoom();if(!room||room.phase!=='reveal'||hasSeenCurrentWord())return;await firebaseFns.setDoc(playerRef(state.roomId,state.myId),{revealedRound:currentRoundNumber()},{merge:true});await firebaseFns.setDoc(privateRef(state.roomId,state.mySecret),{seen:true},{merge:true});SFX.seen();hideRevealOverlay();toast('Rôle vu','Tu es prêt !');}
+async function firebaseMarkSeen(){const room=getRoom();if(!room||room.phase!=='reveal'||hasSeenCurrentWord())return;await firebaseFns.setDoc(playerRef(state.roomId,state.myId),{revealedRound:currentRoundNumber()},{merge:true});await firebaseFns.setDoc(privateRef(state.roomId,state.mySecret),{seen:true},{merge:true});SFX.seen();hideRevealOverlay();const btn=$('btnSeenWord');if(btn){btn.textContent='👁 J\'ai bien vu mon mot';btn.onclick=null;}toast('Mot mémorisé','Tu es prêt !');}
 async function firebaseStartDiscussion(){const room=getRoom();if(!state.isHost||room.phase!=='reveal')return;const alive=getAlivePlayers();if(!alive.every(p=>p.revealedRound===currentRoundNumber()))return;const end=Date.now()+Number(room.settings.discussionSeconds||90)*1000;const turnOrder=buildTurnOrder(alive,room.settings?.turnsPerRound||2);await firebaseFns.updateDoc(roomRef(state.roomId),{phase:'discussion',updatedAt:firebaseFns.serverTimestamp(),'current.discussionEndsAt':end,'current.turnOrder':turnOrder,'current.speakerIndex':0,'current.skipVotes':{}});toast('Discussion lancée','Premier : '+getPlayerName(turnOrder[0]));}
 async function firebaseNextSpeaker(){const room=getRoom();if(!state.isHost||room.phase!=='discussion')return;const order=room.current?.turnOrder||[];const idx=room.current?.speakerIndex||0;const totalTurns=order.length;if(idx>=totalTurns-1)return;await firebaseFns.updateDoc(roomRef(state.roomId),{updatedAt:firebaseFns.serverTimestamp(),'current.speakerIndex':idx+1});const nextId=order[idx+1]||'';toast('Tour suivant',getPlayerName(nextId));sfxPhase();}
 async function firebaseStartVote(){const room=getRoom();if(!state.isHost||room.phase!=='discussion')return;const end=Date.now()+Number(room.settings.voteSeconds||45)*1000;await firebaseFns.updateDoc(roomRef(state.roomId),{phase:'vote',updatedAt:firebaseFns.serverTimestamp(),'current.voteEndsAt':end});toast('Vote lancé');}
@@ -1162,7 +1195,7 @@ function mountOfflineRoom(){showScreen('room');updateBadges();renderPlayers();up
 function offlineAddPlayer(name){if(!state.isHost||!state.offline)return;const clean=String(name||'').trim();if(!clean)return;state.offline.players.push({id:uid('p'),secretId:uid('s'),nickname:clean,host:false,alive:true,joinedAt:now(),revealedRound:-1,votedRound:-1});state.offline.current.aliveIds=state.offline.players.filter(p=>p.alive).map(p=>p.id);persistOffline();renderPlayers();updateRoomHeader();toast('Joueur ajouté',clean);}
 function offlineStartRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=='lobby')return;const alive=room.players.filter(p=>p.alive);const ucCount=clamp(Number(room.settings.undercoverCount||1),0,Math.max(1,alive.length-2));const mwCount=clamp(Number(room.settings.mrWhiteCount||0),0,Math.max(0,alive.length-ucCount-1));if(alive.length<ucCount+mwCount+2)return alert('Pas assez de joueurs (min 3).');const pairIndex=pickPairIndex();const pair=getPairAtIndex(pairIndex);const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);const mrWhiteIds=shuffled.slice(ucCount,ucCount+mwCount);room.roundNumber+=1;room.phase='reveal';room.winner='';room.resultText='';room.current.pairIndex=pairIndex;room.current.undercoverIds=undercoverIds;room.current.mrWhiteIds=mrWhiteIds;room.current.aliveIds=alive.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;room.current.skipVotes={};room.current.clues=[];room.current.civilianWord=pair.a;room.privateWords={};room.votes={};room.offlineRevealQueue=alive.map(p=>p.id);room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.votedRound=-1;p.revealedRound=p.alive?-999999:p.revealedRound;}for(const p of alive){const isMW=mrWhiteIds.includes(p.id);const isUC=undercoverIds.includes(p.id);room.privateWords[p.id]={roundNumber:room.roundNumber,word:isMW?'':isUC?pair.b:pair.a,role:isMW?'mrwhite':isUC?'undercover':'civil',playerId:p.id,seen:false};}state.myPrivateWord=room.privateWords[room.offlineRevealQueue[0]]||null;lastSeenClueCount=0;persistOffline();renderPlayers();updateRoomHeader();toast(`Manche ${room.roundNumber} lancée`);}
 const offlineCurrentRevealPlayer=()=>{const room=state.offline;if(!room||room.phase!=='reveal')return null;const id=room.offlineRevealQueue?.[room.offlineRevealIndex];return room.players.find(p=>p.id===id)||null;};
-function offlineMarkSeen(){const room=state.offline;if(!room||room.phase!=='reveal')return;const player=offlineCurrentRevealPlayer();if(!player)return;player.revealedRound=room.roundNumber;if(room.privateWords[player.id])room.privateWords[player.id].seen=true;room.offlineRevealIndex+=1;state.myPrivateWord=room.offlineRevealIndex<room.offlineRevealQueue.length?room.privateWords[room.offlineRevealQueue[room.offlineRevealIndex]]:null;persistOffline();renderPlayers();updateRoomHeader();SFX.seen();const next=offlineCurrentRevealPlayer();toast('Rôle vu',next?`Passe à ${next.nickname}`:'Tous ont vu !');}
+function offlineMarkSeen(){const room=state.offline;if(!room||room.phase!=='reveal')return;const player=offlineCurrentRevealPlayer();if(!player)return;player.revealedRound=room.roundNumber;if(room.privateWords[player.id])room.privateWords[player.id].seen=true;room.offlineRevealIndex+=1;state.myPrivateWord=room.offlineRevealIndex<room.offlineRevealQueue.length?room.privateWords[room.offlineRevealQueue[room.offlineRevealIndex]]:null;persistOffline();renderPlayers();updateRoomHeader();SFX.seen();const next=offlineCurrentRevealPlayer();toast('Mot mémorisé',next?`Passe à ${next.nickname}`:'Tous ont vu leur mot !');}
 function offlineStartDiscussion(){const room=state.offline;if(!room||!state.isHost||room.phase!=='reveal')return;const alive=room.players.filter(p=>p.alive);if(!alive.every(p=>p.revealedRound===room.roundNumber))return;room.phase='discussion';room.current.discussionEndsAt=now()+Number(room.settings.discussionSeconds||90)*1000;room.current.turnOrder=buildTurnOrder(alive,room.settings?.turnsPerRound||2);room.current.speakerIndex=0;room.current.skipVotes={};persistOffline();updateRoomHeader();toast('Discussion lancée',`Premier : ${getPlayerName(room.current.turnOrder[0])}`);}
 function offlineNextSpeaker(){const room=state.offline;if(!room||!state.isHost||room.phase!=='discussion')return;const order=room.current.turnOrder||[];const idx=room.current.speakerIndex||0;const totalTurns=order.length;if(idx>=totalTurns-1)return;room.current.speakerIndex+=1;persistOffline();updateRoomHeader();const nextId=order[room.current.speakerIndex]||'';toast('Tour suivant',getPlayerName(nextId));sfxPhase();}
 function offlineStartVote(){const room=state.offline;if(!room||!state.isHost||room.phase!=='discussion')return;room.phase='vote';room.current.voteEndsAt=now()+Number(room.settings.voteSeconds||45)*1000;room.votes={};room.offlineVoteQueue=room.players.filter(p=>p.alive).map(p=>p.id);room.offlineVoteIndex=0;room.current.turnOrder=[];room.current.speakerIndex=0;for(const p of room.players)p.votedRound=-1;persistOffline();updateRoomHeader();toast('Vote lancé');}
@@ -1183,7 +1216,50 @@ function toggleFlip(){peekFlipped=!peekFlipped;$('flipCard').classList.toggle('f
 
 // ── ROLES REVEAL ──
 let rolesShownForRound=-1;
-function showRolesReveal(){const room=getRoom();if(!room||!room.winner||room.winner==='pending_mrwhite')return;const roundNum=currentRoundNumber();if(rolesShownForRound===roundNum)return;rolesShownForRound=roundNum;const ucIds=room.current?.undercoverIds||[];const mwIds=room.current?.mrWhiteIds||[];const allPlayers=getPlayers();const pairIndex=room.current?.pairIndex??-1;const pair=pairIndex>=0?getPairAtIndex(pairIndex):null;const sorted=[...allPlayers].sort((a,b)=>{const aU=(ucIds.includes(a.id)||mwIds.includes(a.id))?1:0;const bU=(ucIds.includes(b.id)||mwIds.includes(b.id))?1:0;return aU-bU;});const grid=$('rolesGrid');if(!grid)return;grid.innerHTML=sorted.map((p,i)=>{const isUC=ucIds.includes(p.id);const isMW=mwIds.includes(p.id);const word=isMW?'(aucun mot)':isUC?(pair?.b||'?'):(pair?.a||'?');const delay=0.3+i*0.35;return`<div class="role-card-reveal ${isMW?'mrwhite':isUC?'undercover':'civil'}" style="animation-delay:${delay}s"><div class="role-card-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div class="role-card-name">${escHtml(p.nickname)}</div><div class="role-card-role ${isMW?'mw-text':isUC?'uc-text':'civil-text'}">${isMW?'🤵 Mr. White':isUC?'🕵️ Undercover':'✅ Civil'}</div><div class="role-card-word">${escHtml(word)}</div></div>`;}).join('');const isCivil=room.winner==='civils';const isMWWin=room.winner==='mrwhite';$('rolesTitle').textContent=isCivil?'🏆 Victoire des Civils !':isMWWin?'🤵 Victoire de Mr. White !':'🕵️ Victoire des Undercovers !';$('rolesTitle').style.color=isCivil?'#6ee7b7':isMWWin?'#e2e8f0':'#ff8fa3';const closeDelay=0.3+sorted.length*0.35+0.5;const closeBtn=$('btnCloseRoles');if(closeBtn?.parentElement)closeBtn.parentElement.style.animationDelay=`${closeDelay}s`;$('rolesOverlay').classList.add('active');setTimeout(()=>SFX.win(isCivil||isMWWin),500);}
+function showRolesReveal(){
+  const room=getRoom();
+  if(!room||!room.winner||room.winner==='pending_mrwhite')return;
+  const roundNum=currentRoundNumber();
+  if(rolesShownForRound===roundNum)return;
+  rolesShownForRound=roundNum;
+  const ucIds=room.current?.undercoverIds||[];
+  const mwIds=room.current?.mrWhiteIds||[];
+  const allPlayers=getPlayers();
+  const pairIndex=room.current?.pairIndex??-1;
+  const pair=pairIndex>=0?getPairAtIndex(pairIndex):null;
+  // Civils en premier, undercovers/mrwhite après pour le drama
+  const sorted=[...allPlayers].sort((a,b)=>{
+    const aScore=(mwIds.includes(a.id)?2:ucIds.includes(a.id)?1:0);
+    const bScore=(mwIds.includes(b.id)?2:ucIds.includes(b.id)?1:0);
+    return aScore-bScore;
+  });
+  const grid=$('rolesGrid');if(!grid)return;
+  grid.innerHTML=sorted.map((p,i)=>{
+    const isUC=ucIds.includes(p.id);const isMW=mwIds.includes(p.id);
+    const word=isMW?'(aucun mot)':isUC?(pair?.b||'?'):(pair?.a||'?');
+    const delay=0.2+i*0.4;
+    const roleClass=isMW?'mrwhite':isUC?'undercover':'civil';
+    const roleLabel=isMW?'🤵 Mr. White':isUC?'🕵️ Undercover':'✅ Civil';
+    const roleTextClass=isMW?'mw-text':isUC?'uc-text':'civil-text';
+    return`<div class="role-card-reveal ${roleClass}" style="animation-delay:${delay}s">
+      <div class="role-card-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div>
+      <div class="role-card-name">${escHtml(p.nickname)}</div>
+      <div class="role-card-role ${roleTextClass}">${roleLabel}</div>
+      <div class="role-card-word">"${escHtml(word)}"</div>
+    </div>`;
+  }).join('');
+  const isCivil=room.winner==='civils';const isMWWin=room.winner==='mrwhite';
+  $('rolesTitle').textContent=isCivil?'🏆 Victoire des Civils !':isMWWin?'🤵 Victoire de Mr. White !':'🕵️ Victoire des Undercovers !';
+  $('rolesTitle').style.color=isCivil?'#6ee7b7':isMWWin?'#e2e8f0':'#ff8fa3';
+  $('rolesTitle').style.animation='none';$('rolesTitle').offsetHeight;$('rolesTitle').style.animation='';
+  const closeDelay=0.2+sorted.length*0.4+0.8;
+  const closeBtn=$('btnCloseRoles');
+  if(closeBtn?.parentElement)closeBtn.parentElement.style.animationDelay=`${closeDelay}s`;
+  $('rolesOverlay').classList.add('active');
+  // Confetti burst
+  const conf=$('rolesConfetti');if(conf){conf.innerHTML='';const colors=isCivil?['#6ee7b7','#00e09a','#a7f3d0','#34d399']:isMWWin?['#e2e8f0','#cbd5e1','#f1f5f9','#a78bfa']:['#ff8fa3','#ff3d6b','#fda4af','#a78bfa'];for(let i=0;i<60;i++){const el=document.createElement('div');el.className='confetti-piece';el.style.cssText=`left:${Math.random()*100}%;background:${colors[i%colors.length]};animation-duration:${1.2+Math.random()*1.8}s;animation-delay:${Math.random()*.8}s;transform:rotate(${Math.random()*360}deg);width:${5+Math.random()*8}px;height:${5+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'2px'}`;conf.appendChild(el);}}
+  setTimeout(()=>SFX.win(isCivil||isMWWin),400);
+}
 function closeRolesReveal(){$('rolesOverlay').classList.remove('active');}
 
 // ── SETUP HELPERS ──
@@ -1216,7 +1292,8 @@ $('btnResetGame').addEventListener('click',async()=>{SFX.tap();if(state.mode==='
 $('btnAddOfflinePlayer').addEventListener('click',async()=>{SFX.tap();const name=($('offlinePlayerName').value||'').trim();if(!name)return;offlineAddPlayer(name);$('offlinePlayerName').value='';SFX.phase();});
 $('offlinePlayerName').addEventListener('keydown',e=>{if(e.key==='Enter')$('btnAddOfflinePlayer').click();});
 ['createDiscussion','createVote','createUndercover','createMrWhite','createRounds','createTurns'].forEach(id=>{const el=$(id);if(el)el.addEventListener('input',syncSetupValues);});
-document.querySelectorAll('.btn,.mode-btn,.mode-card').forEach(el=>{el.addEventListener('mouseenter',()=>SFX.hover());if(!el.classList.contains('mode-card'))el.addEventListener('click',()=>SFX.tap());});
+document.querySelectorAll('.btn,.mode-btn').forEach(el=>{el.addEventListener('mouseenter',()=>SFX.hover());el.addEventListener('click',()=>SFX.tap());});
+document.querySelectorAll('.mode-card').forEach(el=>{el.addEventListener('mouseenter',()=>SFX.hover());});
 
 // ── BOOT ──
 async function boot(){
