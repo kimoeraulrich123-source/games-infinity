@@ -211,6 +211,12 @@ input[type=checkbox]{accent-color:var(--vi);width:14px;height:14px;cursor:pointe
 .clue-bar-wrap{display:flex;flex-direction:column;gap:11px;padding:16px;border-radius:var(--r);background:linear-gradient(160deg,rgba(124,58,237,.14),rgba(0,201,255,.07));border:2px solid rgba(124,58,237,.38);animation:cbi .35s cubic-bezier(.34,1.56,.64,1)}
 @keyframes cbi{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 .clue-bar-label{font-family:"Syne",sans-serif;font-weight:900;font-size:.92rem;color:var(--vi2)}
+.clue-bar-timer{display:flex;align-items:center;gap:10px;margin:-2px 0 2px}
+.clue-bar-timer-text{font-family:"Space Mono",monospace;font-size:1.1rem;font-weight:700;color:var(--cy2);min-width:38px;transition:color .3s}
+.clue-bar-timer-text.urgent{color:var(--rs);animation:up .6s ease infinite alternate}
+.clue-bar-timer-bar{flex:1;height:4px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden}
+.clue-bar-timer-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--vi),var(--cy));transition:width .25s linear}
+.clue-bar-timer-fill.urgent{background:linear-gradient(90deg,var(--rs),#ff8fa3)}
 .clue-bar-row{display:flex;gap:9px}
 .clue-bar-input{flex:1;padding:12px 15px;border-radius:var(--r2);border:2px solid rgba(124,58,237,.45);background:rgba(0,0,0,.3);color:#fff;font-family:"Syne",sans-serif;font-size:1.05rem;font-weight:700;outline:none;transition:all .2s}
 .clue-bar-input:focus{border-color:var(--cy);box-shadow:0 0 0 4px rgba(0,201,255,.14);background:rgba(0,0,0,.5)}
@@ -349,6 +355,21 @@ details[open] .summary-arrow{transform:rotate(180deg)}
 .reveal-btn{margin-top:22px;opacity:0;animation:rs .5s ease 1s forwards}
 @keyframes rs{to{opacity:1;transform:translateY(0)}}
 @keyframes rp{to{opacity:1;transform:scale(1)}}
+/* MR WHITE SNOW */
+.mw-snow-container{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.snowflake{position:absolute;top:-12px;color:#fff;font-size:1rem;opacity:0;animation:snowfall linear forwards;pointer-events:none;filter:blur(0px);text-shadow:0 0 6px rgba(226,232,240,.5)}
+.snowflake.small{font-size:.55rem;opacity:0;filter:blur(.5px)}
+.snowflake.medium{font-size:.85rem}
+.snowflake.large{font-size:1.3rem;text-shadow:0 0 12px rgba(226,232,240,.7)}
+@keyframes snowfall{
+  0%{opacity:0;transform:translateY(0) translateX(0) rotate(0deg)}
+  8%{opacity:.85}
+  75%{opacity:.6}
+  100%{opacity:0;transform:translateY(105vh) translateX(var(--sw,30px)) rotate(var(--sr,360deg))}
+}
+.reveal-overlay.mrwhite-active{background:radial-gradient(ellipse at 50% 20%,rgba(30,40,70,.97),rgba(7,9,16,.98) 70%)}
+.reveal-overlay.mrwhite-active .glow-ring{background:radial-gradient(circle,rgba(226,232,240,.18),transparent 70%);filter:blur(80px)}
+.reveal-overlay.mrwhite-active .reveal-word-big{background:linear-gradient(135deg,#fff 10%,#cbd5e1 40%,#94a3b8 70%,#e2e8f0);-webkit-background-clip:text;background-clip:text}
 /* PEEK */
 .peek-word-btn{position:fixed;bottom:20px;left:20px;z-index:60;width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,var(--vi),#9b59b6);border:2px solid rgba(124,58,237,.5);color:#fff;font-size:1.25rem;display:none;place-items:center;cursor:pointer;box-shadow:0 8px 26px rgba(124,58,237,.4);transition:all .2s}
 .peek-word-btn:hover{transform:scale(1.1)}
@@ -412,6 +433,19 @@ details[open] .summary-arrow{transform:rotate(180deg)}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
 @media(max-width:580px){.stats-grid{grid-template-columns:repeat(2,1fr)}.vote-profiles{grid-template-columns:1fr}}
+/* MR WHITE SNOW THEME */
+.mw-snow-wrap{position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden;opacity:0;transition:opacity 1.2s ease}
+.mw-snow-wrap.active{opacity:1}
+.snowflake{position:absolute;top:-12px;color:#fff;font-size:1rem;opacity:0;animation:snowfall linear forwards;pointer-events:none;filter:blur(0px);text-shadow:0 0 6px rgba(200,220,255,.4)}
+@keyframes snowfall{
+  0%{opacity:0;transform:translateY(0) rotate(0deg) translateX(0)}
+  5%{opacity:.85}
+  50%{transform:translateY(50vh) rotate(180deg) translateX(var(--sw,30px))}
+  95%{opacity:.6}
+  100%{opacity:0;transform:translateY(105vh) rotate(360deg) translateX(calc(var(--sw,30px)*-1))}
+}
+.mw-vignette{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0;transition:opacity 1.5s ease;background:radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(180,210,240,.04) 75%,rgba(100,140,200,.08) 100%)}
+.mw-vignette.active{opacity:1}
 </style>
 </head>
 <body>
@@ -486,7 +520,7 @@ details[open] .summary-arrow{transform:rotate(180deg)}
     <div class="stack">
       <div class="field"><label>Ton pseudo</label><input id="createNickname" type="text" placeholder="Ex : Ulrich" maxlength="20"/></div>
       <div class="params-grid">
-        <div class="num-card"><div class="num-head"><span class="num-label">Discussion</span><span id="createDiscussionValue" class="num-value">90s</span></div><div class="num-ctrl"><button type="button" onclick="adjInput('createDiscussion',-15)">−</button><input id="createDiscussion" type="number" min="20" max="600" value="90"/><button type="button" onclick="adjInput('createDiscussion',15)">+</button></div></div>
+        <div class="num-card"><div class="num-head"><span class="num-label">⏱ Temps/indice</span><span id="createClueTimeValue" class="num-value">60s</span></div><div class="num-ctrl"><button type="button" onclick="adjInput('createClueTime',-10)">−</button><input id="createClueTime" type="number" min="15" max="180" value="60"/><button type="button" onclick="adjInput('createClueTime',10)">+</button></div></div>
         <div class="num-card"><div class="num-head"><span class="num-label">Vote</span><span id="createVoteValue" class="num-value">45s</span></div><div class="num-ctrl"><button type="button" onclick="adjInput('createVote',-10)">−</button><input id="createVote" type="number" min="10" max="300" value="45"/><button type="button" onclick="adjInput('createVote',10)">+</button></div></div>
         <div class="num-card"><div class="num-head"><span class="num-label">Undercovers</span><span id="createUndercoverValue" class="num-value">1</span></div><div class="num-ctrl"><button type="button" onclick="adjInput('createUndercover',-1)">−</button><input id="createUndercover" type="number" min="0" max="1" value="1"/><button type="button" onclick="adjInput('createUndercover',1)">+</button></div></div>
         <div class="num-card"><div class="num-head"><span class="num-label">Mr. White</span><span id="createMrWhiteValue" class="num-value">0</span></div><div class="num-ctrl"><button type="button" onclick="adjInput('createMrWhite',-1)">−</button><input id="createMrWhite" type="number" min="0" max="1" value="0"/><button type="button" onclick="adjInput('createMrWhite',1)">+</button></div></div>
@@ -631,7 +665,7 @@ details[open] .summary-arrow{transform:rotate(180deg)}
       <div class="stats-grid" style="margin-bottom:13px">
         <div class="stat"><div class="stat-k">Undercovers</div><div class="stat-v" id="settingsUndercover">1</div></div>
         <div class="stat"><div class="stat-k">Mr. White</div><div class="stat-v" id="settingsMrWhite">0</div></div>
-        <div class="stat"><div class="stat-k">Discussion</div><div class="stat-v" id="settingsDiscussion">90s</div></div>
+        <div class="stat"><div class="stat-k">Temps/indice</div><div class="stat-v" id="settingsClueTime">60s</div></div>
         <div class="stat"><div class="stat-k">Vote</div><div class="stat-v" id="settingsVote">45s</div></div>
         <div class="stat"><div class="stat-k">Manches</div><div class="stat-v" id="settingsRounds">3</div></div>
         <div class="stat"><div class="stat-k">Vivants</div><div class="stat-v" id="aliveCount">0</div></div>
@@ -664,13 +698,8 @@ details[open] .summary-arrow{transform:rotate(180deg)}
     </div>
     <div id="panel-discussion" class="card hidden">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
-        <div><h2>Tour d'indices</h2><div class="small muted">Chaque joueur donne un mot pour décrire son mot secret.</div></div>
-        <div style="text-align:right">
-          <div id="discussionTimer" class="timer-display">00:00</div>
-          <div id="timerAdjust" class="hidden" style="margin-top:4px"><div class="timer-adj"><button class="btn btn-ghost btn-sm" onclick="adjustTimer('discussion',-30)">−30s</button><button class="btn btn-ghost btn-sm" onclick="adjustTimer('discussion',-10)">−10</button><button class="btn btn-ghost btn-sm" onclick="adjustTimer('discussion',10)">+10</button><button class="btn btn-ghost btn-sm" onclick="adjustTimer('discussion',30)">+30s</button></div></div>
-        </div>
+        <div><h2>Tour d'indices</h2><div class="small muted">Chaque joueur a <strong id="clueTimeDisplay">60s</strong> pour donner un indice.</div></div>
       </div>
-      <div class="progress-bar" style="margin-top:10px"><div id="discussionProgress" class="progress-fill"></div></div>
       <div id="speakerNow" class="speaker-now" style="margin-top:13px">
         <div class="speaker-dot"></div>
         <div style="flex:1"><div id="currentSpeakerText" class="speaker-name">—</div><div id="speakerProgressBadge" class="speaker-sub">—</div></div>
@@ -728,6 +757,7 @@ details[open] .summary-arrow{transform:rotate(180deg)}
 
 <!-- OVERLAYS -->
 <div id="revealOverlay" class="reveal-overlay">
+  <div id="mwSnowContainer" class="mw-snow-container"></div>
   <div class="glow-ring"></div>
   <div id="revealCounter" class="reveal-counter">0 / 0</div>
   <div id="revealPlayerName" class="reveal-player-name">—</div>
@@ -765,6 +795,8 @@ details[open] .summary-arrow{transform:rotate(180deg)}
   <button class="btn btn-ghost" id="btnCancelSearch">Annuler</button>
 </div>
 <div id="toastWrap" class="toast-wrap"></div>
+<div id="mwSnowWrap" class="mw-snow-wrap"></div>
+<div id="mwVignette" class="mw-vignette"></div>
 
 <script>
 "use strict";
@@ -792,7 +824,46 @@ const SFX=(()=>{
     skip(){unlock();o(440,'triangle',.026,.003,.1);o(330,'sine',.022,.003,.14,.06);},
     chat(){unlock();o(600,'sine',.018,.001,.05);},
     warn(){unlock();n(.06,180,.05);n(.05,200,.038,.09);},
-    wake(){unlock();o(220,'sine',.01,.06,.7);o(330,'sine',.008,.08,.8,.12);o(440,'sine',.006,.1,.9,.24);o(660,'sine',.005,.12,1,.4);}
+    wake(){unlock();o(220,'sine',.01,.06,.7);o(330,'sine',.008,.08,.8,.12);o(440,'sine',.006,.1,.9,.24);o(660,'sine',.005,.12,1,.4);},
+    // Jazzy piano melody for Mr. White reveal
+    mrWhiteJazz(){
+      unlock();if(!ctx)return;
+      const T=ctx.currentTime;
+      // Piano note with harmonics — warm, intimate jazz feel
+      function piano(freq,when,dur,vel){
+        const t=T+when;
+        // Fundamental
+        const o1=ctx.createOscillator();o1.type='sine';o1.frequency.value=freq;
+        // 2nd harmonic (octave) — softer
+        const o2=ctx.createOscillator();o2.type='sine';o2.frequency.value=freq*2;
+        // 3rd harmonic — very soft for warmth
+        const o3=ctx.createOscillator();o3.type='sine';o3.frequency.value=freq*3;
+        const g1=ctx.createGain();const g2=ctx.createGain();const g3=ctx.createGain();
+        const mg=ctx.createGain();
+        g1.gain.setValueAtTime(0,t);g1.gain.linearRampToValueAtTime(vel*.028,t+.008);g1.gain.exponentialRampToValueAtTime(vel*.016,t+.12);g1.gain.exponentialRampToValueAtTime(.0001,t+dur);
+        g2.gain.setValueAtTime(0,t);g2.gain.linearRampToValueAtTime(vel*.012,t+.005);g2.gain.exponentialRampToValueAtTime(.0001,t+dur*.7);
+        g3.gain.setValueAtTime(0,t);g3.gain.linearRampToValueAtTime(vel*.005,t+.004);g3.gain.exponentialRampToValueAtTime(.0001,t+dur*.5);
+        mg.gain.value=1;
+        o1.connect(g1);o2.connect(g2);o3.connect(g3);
+        g1.connect(mg);g2.connect(mg);g3.connect(mg);mg.connect(master);
+        o1.start(t);o2.start(t);o3.start(t);
+        o1.stop(t+dur+.05);o2.stop(t+dur+.05);o3.stop(t+dur+.05);
+      }
+      // Jazz chord: each note slightly staggered (human feel)
+      // Progression: Cmaj7 → Am7 → Dm7 → G7 → Cmaj7(9)
+      // Cmaj7: C4-E4-G4-B4
+      piano(261.6,.0,2.2,1);piano(329.6,.03,2.0,.85);piano(392,.06,1.8,.7);piano(493.9,.09,1.6,.6);
+      // Am7: A3-C4-E4-G4
+      piano(220,.7,1.8,.9);piano(261.6,.73,1.6,.75);piano(329.6,.76,1.5,.65);piano(392,.79,1.3,.55);
+      // Dm7: D4-F4-A4-C5
+      piano(293.7,1.5,1.8,.85);piano(349.2,1.53,1.6,.7);piano(440,1.56,1.4,.6);piano(523.3,1.59,1.2,.5);
+      // G7: G3-B3-D4-F4
+      piano(196,2.3,2.2,.9);piano(246.9,2.34,2.0,.75);piano(293.7,2.37,1.8,.65);piano(349.2,2.4,1.6,.55);
+      // Resolve: Cmaj9 — dreamy
+      piano(261.6,3.2,3.0,1);piano(329.6,3.24,2.8,.8);piano(392,3.28,2.6,.65);piano(493.9,3.32,2.4,.55);piano(293.7,3.36,2.2,.45);
+      // High sparkle notes — like snowflakes
+      piano(1047,3.8,1.5,.25);piano(988,4.2,1.2,.2);piano(880,4.5,1.4,.22);piano(784,4.9,1.8,.18);
+    }
   };
 })();
 const sfxReveal=()=>SFX.reveal();
@@ -802,6 +873,99 @@ const sfxPhase=()=>SFX.phase();
 const sfxCountdown=()=>SFX.countdown();
 const sfxWin=c=>SFX.win(c);
 const sfxSkip=()=>SFX.skip();
+
+// ══════════════════════════════
+// MR WHITE SNOW & JAZZ AMBIANCE
+// ══════════════════════════════
+const MWSnow=(()=>{
+  let active=false,interval=null,jazzCtx=null,jazzNodes=[];
+  const flakes=['❄','❅','❆','✦','·','•'];
+  function start(){
+    if(active)return;active=true;
+    const wrap=$('mwSnowWrap');const vig=$('mwVignette');
+    if(wrap)wrap.classList.add('active');
+    if(vig)vig.classList.add('active');
+    // Spawn snowflakes
+    interval=setInterval(()=>{
+      if(!wrap)return;
+      const f=document.createElement('span');
+      f.className='snowflake';
+      f.textContent=flakes[Math.floor(Math.random()*flakes.length)];
+      const size=0.5+Math.random()*1.2;
+      const drift=-40+Math.random()*80;
+      const dur=6+Math.random()*10;
+      const delay=Math.random()*0.5;
+      f.style.cssText=`left:${Math.random()*100}%;font-size:${size}rem;animation-duration:${dur}s;animation-delay:${delay}s;--sw:${drift}px;opacity:0;filter:blur(${Math.random()>0.7?1:0}px)`;
+      wrap.appendChild(f);
+      setTimeout(()=>f.remove(),(dur+delay+1)*1000);
+    },180);
+    // Jazz ambiance — soft chords + brush hits
+    startJazz();
+  }
+  function stop(){
+    if(!active)return;active=false;
+    const wrap=$('mwSnowWrap');const vig=$('mwVignette');
+    if(wrap){wrap.classList.remove('active');setTimeout(()=>{if(!active)wrap.innerHTML='';},1500);}
+    if(vig)vig.classList.remove('active');
+    if(interval){clearInterval(interval);interval=null;}
+    stopJazz();
+  }
+  function startJazz(){
+    try{
+      const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+      jazzCtx=new AC();
+      const master=jazzCtx.createGain();master.gain.value=0.0001;master.connect(jazzCtx.destination);
+      // Fade in
+      master.gain.linearRampToValueAtTime(0.12,jazzCtx.currentTime+2);
+      jazzNodes.push(master);
+      // Pad — dreamy jazz chord (Cmaj9 voicing)
+      const freqs=[261.6,329.6,392,493.9,587.3];
+      freqs.forEach((f,i)=>{
+        const osc=jazzCtx.createOscillator();
+        osc.type=i%2===0?'sine':'triangle';
+        osc.frequency.value=f;
+        const g=jazzCtx.createGain();
+        g.gain.value=0.025-i*0.003;
+        const filt=jazzCtx.createBiquadFilter();
+        filt.type='lowpass';filt.frequency.value=800+i*100;filt.Q.value=0.5;
+        // Subtle vibrato
+        const lfo=jazzCtx.createOscillator();lfo.type='sine';lfo.frequency.value=0.3+i*0.15;
+        const lfoG=jazzCtx.createGain();lfoG.gain.value=0.8;
+        lfo.connect(lfoG);lfoG.connect(osc.frequency);lfo.start();
+        osc.connect(filt);filt.connect(g);g.connect(master);osc.start();
+        jazzNodes.push(osc,g,filt,lfo,lfoG);
+      });
+      // Soft brush loop — noise hits
+      const brushLoop=()=>{
+        if(!jazzCtx||!active)return;
+        const buf=jazzCtx.createBuffer(1,jazzCtx.sampleRate*0.08,jazzCtx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3);
+        const src=jazzCtx.createBufferSource();src.buffer=buf;
+        const bp=jazzCtx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=3000+Math.random()*2000;bp.Q.value=0.4;
+        const g=jazzCtx.createGain();g.gain.value=0.015+Math.random()*0.01;
+        src.connect(bp);bp.connect(g);g.connect(master);src.start();
+        setTimeout(brushLoop,800+Math.random()*1600);
+      };
+      setTimeout(brushLoop,1200);
+    }catch(e){console.log('Jazz ambiance not available');}
+  }
+  function stopJazz(){
+    if(jazzCtx){
+      try{
+        const master=jazzNodes[0];
+        if(master&&master.gain)master.gain.linearRampToValueAtTime(0.0001,jazzCtx.currentTime+1.5);
+        setTimeout(()=>{
+          jazzNodes.forEach(n=>{try{n.stop?.();}catch(e){}});
+          jazzNodes=[];
+          try{jazzCtx.close();}catch(e){}
+          jazzCtx=null;
+        },2000);
+      }catch(e){jazzCtx=null;jazzNodes=[];}
+    }
+  }
+  return{start,stop,isActive:()=>active};
+})();
 
 // ══════════════════════════════
 // PROFILE & RANKING
@@ -956,7 +1120,7 @@ document.getElementById('btnNormalMode').addEventListener('click',(e)=>{e.stopPr
 document.getElementById('btnRankedMode').addEventListener('click',(e)=>{e.stopPropagation();SFX.tap();showScreen('ranked');});
 document.getElementById('btnCustomMode').addEventListener('click',(e)=>{e.stopPropagation();SFX.tap();showScreen('setup');});
 document.getElementById('btnGoMenu').addEventListener('click',()=>{if(confirm('Retourner au menu ? La partie sera quittée.'))goMenu();});
-function goMenu(){if(state.unsubRoom)state.unsubRoom();if(state.unsubPlayers)state.unsubPlayers();if(state.tickInterval)clearInterval(state.tickInterval);localStorage.removeItem('uc_offline_v6');state.mode='offline';state.roomId=null;state.isHost=false;state.roomData=null;state.players=[];state.myPrivateWord=null;state.offline=null;state.lastPhase='';state.lastWinner='';lastSeenClueCount=0;mrWhiteGuessActive=false;rankedSessionResults=null;hideRevealOverlay();closeRolesReveal();closePeek();history.replaceState(null,'',location.pathname);showScreen('menu');SFX.close();}
+function goMenu(){if(state.unsubRoom)state.unsubRoom();if(state.unsubPlayers)state.unsubPlayers();if(state.tickInterval)clearInterval(state.tickInterval);clearClueTimer();localStorage.removeItem('uc_offline_v6');state.mode='offline';state.roomId=null;state.isHost=false;state.roomData=null;state.players=[];state.myPrivateWord=null;state.offline=null;state.lastPhase='';state.lastWinner='';lastSeenClueCount=0;mrWhiteGuessActive=false;rankedSessionResults=null;MWSnow.stop();hideRevealOverlay();closeRolesReveal();closePeek();history.replaceState(null,'',location.pathname);showScreen('menu');SFX.close();}
 
 // ══════════════════════════════
 // NORMAL MATCHMAKING
@@ -977,7 +1141,7 @@ async function joinOrCreateNormalRoom(nickname){
     for(const doc of snap.docs){if((doc.data().players||[]).length<8){roomId=doc.id;break;}}
     if(!roomId){
       roomId=roomCode();
-      await firebaseFns.setDoc(firebaseFns.doc(state.db,'matchmaking',roomId),{roomId,open:true,gameMode:'normal',players:[{id:state.myId,nickname}],settings:{discussionSeconds:300,voteSeconds:60,undercoverCount:1,mrWhiteCount:0,roundsTotal:3,turnsPerRound:2,gameMode:'normal',ranked:false,secretVotes:false},createdAt:firebaseFns.serverTimestamp()});
+      await firebaseFns.setDoc(firebaseFns.doc(state.db,'matchmaking',roomId),{roomId,open:true,gameMode:'normal',players:[{id:state.myId,nickname}],settings:{discussionSeconds:300,voteSeconds:60,clueSeconds:60,undercoverCount:1,mrWhiteCount:0,roundsTotal:3,turnsPerRound:2,gameMode:'normal',ranked:false,secretVotes:false},createdAt:firebaseFns.serverTimestamp()});
     }else{await firebaseFns.updateDoc(firebaseFns.doc(state.db,'matchmaking',roomId),{players:firebaseFns.arrayUnion({id:state.myId,nickname})});}
     searchRoomId=roomId;pollNormalRoom(roomId,nickname);
   }catch(e){console.error(e);toast('Erreur matchmaking','#ff3d6b');$('searchingOverlay').classList.remove('active');}
@@ -1013,7 +1177,7 @@ $('btnCancelSearch').addEventListener('click',()=>{if(searchInterval)clearInterv
 // ══════════════════════════════
 let rankedSessionResults=null;
 function initRankedSession(){rankedSessionResults={role:'civil',correctVotes:0,wrongVotes:0,survived:true,ucVotesEvaded:0,mwGuessWin:false,won:false};}
-$('btnCreateRanked').addEventListener('click',async()=>{SFX.tap();const nickname=($('rankedNickname').value||'').trim()||getProfile()?.name;if(!nickname){toast('⚠ Entre un pseudo','#ffb800');return;}if(!state.firebaseReady){toast('⚠ Firebase requis','#ffb800');return;}state.myName=nickname;const settings={discussionSeconds:300,voteSeconds:60,undercoverCount:1,mrWhiteCount:0,roundsTotal:6,turnsPerRound:2,gameMode:'ranked',ranked:true,secretVotes:true};initRankedSession();try{await createFirebaseRoom(nickname,settings);SFX.success();}catch(e){toast('Erreur : '+e.message,'#ff3d6b');}});
+$('btnCreateRanked').addEventListener('click',async()=>{SFX.tap();const nickname=($('rankedNickname').value||'').trim()||getProfile()?.name;if(!nickname){toast('⚠ Entre un pseudo','#ffb800');return;}if(!state.firebaseReady){toast('⚠ Firebase requis','#ffb800');return;}state.myName=nickname;const settings={discussionSeconds:300,voteSeconds:60,clueSeconds:60,undercoverCount:1,mrWhiteCount:0,roundsTotal:6,turnsPerRound:2,gameMode:'ranked',ranked:true,secretVotes:true};initRankedSession();try{await createFirebaseRoom(nickname,settings);SFX.success();}catch(e){toast('Erreur : '+e.message,'#ff3d6b');}});
 $('btnJoinRanked').addEventListener('click',async()=>{SFX.tap();const code=prompt('Code de la salle Ranked :');if(!code)return;const nickname=($('rankedNickname').value||'').trim()||getProfile()?.name;if(!nickname){toast('⚠ Entre un pseudo','#ffb800');return;}state.myName=nickname;initRankedSession();try{await joinFirebaseRoom(code.trim().toUpperCase(),nickname);}catch(e){toast('Erreur : '+e.message,'#ff3d6b');}});
 
 // ══════════════════════════════
@@ -1162,12 +1326,59 @@ async function submitClue(playerId,playerName,word){
 }
 let waTimeout=null;
 function showWordAnnounce(playerName,word){const overlay=$('wordAnnounceOverlay');$('waAuthor').textContent=playerName;$('waWord').textContent=`"${word}"`;overlay.querySelectorAll('.wa-author,.wa-wrote,.wa-word').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation='';});const pc=$('waParticles');pc.innerHTML='';const colors=['#7c3aed','#00c9ff','#00e09a','#ffb800','#f72585','#a78bfa'];for(let i=0;i<24;i++){const p=document.createElement('div');p.className='wa-particle';const angle=Math.random()*Math.PI*2;const dist=120+Math.random()*180;p.style.cssText=`left:50%;top:50%;background:${colors[i%colors.length]};--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist}px;animation-delay:${.3+Math.random()*.4}s;width:${3+Math.random()*5}px;height:${3+Math.random()*5}px;`;pc.appendChild(p);}overlay.classList.add('active');SFX.reveal();if(waTimeout)clearTimeout(waTimeout);waTimeout=setTimeout(()=>{overlay.classList.remove('active');},3000);}
-function renderClueInput(){const room=getRoom();const section=$('clueInputSection');if(!section||!room||room.phase!=='discussion')return;const order=room.current?.turnOrder||[];const idx=room.current?.speakerIndex||0;const totalTurns=order.length;if(idx>=totalTurns){section.innerHTML=`<div class="clue-waiting"><div class="clue-waiting-name">✅ Tous les indices sont donnés !</div><div class="clue-waiting-sub">Passage au vote…</div></div>`;return;}const curId=idx<totalTurns?order[idx]:'';const curName=getPlayerName(curId);
+let clueTimerInterval=null;let clueTimerEndsAt=0;
+function clearClueTimer(){if(clueTimerInterval){clearInterval(clueTimerInterval);clueTimerInterval=null;}clueTimerEndsAt=0;}
+function getClueSeconds(){return getRoom()?.settings?.clueSeconds||60;}
+
+function renderClueInput(){const room=getRoom();const section=$('clueInputSection');if(!section||!room||room.phase!=='discussion')return;const order=room.current?.turnOrder||[];const idx=room.current?.speakerIndex||0;const totalTurns=order.length;if(idx>=totalTurns){clearClueTimer();section.innerHTML=`<div class="clue-waiting"><div class="clue-waiting-name">✅ Tous les indices sont donnés !</div><div class="clue-waiting-sub">Passage au vote…</div></div>`;return;}const curId=idx<totalTurns?order[idx]:'';const curName=getPlayerName(curId);
 // Si l'indice a déjà été soumis ce tour, afficher l'attente
-if(clueSubmittedBySpeaker&&(state.mode==='offline'||curId===state.myId)){section.innerHTML=`<div class="clue-waiting"><div class="clue-waiting-name">✅ Indice envoyé !</div><div class="clue-waiting-sub">En attente du prochain joueur…</div></div>`;return;}
-if(state.mode==='offline'){section.innerHTML=`<div class="clue-bar-wrap"><div class="clue-bar-label">🎙 ${escHtml(curName)}, donne ton indice :</div><div class="clue-bar-row"><input id="clueBarInput" class="clue-bar-input" type="text" placeholder="Un seul mot..." maxlength="40" autocomplete="off"/><button id="clueBarSend" class="clue-bar-send">Valider ✓</button></div></div>`;const inp=$('clueBarInput');const btn=$('clueBarSend');if(inp&&btn){inp.focus();const ds=()=>{const w=(inp.value||'').trim();if(!w)return;inp.disabled=true;btn.disabled=true;submitClue(curId,curName,w);};btn.addEventListener('click',ds);inp.addEventListener('keydown',e=>{if(e.key==='Enter')ds();});}}else{if(curId===state.myId){section.innerHTML=`<div class="clue-bar-wrap"><div class="clue-bar-label">🎙 C'est ton tour ! Donne un indice :</div><div class="clue-bar-row"><input id="clueBarInput" class="clue-bar-input" type="text" placeholder="Un seul mot..." maxlength="40" autocomplete="off"/><button id="clueBarSend" class="clue-bar-send">Valider ✓</button></div></div>`;const inp=$('clueBarInput');const btn=$('clueBarSend');if(inp&&btn){inp.focus();const ds=()=>{const w=(inp.value||'').trim();if(!w)return;inp.disabled=true;btn.disabled=true;submitClue(curId,state.myName,w);};btn.addEventListener('click',ds);inp.addEventListener('keydown',e=>{if(e.key==='Enter')ds();});}}else{section.innerHTML=`<div class="clue-waiting"><div class="clue-waiting-name">🎙 ${escHtml(curName)} réfléchit…</div><div class="clue-waiting-sub">En attente de son indice</div></div>`;}}}
+if(clueSubmittedBySpeaker&&(state.mode==='offline'||curId===state.myId)){clearClueTimer();section.innerHTML=`<div class="clue-waiting"><div class="clue-waiting-name">✅ Indice envoyé !</div><div class="clue-waiting-sub">En attente du prochain joueur…</div></div>`;return;}
+const isMyTurn=state.mode==='offline'||curId===state.myId;
+if(isMyTurn){
+  const clueSecs=getClueSeconds();
+  section.innerHTML=`<div class="clue-bar-wrap"><div class="clue-bar-label">🎙 ${state.mode==='offline'?escHtml(curName)+', c\'est ton tour !':'C\'est ton tour ! Donne un indice :'}</div><div class="clue-bar-timer"><span id="clueCountdown" class="clue-bar-timer-text">${clueSecs}s</span><div class="clue-bar-timer-bar"><div id="clueCountdownBar" class="clue-bar-timer-fill" style="width:100%"></div></div></div><div class="clue-bar-row"><input id="clueBarInput" class="clue-bar-input" type="text" placeholder="Un seul mot..." maxlength="40" autocomplete="off"/><button id="clueBarSend" class="clue-bar-send">Envoyer ✓</button></div></div>`;
+  const inp=$('clueBarInput');const btn=$('clueBarSend');
+  if(inp&&btn){
+    setTimeout(()=>{inp.focus();section.scrollIntoView({behavior:'smooth',block:'center'});},100);
+    const submitFn=()=>{const w=(inp.value||'').trim();if(!w)return;inp.disabled=true;btn.disabled=true;clearClueTimer();submitClue(curId,state.mode==='offline'?curName:state.myName,w);};
+    btn.addEventListener('click',submitFn);
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter')submitFn();});
+  }
+  // Démarrer le timer individuel
+  startClueTimer(clueSecs,curId,state.mode==='offline'?curName:state.myName);
+}else{
+  clearClueTimer();
+  section.innerHTML=`<div class="clue-waiting"><div class="clue-waiting-name">🎙 ${escHtml(curName)} réfléchit…</div><div class="clue-waiting-sub">En attente de son indice</div></div>`;
+}}
+
+function startClueTimer(totalSecs,playerId,playerName){
+  clearClueTimer();
+  clueTimerEndsAt=Date.now()+totalSecs*1000;
+  clueTimerInterval=setInterval(()=>{
+    const ms=Math.max(0,clueTimerEndsAt-Date.now());
+    const secsLeft=Math.ceil(ms/1000);
+    const pct=Math.max(0,(ms/(totalSecs*1000))*100);
+    const el=$('clueCountdown');const bar=$('clueCountdownBar');
+    if(el){el.textContent=`${secsLeft}s`;el.classList.toggle('urgent',secsLeft<=10);}
+    if(bar){bar.style.width=`${pct}%`;bar.classList.toggle('urgent',secsLeft<=10);}
+    // Countdown SFX dans les 5 dernières secondes
+    if(secsLeft<=5&&secsLeft>=1){const key=`clue_${secsLeft}`;if(audio.lastCountKey!==key){audio.lastCountKey=key;sfxCountdown();}}
+    if(ms<=0){
+      clearClueTimer();audio.lastCountKey=null;
+      // Temps écoulé → auto-passer le tour
+      if(!clueSubmittedBySpeaker){
+        clueSubmittedBySpeaker=true;
+        const inp=$('clueBarInput');const btn=$('clueBarSend');
+        if(inp)inp.disabled=true;if(btn)btn.disabled=true;
+        toast('⏱️ Temps écoulé !',`${playerName} passe son tour`);
+        SFX.warn();
+        submitClue(playerId,playerName,'⏱️');
+      }
+    }
+  },250);
+}
 function offlineNextSpeakerAuto(){const room=state.offline;if(!room||room.phase!=='discussion')return;const order=room.current.turnOrder||[];const idx=room.current.speakerIndex||0;const totalTurns=order.length;if(idx>=totalTurns-1){offlineStartVote();return;}room.current.speakerIndex+=1;persistOffline();updateRoomHeader();const nextId=order[room.current.speakerIndex]||'';toast('Tour suivant',getPlayerName(nextId));sfxPhase();}
-function initGameSession(){lastSeenClueCount=0;clueSubmittedBySpeaker=false;renderClueFeed();}
+function initGameSession(){lastSeenClueCount=0;clueSubmittedBySpeaker=false;lastRenderedSpeakerIdx=-1;clearClueTimer();renderClueFeed();}
 
 const state={mode:'offline',db:null,firebaseReady:false,roomId:null,myId:PROFILE.playerId,mySecret:PROFILE.secretId,isHost:false,myName:'',roomData:null,players:[],myPrivateWord:null,unsubRoom:null,unsubPlayers:null,tickInterval:null,offline:null,lastPhase:'',lastWinner:'',recentPairIndexes:[]};
 const getRoom=()=>state.mode==='firebase'?state.roomData:state.offline;
@@ -1198,26 +1409,32 @@ async function executeSkipWord(){const room=getRoom();if(!room||!state.isHost)re
 function executeSkipWordOffline(){const room=state.offline;if(!room)return;const alive=room.players.filter(p=>p.alive);const ucIds=room.current.undercoverIds||[];const mwIds=room.current.mrWhiteIds||[];const pairIndex=pickPairIndex();const pair=getPairAtIndex(pairIndex);room.current.pairIndex=pairIndex;room.current.skipVotes={};room.privateWords={};for(const p of alive){p.revealedRound=-999999;const isMW=mwIds.includes(p.id);const isUC=ucIds.includes(p.id);room.privateWords[p.id]={roundNumber:room.roundNumber,word:isMW?'':isUC?pair.b:pair.a,role:isMW?'mrwhite':isUC?'undercover':'civil',playerId:p.id,seen:false};}room.offlineRevealQueue=alive.map(p=>p.id);room.offlineRevealIndex=0;state.myPrivateWord=room.privateWords[room.offlineRevealQueue[0]]||null;persistOffline();toast('Mot changé !');sfxSkip();renderPlayers();updateRoomHeader();}
 function updateSkipBanner(){const room=getRoom();const banner=$('skipWordBanner');const btn=$('btnSkipWord');if(!banner||!btn)return;if(!room||room.phase!=='reveal'){show(banner,false);return;}show(banner,true);setText('skipVoteCount',`${Object.keys(getSkipVotes()).length} / ${getMajorityThreshold()} votes`);btn.disabled=hasVotedToSkip();btn.textContent=hasVotedToSkip()?'✓ Voté':'Changer';}
 
+
 function showRevealOverlay(playerName,word,role,seenCount,totalCount){
   const overlay=$('revealOverlay');
   $('revealCounter').textContent=`${seenCount+1} / ${totalCount}`;
   const tag=$('revealRoleTag');
   const isMWIdentity=word==='MR. WHITE';
+  // Stop previous snow if any
+  MWSnow.stop();
   if(isMWIdentity){
     $('revealPlayerName').textContent=`${playerName} — tu es Mr. White 🤵`;
     $('revealWordBig').textContent='Mr. White';
-    tag.textContent='🎭 Tu n\'as aucun mot — bluff comme si tu en avais un. Cache-le à tes amis !';
+    tag.textContent='🎭 Tu n\'as aucun mot — bluff comme si tu en avais un !';
     tag.className='reveal-role-tag mrwhite';
+    // Neige + jazzy piano pour Mr. White
+    setTimeout(()=>MWSnow.start(),400);
   }else{
     $('revealPlayerName').textContent=`${playerName} — voici ton mot secret`;
     $('revealWordBig').textContent=word||'—';
-    tag.textContent='🤫 Souviens-toi de ce mot. Cache-le à tes amis !';
+    tag.textContent='🤫 Mémorise bien ce mot, puis passe le téléphone au joueur suivant !';
     tag.className='reveal-role-tag civil';
   }
   overlay.querySelectorAll('[class*="reveal-"]').forEach(el=>{el.style.animation='none';el.offsetHeight;el.style.animation='';});
-  overlay.classList.add('active');SFX.reveal();
+  overlay.classList.add('active');
+  if(!isMWIdentity)SFX.reveal();
 }
-function hideRevealOverlay(){$('revealOverlay').classList.remove('active');}
+function hideRevealOverlay(){MWSnow.stop();$('revealOverlay').classList.remove('active');}
 function maybePlayPhaseAudio(){const room=getRoom();if(!room)return;if(state.lastPhase!==room.phase){if(['discussion','vote','result'].includes(room.phase))sfxPhase();state.lastPhase=room.phase;}if(!room.winner)state.lastWinner='';}
 function renderRoundDots(){const room=getRoom();const total=room?.settings?.roundsTotal||1;const cur=currentRoundNumber();const dots=$('roundsDots');if(!dots)return;dots.innerHTML='';for(let i=1;i<=total;i++){const d=document.createElement('div');d.className='round-dot'+(i<cur?' done':i===cur?' current':'');dots.appendChild(d);}setText('roundsLabel',`${cur} / ${total}`);}
 function renderPlayers(){const players=getPlayers();const speakerId=currentSpeakerId();const room=getRoom();const phase=room?.phase||'lobby';// Au lobby : afficher le total, en jeu : afficher les vivants
@@ -1228,14 +1445,18 @@ function updateBadges(){const inGame=currentScreen==='room'||currentScreen==='mr
 const PHASE_ORDER=['lobby','reveal','discussion','vote','result'];
 function updateStepUI(phase){const idx=PHASE_ORDER.indexOf(phase);PHASE_ORDER.forEach((p,i)=>{const el=$('step-'+p);if(!el)return;el.classList.remove('active','done');if(i<idx)el.classList.add('done');else if(i===idx)el.classList.add('active');});setText('phaseBadge',phaseLabel(phase));show($('panel-discussion'),phase==='discussion');show($('panel-vote'),phase==='vote');show($('panel-result'),phase==='result');show($('panel-clue-feed'),phase==='discussion'||phase==='vote');const vt=$('voteTypeLabel');if(vt)vt.textContent=getRoom()?.settings?.ranked?'Votes secrets — révélation simultanée.':'Votez pour éliminer un suspect.';}
 
-function updateButtons(){const room=getRoom();const phase=room?.phase||'lobby';const alive=getAlivePlayers();const allPlayers=getPlayers();const lobbyCount=phase==='lobby'?allPlayers.length:alive.length;const allSeen=alive.every(p=>p.revealedRound===currentRoundNumber());const order=room?.current?.turnOrder||[];const idx=room?.current?.speakerIndex||0;const totalTurns=order.length;show($('btnStartRound'),state.isHost&&phase==='lobby'&&lobbyCount>=3);show($('btnForceDiscussion'),state.isHost&&phase==='reveal');if($('btnForceDiscussion'))$('btnForceDiscussion').disabled=!allSeen;show($('btnNextSpeaker'),state.isHost&&phase==='discussion');if($('btnNextSpeaker'))$('btnNextSpeaker').disabled=idx>=Math.max(0,totalTurns-1);show($('btnForceVote'),state.isHost&&phase==='discussion');show($('btnResolveVote'),state.isHost&&phase==='vote'&&!room?.settings?.ranked);show($('revealVotesPanel'),state.isHost&&phase==='vote'&&!!room?.settings?.ranked);show($('btnNextRound'),state.isHost&&phase==='result'&&currentRoundNumber()<(room?.settings?.roundsTotal||1));show($('btnResetGame'),state.isHost);show($('timerAdjust'),state.isHost&&phase==='discussion');show($('voteTimerAdjust'),state.isHost&&phase==='vote');if($('btnSeenWord'))$('btnSeenWord').disabled=state.mode==='firebase'?hasSeenCurrentWord():!offlineCurrentRevealPlayer();show($('panel-offline-admin'),state.mode==='offline'&&state.isHost&&phase==='lobby');updateSkipBanner();}
+function updateButtons(){const room=getRoom();const phase=room?.phase||'lobby';const alive=getAlivePlayers();const allPlayers=getPlayers();const lobbyCount=phase==='lobby'?allPlayers.length:alive.length;const allSeen=alive.every(p=>p.revealedRound===currentRoundNumber());const order=room?.current?.turnOrder||[];const idx=room?.current?.speakerIndex||0;const totalTurns=order.length;show($('btnStartRound'),state.isHost&&phase==='lobby'&&lobbyCount>=3);show($('btnForceDiscussion'),state.isHost&&phase==='reveal');if($('btnForceDiscussion'))$('btnForceDiscussion').disabled=!allSeen;show($('btnNextSpeaker'),state.isHost&&phase==='discussion');if($('btnNextSpeaker'))$('btnNextSpeaker').disabled=idx>=Math.max(0,totalTurns-1);show($('btnForceVote'),state.isHost&&phase==='discussion');show($('btnResolveVote'),state.isHost&&phase==='vote'&&!room?.settings?.ranked);show($('revealVotesPanel'),state.isHost&&phase==='vote'&&!!room?.settings?.ranked);show($('btnNextRound'),state.isHost&&phase==='result'&&currentRoundNumber()<(room?.settings?.roundsTotal||1));show($('btnResetGame'),state.isHost);show($('voteTimerAdjust'),state.isHost&&phase==='vote');if($('btnSeenWord'))$('btnSeenWord').disabled=state.mode==='firebase'?hasSeenCurrentWord():!offlineCurrentRevealPlayer();show($('panel-offline-admin'),state.mode==='offline'&&state.isHost&&phase==='lobby');updateSkipBanner();}
 
-function updateRoomHeader(){const room=getRoom();if(!room)return;const settings=room.settings||{};setText('roomTitle',`Salle ${state.roomId||'—'}`);setText('roomMeta',state.mode==='firebase'?'Multijoueur en ligne':'Partie locale');setText('settingsUndercover',settings.undercoverCount??1);setText('settingsMrWhite',settings.mrWhiteCount??0);setText('settingsDiscussion',`${settings.discussionSeconds||90}s`);setText('settingsVote',`${settings.voteSeconds||45}s`);setText('settingsRounds',settings.roundsTotal||1);setText('settingsTurns',settings.turnsPerRound||2);if($('shareLinkInput'))$('shareLinkInput').value=state.mode==='firebase'?`${location.origin}${location.pathname}?room=${encodeURIComponent(state.roomId||'')}`:`${location.origin}${location.pathname}`;show($('hostBadge'),state.isHost);updateBadges();renderRoundDots();updateStepUI(room.phase||'lobby');updateRevealPanel();updateDiscussionPanel();updateVotePanel();updateResultPanel();updateButtons();updatePeekButton();maybePlayPhaseAudio();}
+function updateRoomHeader(){const room=getRoom();if(!room)return;const settings=room.settings||{};setText('roomTitle',`Salle ${state.roomId||'—'}`);setText('roomMeta',state.mode==='firebase'?'Multijoueur en ligne':'Partie locale');setText('settingsUndercover',settings.undercoverCount??1);setText('settingsMrWhite',settings.mrWhiteCount??0);setText('settingsClueTime',`${settings.clueSeconds||60}s`);setText('settingsVote',`${settings.voteSeconds||45}s`);setText('settingsRounds',settings.roundsTotal||1);setText('settingsTurns',settings.turnsPerRound||2);const ctd=$('clueTimeDisplay');if(ctd)ctd.textContent=`${settings.clueSeconds||60}s`;if($('shareLinkInput'))$('shareLinkInput').value=state.mode==='firebase'?`${location.origin}${location.pathname}?room=${encodeURIComponent(state.roomId||'')}`:`${location.origin}${location.pathname}`;show($('hostBadge'),state.isHost);updateBadges();renderRoundDots();updateStepUI(room.phase||'lobby');updateRevealPanel();updateDiscussionPanel();updateVotePanel();updateResultPanel();updateButtons();updatePeekButton();maybePlayPhaseAudio();}
 
 function updateRevealPanel(){const room=getRoom();if(!room||room.phase!=='reveal'){hideRevealOverlay();return;}if(state.mode==='firebase'){const alive=getAlivePlayers();const seen=alive.filter(p=>p.revealedRound===currentRoundNumber()).length;if(state.myPrivateWord&&!hasSeenCurrentWord()){const role=state.myPrivateWord.role||'civil';const isMW=role==='mrwhite';const isCPP=room.settings?.gameMode==='custom';// En PP : Mr. White voit son identité. Sinon ??? pour tout le monde
 const word=isMW?(isCPP?'MR. WHITE':'???'):state.myPrivateWord.word;showRevealOverlay(state.myName,word,role,seen,alive.length);}else{hideRevealOverlay();setStatus('Révélation',`${seen}/${alive.length} joueurs ont vu leur mot`);}}else{const cur=offlineCurrentRevealPlayer();const alive=getAlivePlayers();const seen=alive.filter(p=>p.revealedRound===currentRoundNumber()).length;if(cur){const pw=state.offline.privateWords[cur.id];const role=pw?.role||'civil';const isMW=role==='mrwhite';const isCPP=room.settings?.gameMode==='custom';const word=isMW?(isCPP?'MR. WHITE':'???'):pw?.word||'—';showRevealOverlay(cur.nickname,word,role,seen,alive.length);}else{hideRevealOverlay();setStatus('Tous ont vu leur mot','L\'hôte peut lancer la discussion.');}}updateButtons();}
 
-function updateDiscussionPanel(){const room=getRoom();if(!room||room.phase!=='discussion')return;const order=room.current?.turnOrder||[];const idx=room.current?.speakerIndex||0;const totalTurns=order.length;const curId=idx<totalTurns?order[idx]:'';const alivePlayers=getAlivePlayers();const playersCount=alivePlayers.length;const passNum=playersCount>0?Math.floor(idx/playersCount)+1:1;const totalPasses=playersCount>0?Math.ceil(totalTurns/playersCount):1;const playerNum=playersCount>0?(idx%playersCount)+1:0;setText('currentSpeakerText',curId?getPlayerName(curId):'Terminé');if(idx>=totalTurns)setText('speakerProgressBadge','Tous les indices sont donnés !');else if(totalPasses>1)setText('speakerProgressBadge',`Passage ${passNum}/${totalPasses} · Joueur ${playerNum}/${playersCount}`);else setText('speakerProgressBadge',`Joueur ${playerNum} sur ${playersCount}`);const av=$('speakerAvatar');if(av&&curId){av.style.background=avatarColor(curId);av.textContent=avatarInitial(getPlayerName(curId));}renderClueInput();renderClueFeed();}
+let lastRenderedSpeakerIdx=-1;
+function updateDiscussionPanel(){const room=getRoom();if(!room||room.phase!=='discussion'){lastRenderedSpeakerIdx=-1;return;}const order=room.current?.turnOrder||[];const idx=room.current?.speakerIndex||0;const totalTurns=order.length;const curId=idx<totalTurns?order[idx]:'';const alivePlayers=getAlivePlayers();const playersCount=alivePlayers.length;const passNum=playersCount>0?Math.floor(idx/playersCount)+1:1;const totalPasses=playersCount>0?Math.ceil(totalTurns/playersCount):1;const playerNum=playersCount>0?(idx%playersCount)+1:0;setText('currentSpeakerText',curId?getPlayerName(curId):'Terminé');if(idx>=totalTurns)setText('speakerProgressBadge','Tous les indices sont donnés !');else if(totalPasses>1)setText('speakerProgressBadge',`Passage ${passNum}/${totalPasses} · Joueur ${playerNum}/${playersCount}`);else setText('speakerProgressBadge',`Joueur ${playerNum} sur ${playersCount}`);const av=$('speakerAvatar');if(av&&curId){av.style.background=avatarColor(curId);av.textContent=avatarInitial(getPlayerName(curId));}
+// Ne re-render l'input que si le speaker a changé (sinon ça reset le timer)
+if(lastRenderedSpeakerIdx!==idx||!clueTimerInterval){lastRenderedSpeakerIdx=idx;renderClueInput();}
+renderClueFeed();}
 
 function updateVotePanel(){const room=getRoom();if(!room||room.phase!=='vote')return;const alive=getAlivePlayers();const grid=$('voteGrid');if(!grid)return;if(state.mode==='firebase'){const me=getPlayers().find(p=>p.id===state.myId);const voted=me?.votedRound===currentRoundNumber();$('voteInfo').textContent=voted?'✓ Vote enregistré':'⚡ Tu n\'as pas encore voté';$('voteInfo').className='badge '+(voted?'badge-ok':'badge-warn');show($('offlineVoteVoter'),false);grid.innerHTML=alive.filter(p=>p.id!==state.myId).map(p=>{const clues=getPlayerClues(p.id);return`<div class="vote-profile"><div class="vote-profile-head"><div class="vote-profile-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div><div class="vote-profile-name">${escHtml(p.nickname)}</div><div class="vote-profile-tag">En jeu</div></div></div><div class="vote-profile-clues">${clues.length?clues.map((c,i)=>`<div class="vote-clue-chip"><span class="vote-clue-round">T${i+1}</span> ${escHtml(c.word)}</div>`).join(''):`<div class="small muted">Aucun indice</div>`}</div><button class="vote-profile-btn ${voted?'voted':''}" data-vote="${escHtml(p.id)}" ${(!me?.alive||voted)?'disabled':''}>${voted?'✓ Voté':'🗳 Voter contre'}</button></div>`;}).join('');}else{const voter=offlineCurrentVoter();const done=!voter;$('voteInfo').textContent=done?'✓ Tous ont voté':`🗳 Au tour de : ${voter?.nickname}`;$('voteInfo').className='badge '+(done?'badge-ok':'badge-warn');show($('offlineVoteVoter'),!done);if(!done&&$('offlineVoteVoter'))$('offlineVoteVoter').textContent=`📱 Passe le téléphone à ${voter.nickname}`;grid.innerHTML=done?`<div class="small muted" style="text-align:center;padding:20px">En attente du résultat…</div>`:alive.filter(p=>p.id!==voter.id).map(p=>{const clues=getPlayerClues(p.id);return`<div class="vote-profile"><div class="vote-profile-head"><div class="vote-profile-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div><div class="vote-profile-name">${escHtml(p.nickname)}</div><div class="vote-profile-tag">En jeu</div></div></div><div class="vote-profile-clues">${clues.length?clues.map((c,i)=>`<div class="vote-clue-chip"><span class="vote-clue-round">T${i+1}</span> ${escHtml(c.word)}</div>`).join(''):`<div class="small muted">Aucun indice</div>`}</div><button class="vote-profile-btn" data-vote="${escHtml(p.id)}">🗳 Voter contre</button></div>`;}).join('');}[...grid.querySelectorAll('[data-vote]')].forEach(btn=>{btn.addEventListener('click',()=>{const id=btn.getAttribute('data-vote');SFX.vote();if(state.mode==='firebase')firebaseCastVote(id);else offlineCastVote(id);});});}
 
@@ -1254,10 +1475,10 @@ function updateResultPanel(){const room=getRoom();if(!room)return;setText('resul
 
 function updateTimerVisual(timerId,progressId,endAt,totalSecs){const ms=Math.max(0,(endAt||0)-Date.now());const totalMs=Math.max(1000,(totalSecs||1)*1000);const ratio=((totalMs-ms)/totalMs)*100;const total=Math.max(0,Math.ceil(ms/1000));const m=String(Math.floor(total/60)).padStart(2,'0');const s=String(total%60).padStart(2,'0');const el=$(timerId);if(!el)return;el.textContent=`${m}:${s}`;el.classList.toggle('urgent',ms<=5000&&ms>0);const prog=$(progressId);if(prog)prog.style.width=`${Math.max(0,Math.min(100,ratio))}%`;const secLeft=Math.ceil(ms/1000);const room=getRoom();if(ms>0&&secLeft<=5&&secLeft>=1){const key=`${room?.phase}_${secLeft}`;if(audio.lastCountKey!==key){audio.lastCountKey=key;sfxCountdown();}}if(ms<=0)audio.lastCountKey=null;}
 
-function adjustTimer(type,delta){const room=getRoom();if(!room||!state.isHost)return;if(type==='discussion'&&room.phase==='discussion'&&room.current?.discussionEndsAt){const ne=room.current.discussionEndsAt+delta*1000;if(state.mode==='offline'){state.offline.current.discussionEndsAt=Math.max(Date.now()+2000,ne);persistOffline();}else if(firebaseFns)firebaseFns.updateDoc(roomRef(state.roomId),{'current.discussionEndsAt':Math.max(Date.now()+2000,ne)});toast('Timer ajusté',`${delta>0?'+':''}${delta}s`);}if(type==='vote'&&room.phase==='vote'&&room.current?.voteEndsAt){const ne=room.current.voteEndsAt+delta*1000;if(state.mode==='offline'){state.offline.current.voteEndsAt=Math.max(Date.now()+2000,ne);persistOffline();}else if(firebaseFns)firebaseFns.updateDoc(roomRef(state.roomId),{'current.voteEndsAt':Math.max(Date.now()+2000,ne)});toast('Timer ajusté',`${delta>0?'+':''}${delta}s`);}}
+function adjustTimer(type,delta){const room=getRoom();if(!room||!state.isHost)return;if(type==='vote'&&room.phase==='vote'&&room.current?.voteEndsAt){const ne=room.current.voteEndsAt+delta*1000;if(state.mode==='offline'){state.offline.current.voteEndsAt=Math.max(Date.now()+2000,ne);persistOffline();}else if(firebaseFns)firebaseFns.updateDoc(roomRef(state.roomId),{'current.voteEndsAt':Math.max(Date.now()+2000,ne)});toast('Timer ajusté',`${delta>0?'+':''}${delta}s`);}}
 window.adjustTimer=adjustTimer;
 
-function startTick(){if(state.tickInterval)clearInterval(state.tickInterval);state.tickInterval=setInterval(()=>{const room=getRoom();if(!room)return;if(room.phase==='discussion')updateTimerVisual('discussionTimer','discussionProgress',room.current?.discussionEndsAt||0,room.settings?.discussionSeconds||90);if(room.phase==='vote')updateTimerVisual('voteTimer','voteProgress',room.current?.voteEndsAt||0,room.settings?.voteSeconds||45);if(state.mode==='firebase')autoPhaseProgress();else offlineAutoProgress();},250);}
+function startTick(){if(state.tickInterval)clearInterval(state.tickInterval);state.tickInterval=setInterval(()=>{const room=getRoom();if(!room)return;if(room.phase==='vote')updateTimerVisual('voteTimer','voteProgress',room.current?.voteEndsAt||0,room.settings?.voteSeconds||45);if(state.mode==='firebase')autoPhaseProgress();else offlineAutoProgress();},250);}
 
 // ── FIREBASE ──
 let firebaseFns=null;
@@ -1301,7 +1522,7 @@ async function firebaseStartRound(){
   await batch.commit();toast('Manche '+roundNumber+' lancée');
 }
 async function firebaseMarkSeen(){const room=getRoom();if(!room||room.phase!=='reveal'||hasSeenCurrentWord())return;await firebaseFns.setDoc(playerRef(state.roomId,state.myId),{revealedRound:currentRoundNumber()},{merge:true});await firebaseFns.setDoc(privateRef(state.roomId,state.mySecret),{seen:true},{merge:true});SFX.seen();hideRevealOverlay();const btn=$('btnSeenWord');if(btn){btn.textContent='👁 J\'ai bien vu mon mot';btn.onclick=null;}toast('Mot mémorisé','Tu es prêt !');}
-async function firebaseStartDiscussion(){const room=getRoom();if(!state.isHost||room.phase!=='reveal')return;const alive=getAlivePlayers();if(!alive.every(p=>p.revealedRound===currentRoundNumber()))return;const end=Date.now()+Number(room.settings.discussionSeconds||90)*1000;const turnOrder=buildTurnOrder(alive,room.settings?.turnsPerRound||2);await firebaseFns.updateDoc(roomRef(state.roomId),{phase:'discussion',updatedAt:firebaseFns.serverTimestamp(),'current.discussionEndsAt':end,'current.turnOrder':turnOrder,'current.speakerIndex':0,'current.skipVotes':{}});toast('Discussion lancée','Premier : '+getPlayerName(turnOrder[0]));}
+async function firebaseStartDiscussion(){const room=getRoom();if(!state.isHost||room.phase!=='reveal')return;const alive=getAlivePlayers();if(!alive.every(p=>p.revealedRound===currentRoundNumber()))return;const turnOrder=buildTurnOrder(alive,room.settings?.turnsPerRound||2);await firebaseFns.updateDoc(roomRef(state.roomId),{phase:'discussion',updatedAt:firebaseFns.serverTimestamp(),'current.discussionEndsAt':0,'current.turnOrder':turnOrder,'current.speakerIndex':0,'current.skipVotes':{}});toast('Discussion lancée','Premier : '+getPlayerName(turnOrder[0]));}
 async function firebaseNextSpeaker(){const room=getRoom();if(!state.isHost||room.phase!=='discussion')return;const order=room.current?.turnOrder||[];const idx=room.current?.speakerIndex||0;const totalTurns=order.length;if(idx>=totalTurns-1)return;await firebaseFns.updateDoc(roomRef(state.roomId),{updatedAt:firebaseFns.serverTimestamp(),'current.speakerIndex':idx+1});const nextId=order[idx+1]||'';toast('Tour suivant',getPlayerName(nextId));sfxPhase();}
 async function firebaseStartVote(){const room=getRoom();if(!state.isHost||room.phase!=='discussion')return;const end=Date.now()+Number(room.settings.voteSeconds||45)*1000;await firebaseFns.updateDoc(roomRef(state.roomId),{phase:'vote',updatedAt:firebaseFns.serverTimestamp(),'current.voteEndsAt':end});toast('Vote lancé');}
 async function firebaseCastVote(targetId){const room=getRoom();if(!room||room.phase!=='vote')return;const me=getPlayers().find(p=>p.id===state.myId);if(!me?.alive||me.votedRound===currentRoundNumber()||targetId===state.myId)return;
@@ -1318,9 +1539,9 @@ async function firebaseCastVote(targetId){const room=getRoom();if(!room||room.ph
     alert(e.message||'Erreur de vote.');
   }}
 async function firebaseResolveVotes(){const room=getRoom();if(!state.isHost||room.phase!=='vote')return;const votesSnap=await firebaseFns.getDocs(votesCol(state.roomId));const votes=votesSnap.docs.map(d=>d.data()).filter(v=>v.roundNumber===currentRoundNumber());const alive=getAlivePlayers();const tally={};for(const p of alive)tally[p.id]=0;for(const v of votes){if(v.targetId in tally)tally[v.targetId]++;}if(room.settings?.ranked){const rvd=$('revealedVotesDisplay');if(rvd){show(rvd,true);rvd.innerHTML=`<div style="font-family:'Syne',sans-serif;font-weight:900;margin-bottom:10px;color:var(--am)">⚡ Votes révélés :</div>${alive.map(p=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--b3)"><span>${escHtml(p.nickname)}</span><span style="font-family:'Space Mono',monospace;color:var(--vi2)">${tally[p.id]||0} vote${(tally[p.id]||0)!==1?'s':''}</span></div>`).join('')}`;}}const maxV=Math.max(0,...Object.values(tally));const top=Object.keys(tally).filter(id=>tally[id]===maxV);const elimId=top.length?top[randInt(top.length)]:null;const elimPlayer=getPlayers().find(p=>p.id===elimId);const ucIds=room.current?.undercoverIds||[];const mwIds=room.current?.mrWhiteIds||[];const batch=firebaseFns.writeBatch(state.db);if(elimId)batch.set(playerRef(state.roomId,elimId),{alive:false},{merge:true});const survivors=getPlayers().map(p=>p.id===elimId?{...p,alive:false}:p).filter(p=>p.alive);const aliveUC=survivors.filter(p=>ucIds.includes(p.id)).length;const aliveMW=survivors.filter(p=>mwIds.includes(p.id)).length;const aliveCivil=survivors.length-aliveUC-aliveMW;const resultText=elimPlayer?`${elimPlayer.nickname} a été éliminé.`:'Personne n\'a été éliminé.';let winner='';if(aliveUC===0&&aliveMW===0)winner='civils';else if(aliveUC>=aliveCivil)winner='undercover';const elimIsMW=mwIds.includes(elimId||'');if(elimIsMW&&!winner){batch.update(roomRef(state.roomId),{phase:'result',updatedAt:firebaseFns.serverTimestamp(),resultText,winner:'pending_mrwhite','current.aliveIds':survivors.map(p=>p.id),'current.turnOrder':[],'current.speakerIndex':0,...(elimId?{'current.eliminatedIds':firebaseFns.arrayUnion(elimId)}:{})});await batch.commit();toast('Résultat prêt');setTimeout(()=>triggerMrWhiteGuess(elimId,room.current?.civilianWord||''),1500);}else{batch.update(roomRef(state.roomId),{phase:'result',updatedAt:firebaseFns.serverTimestamp(),resultText,winner,'current.aliveIds':survivors.map(p=>p.id),'current.turnOrder':[],'current.speakerIndex':0,...(elimId?{'current.eliminatedIds':firebaseFns.arrayUnion(elimId)}:{})});await batch.commit();toast('Résultat prêt');}if(rankedSessionResults){if(ucIds.includes(state.myId)){rankedSessionResults.survived=elimId!==state.myId;if(elimId!==state.myId)rankedSessionResults.ucVotesEvaded++;} } }
-async function firebaseNextRound(){const room=getRoom();if(!state.isHost||room.phase!=='result')return;rolesShownForRound=-1;closeRolesReveal();const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast('Fin des manches');return;}const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));batch.update(roomRef(state.roomId),{phase:'lobby',winner:'',updatedAt:firebaseFns.serverTimestamp(),resultText:'','current.discussionEndsAt':0,'current.voteEndsAt':0,'current.turnOrder':[],'current.speakerIndex':0,'current.skipVotes':{},'current.clues':[]});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1},{merge:true});await batch.commit();toast('Retour au lobby');}
-async function firebaseResetGame(){if(!state.isHost)return;rolesShownForRound=-1;closeRolesReveal();const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1,revealedRound:-1},{merge:true});batch.update(roomRef(state.roomId),{phase:'lobby',roundNumber:0,winner:'',resultText:'',updatedAt:firebaseFns.serverTimestamp(),current:{aliveIds:getPlayers().map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],mrWhiteIds:[],civilianWord:'',discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{},clues:[]}});await batch.commit();toast('Partie réinitialisée');}
-function autoPhaseProgress(){if(state.mode!=='firebase'||!state.isHost)return;const room=getRoom();if(!room)return;if(room.phase==='discussion'&&room.current?.discussionEndsAt&&Date.now()>=room.current.discussionEndsAt)firebaseStartVote();if(room.phase==='vote'&&room.current?.voteEndsAt&&Date.now()>=room.current.voteEndsAt&&!room.settings?.ranked)firebaseResolveVotes();}
+async function firebaseNextRound(){const room=getRoom();if(!state.isHost||room.phase!=='result')return;rolesShownForRound=-1;closeRolesReveal();MWSnow.stop();const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast('Fin des manches');return;}const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));batch.update(roomRef(state.roomId),{phase:'lobby',winner:'',updatedAt:firebaseFns.serverTimestamp(),resultText:'','current.discussionEndsAt':0,'current.voteEndsAt':0,'current.turnOrder':[],'current.speakerIndex':0,'current.skipVotes':{},'current.clues':[]});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1},{merge:true});await batch.commit();toast('Retour au lobby');}
+async function firebaseResetGame(){if(!state.isHost)return;rolesShownForRound=-1;closeRolesReveal();MWSnow.stop();const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1,revealedRound:-1},{merge:true});batch.update(roomRef(state.roomId),{phase:'lobby',roundNumber:0,winner:'',resultText:'',updatedAt:firebaseFns.serverTimestamp(),current:{aliveIds:getPlayers().map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],mrWhiteIds:[],civilianWord:'',discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{},clues:[]}});await batch.commit();toast('Partie réinitialisée');}
+function autoPhaseProgress(){if(state.mode!=='firebase'||!state.isHost)return;const room=getRoom();if(!room)return;if(room.phase==='vote'&&room.current?.voteEndsAt&&Date.now()>=room.current.voteEndsAt&&!room.settings?.ranked)firebaseResolveVotes();}
 
 // ── OFFLINE ──
 function createOfflineRoom(nickname,settings){state.offline={mode:'offline',roomId:'LOCAL',hostId:state.myId,phase:'lobby',roundNumber:0,winner:'',resultText:'',settings,players:[{id:state.myId,secretId:state.mySecret,nickname,host:true,alive:true,joinedAt:now(),revealedRound:-1,votedRound:-1}],current:{aliveIds:[state.myId],eliminatedIds:[],pairIndex:-1,undercoverIds:[],mrWhiteIds:[],civilianWord:'',discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{},clues:[]},privateWords:{},votes:{},offlineRevealQueue:[],offlineRevealIndex:0,offlineVoteQueue:[],offlineVoteIndex:0};state.mode='offline';state.roomId='LOCAL';state.myName=nickname;state.isHost=true;state.myPrivateWord=null;persistOffline();mountOfflineRoom();toast('Partie locale créée');}
@@ -1331,15 +1552,15 @@ function offlineAddPlayer(name){if(!state.isHost||!state.offline)return;const cl
 function offlineStartRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=='lobby')return;const alive=room.players.filter(p=>p.alive);const totalPlayers=alive.length;let ucCount=clamp(Number(room.settings.undercoverCount??0),0,1);let mwCount=clamp(Number(room.settings.mrWhiteCount??0),0,1);if(ucCount>0&&mwCount>0)mwCount=0;const civilCount=totalPlayers-ucCount-mwCount;if(totalPlayers<3)return alert('Il faut au moins 3 joueurs pour commencer.');if(civilCount<2)return alert(`Pas assez de joueurs.\nAvec ${ucCount} undercover et ${mwCount} Mr White, il faut au moins ${ucCount+mwCount+2} joueurs.\nActuellement : ${totalPlayers} joueurs.`);const pairIndex=pickPairIndex();const pair=getPairAtIndex(pairIndex);const shuffled=shuffle(alive.map(p=>p.id));const undercoverIds=shuffled.slice(0,ucCount);const mrWhiteIds=shuffled.slice(ucCount,ucCount+mwCount);room.roundNumber+=1;room.phase='reveal';room.winner='';room.resultText='';room.current.pairIndex=pairIndex;room.current.undercoverIds=undercoverIds;room.current.mrWhiteIds=mrWhiteIds;room.current.aliveIds=alive.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;room.current.skipVotes={};room.current.clues=[];room.current.civilianWord=pair.a;room.privateWords={};room.votes={};room.offlineRevealQueue=alive.map(p=>p.id);room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.votedRound=-1;p.revealedRound=p.alive?-999999:p.revealedRound;}for(const p of alive){const isMW=mrWhiteIds.includes(p.id);const isUC=undercoverIds.includes(p.id);room.privateWords[p.id]={roundNumber:room.roundNumber,word:isMW?'':isUC?pair.b:pair.a,role:isMW?'mrwhite':isUC?'undercover':'civil',playerId:p.id,seen:false};}state.myPrivateWord=room.privateWords[room.offlineRevealQueue[0]]||null;lastSeenClueCount=0;persistOffline();renderPlayers();updateRoomHeader();toast(`Manche ${room.roundNumber} lancée`);}
 const offlineCurrentRevealPlayer=()=>{const room=state.offline;if(!room||room.phase!=='reveal')return null;const id=room.offlineRevealQueue?.[room.offlineRevealIndex];return room.players.find(p=>p.id===id)||null;};
 function offlineMarkSeen(){const room=state.offline;if(!room||room.phase!=='reveal')return;const player=offlineCurrentRevealPlayer();if(!player)return;player.revealedRound=room.roundNumber;if(room.privateWords[player.id])room.privateWords[player.id].seen=true;room.offlineRevealIndex+=1;state.myPrivateWord=room.offlineRevealIndex<room.offlineRevealQueue.length?room.privateWords[room.offlineRevealQueue[room.offlineRevealIndex]]:null;persistOffline();renderPlayers();updateRoomHeader();SFX.seen();const next=offlineCurrentRevealPlayer();if(next){toast('Mot mémorisé',`Passe le téléphone à ${next.nickname}`);}else{toast('✅ Tous ont vu leur mot !','La discussion commence...');setTimeout(()=>{if(state.offline&&state.offline.phase==='reveal')offlineStartDiscussion();},2000);}}
-function offlineStartDiscussion(){const room=state.offline;if(!room||!state.isHost||room.phase!=='reveal')return;const alive=room.players.filter(p=>p.alive);if(!alive.every(p=>p.revealedRound===room.roundNumber))return;room.phase='discussion';room.current.discussionEndsAt=now()+Number(room.settings.discussionSeconds||90)*1000;room.current.turnOrder=buildTurnOrder(alive,room.settings?.turnsPerRound||2);room.current.speakerIndex=0;room.current.skipVotes={};persistOffline();updateRoomHeader();toast('Discussion lancée',`Premier : ${getPlayerName(room.current.turnOrder[0])}`);}
+function offlineStartDiscussion(){const room=state.offline;if(!room||!state.isHost||room.phase!=='reveal')return;const alive=room.players.filter(p=>p.alive);if(!alive.every(p=>p.revealedRound===room.roundNumber))return;room.phase='discussion';room.current.discussionEndsAt=0;room.current.turnOrder=buildTurnOrder(alive,room.settings?.turnsPerRound||2);room.current.speakerIndex=0;room.current.skipVotes={};persistOffline();updateRoomHeader();toast('Discussion lancée',`Premier : ${getPlayerName(room.current.turnOrder[0])}`);}
 function offlineNextSpeaker(){const room=state.offline;if(!room||!state.isHost||room.phase!=='discussion')return;const order=room.current.turnOrder||[];const idx=room.current.speakerIndex||0;const totalTurns=order.length;if(idx>=totalTurns-1)return;room.current.speakerIndex+=1;persistOffline();updateRoomHeader();const nextId=order[room.current.speakerIndex]||'';toast('Tour suivant',getPlayerName(nextId));sfxPhase();}
 function offlineStartVote(){const room=state.offline;if(!room||room.phase!=='discussion')return;room.phase='vote';room.current.voteEndsAt=now()+Number(room.settings.voteSeconds||45)*1000;room.votes={};room.offlineVoteQueue=room.players.filter(p=>p.alive).map(p=>p.id);room.offlineVoteIndex=0;room.current.turnOrder=[];room.current.speakerIndex=0;for(const p of room.players)p.votedRound=-1;persistOffline();updateRoomHeader();toast('Vote lancé');}
 const offlineCurrentVoter=()=>{const room=state.offline;if(!room||room.phase!=='vote')return null;const id=room.offlineVoteQueue?.[room.offlineVoteIndex];return room.players.find(p=>p.id===id)||null;};
 function offlineCastVote(targetId){const room=state.offline;if(!room||room.phase!=='vote')return;const voter=offlineCurrentVoter();if(!voter||!voter.alive||voter.votedRound===room.roundNumber)return;if(targetId===voter.id)return;room.votes[voter.id]={playerId:voter.id,targetId,roundNumber:room.roundNumber};voter.votedRound=room.roundNumber;room.offlineVoteIndex+=1;persistOffline();renderPlayers();updateVotePanel();SFX.vote();const nv=offlineCurrentVoter();if(nv){toast('Vote enregistré',`Passe le téléphone à ${nv.nickname}`);}else{toast('✅ Tous ont voté !','Résultat dans un instant...');setTimeout(()=>{if(state.offline&&state.offline.phase==='vote')offlineResolveVotes();},2000);}}
 function offlineResolveVotes(){const room=state.offline;if(!room||!state.isHost||room.phase!=='vote')return;const alive=room.players.filter(p=>p.alive);const tally={};for(const p of alive)tally[p.id]=0;Object.values(room.votes).forEach(v=>{if(v.targetId in tally)tally[v.targetId]++;});const maxV=Math.max(0,...Object.values(tally));const top=Object.keys(tally).filter(id=>tally[id]===maxV);const elimId=top.length?top[randInt(top.length)]:null;const elimPlayer=room.players.find(p=>p.id===elimId);const ucIds=room.current.undercoverIds||[];const mwIds=room.current.mrWhiteIds||[];if(elimPlayer)elimPlayer.alive=false;const survivors=room.players.filter(p=>p.alive);const aliveUC=survivors.filter(p=>ucIds.includes(p.id)).length;const aliveMW=survivors.filter(p=>mwIds.includes(p.id)).length;const aliveCivil=survivors.length-aliveUC-aliveMW;room.resultText=elimPlayer?`${elimPlayer.nickname} a été éliminé.`:'Personne n\'a été éliminé.';if(aliveUC===0&&aliveMW===0)room.winner='civils';else if(aliveUC>=aliveCivil)room.winner='undercover';else room.winner='';room.phase='result';room.current.aliveIds=survivors.map(p=>p.id);room.current.turnOrder=[];room.current.speakerIndex=0;if(elimId){if(!room.current.eliminatedIds)room.current.eliminatedIds=[];room.current.eliminatedIds.push(elimId);}persistOffline();renderPlayers();updateRoomHeader();toast('Résultat prêt');const elimIsMW=mwIds.includes(elimId||'');if(elimIsMW&&!room.winner){room.winner='pending_mrwhite';persistOffline();setTimeout(()=>triggerMrWhiteGuess(elimId,room.current.civilianWord||''),1500);}}
-function offlineNextRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=='result')return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast('Fin des manches');return;}room.phase='lobby';room.winner='';room.resultText='';room.votes={};room.current.discussionEndsAt=0;room.current.voteEndsAt=0;room.current.turnOrder=[];room.current.speakerIndex=0;room.current.skipVotes={};room.current.clues=[];room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.alive=true;p.votedRound=-1;}room.current.aliveIds=room.players.map(p=>p.id);room.current.eliminatedIds=[];rolesShownForRound=-1;closeRolesReveal();persistOffline();renderPlayers();updateRoomHeader();toast('Retour au lobby');}
-function offlineResetGame(){const room=state.offline;if(!room||!state.isHost)return;room.phase='lobby';room.roundNumber=0;room.winner='';room.resultText='';room.current={aliveIds:room.players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],mrWhiteIds:[],civilianWord:'',discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{},clues:[]};room.privateWords={};room.votes={};room.offlineRevealQueue=[];room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.alive=true;p.votedRound=-1;p.revealedRound=-1;}rolesShownForRound=-1;closeRolesReveal();lastSeenClueCount=0;persistOffline();renderPlayers();updateRoomHeader();toast('Partie réinitialisée');}
-function offlineAutoProgress(){const room=state.offline;if(!room||!state.isHost)return;if(room.phase==='discussion'&&room.current.discussionEndsAt&&now()>=room.current.discussionEndsAt)offlineStartVote();if(room.phase==='vote'&&room.current.voteEndsAt&&now()>=room.current.voteEndsAt)offlineResolveVotes();}
+function offlineNextRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=='result')return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast('Fin des manches');return;}room.phase='lobby';room.winner='';room.resultText='';room.votes={};room.current.discussionEndsAt=0;room.current.voteEndsAt=0;room.current.turnOrder=[];room.current.speakerIndex=0;room.current.skipVotes={};room.current.clues=[];room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.alive=true;p.votedRound=-1;}room.current.aliveIds=room.players.map(p=>p.id);room.current.eliminatedIds=[];rolesShownForRound=-1;closeRolesReveal();MWSnow.stop();persistOffline();renderPlayers();updateRoomHeader();toast('Retour au lobby');}
+function offlineResetGame(){const room=state.offline;if(!room||!state.isHost)return;room.phase='lobby';room.roundNumber=0;room.winner='';room.resultText='';room.current={aliveIds:room.players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],mrWhiteIds:[],civilianWord:'',discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{},clues:[]};room.privateWords={};room.votes={};room.offlineRevealQueue=[];room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.alive=true;p.votedRound=-1;p.revealedRound=-1;}rolesShownForRound=-1;closeRolesReveal();MWSnow.stop();lastSeenClueCount=0;persistOffline();renderPlayers();updateRoomHeader();toast('Partie réinitialisée');}
+function offlineAutoProgress(){const room=state.offline;if(!room||!state.isHost)return;if(room.phase==='vote'&&room.current.voteEndsAt&&now()>=room.current.voteEndsAt)offlineResolveVotes();}
 
 // ── PEEK ──
 let peekFlipped=false;
@@ -1400,7 +1621,7 @@ function showRolesReveal(){
 function closeRolesReveal(){$('rolesOverlay').classList.remove('active');}
 
 // ── SETUP HELPERS ──
-function syncSetupValues(){setText('createDiscussionValue',`${$('createDiscussion').value}s`);setText('createVoteValue',`${$('createVote').value}s`);setText('createUndercoverValue',`${$('createUndercover').value}`);setText('createMrWhiteValue',`${$('createMrWhite').value}`);setText('createRoundsValue',`${$('createRounds').value}`);setText('createTurnsValue',`${$('createTurns').value}`);}
+function syncSetupValues(){setText('createClueTimeValue',`${$('createClueTime').value}s`);setText('createVoteValue',`${$('createVote').value}s`);setText('createUndercoverValue',`${$('createUndercover').value}`);setText('createMrWhiteValue',`${$('createMrWhite').value}`);setText('createRoundsValue',`${$('createRounds').value}`);setText('createTurnsValue',`${$('createTurns').value}`);}
 function adjInput(id,delta){
   const el=$(id);if(!el)return;
   const min=Number(el.min)||0;const max=Number(el.max)||9999;
@@ -1424,8 +1645,8 @@ $('soundVolume').addEventListener('input',updateAudioSettings);
 $('btnCopyLink').addEventListener('click',()=>{navigator.clipboard.writeText($('shareLinkInput').value).catch(()=>{});SFX.tap();toast('Lien copié !');});
 $('btnSkipWord').addEventListener('click',castSkipVote);
 $('toggleMrWhite').addEventListener('click',()=>{const item=$('mrWhiteRoleItem');const btn=$('toggleMrWhite');const isOn=item.classList.contains('enabled');item.classList.toggle('enabled',!isOn);btn.classList.toggle('on',!isOn);btn.textContent=!isOn?'Actif':'Inactif';const el=$('createMrWhite');if(el){el.value=!isOn?'1':'0';syncSetupValues();}SFX.tap();});
-$('btnCreateOnline').addEventListener('click',async()=>{SFX.tap();const nickname=($('createNickname').value||'').trim();if(!nickname)return alert('Entre un pseudo.');if(!state.firebaseReady)return alert('Firebase non disponible.');let uc=clamp(parseInt($('createUndercover').value,10)??0,0,1);let mw=clamp(parseInt($('createMrWhite').value,10)??0,0,1);if(uc>0&&mw>0)mw=0;const settings={discussionSeconds:clamp(parseInt($('createDiscussion').value,10)||90,20,600),voteSeconds:clamp(parseInt($('createVote').value,10)||45,10,300),undercoverCount:uc,mrWhiteCount:mw,roundsTotal:clamp(parseInt($('createRounds').value,10)||3,1,20),turnsPerRound:clamp(parseInt($('createTurns').value,10)||2,1,20),gameMode:'custom',ranked:false,secretVotes:false};state.myName=nickname;try{await createFirebaseRoom(nickname,settings);SFX.success();}catch(e){alert(e.message||'Erreur.');}});
-$('btnCreateOffline').addEventListener('click',async()=>{SFX.tap();const nickname=($('createNickname').value||'').trim();if(!nickname)return alert('Entre un pseudo.');let uc=clamp(parseInt($('createUndercover').value,10)??0,0,1);let mw=clamp(parseInt($('createMrWhite').value,10)??0,0,1);if(uc>0&&mw>0)mw=0;const settings={discussionSeconds:clamp(parseInt($('createDiscussion').value,10)||90,20,600),voteSeconds:clamp(parseInt($('createVote').value,10)||45,10,300),undercoverCount:uc,mrWhiteCount:mw,roundsTotal:clamp(parseInt($('createRounds').value,10)||3,1,20),turnsPerRound:clamp(parseInt($('createTurns').value,10)||2,1,20),gameMode:'custom',ranked:false,secretVotes:false};createOfflineRoom(nickname,settings);SFX.success();});
+$('btnCreateOnline').addEventListener('click',async()=>{SFX.tap();const nickname=($('createNickname').value||'').trim();if(!nickname)return alert('Entre un pseudo.');if(!state.firebaseReady)return alert('Firebase non disponible.');let uc=clamp(parseInt($('createUndercover').value,10)??0,0,1);let mw=clamp(parseInt($('createMrWhite').value,10)??0,0,1);if(uc>0&&mw>0)mw=0;const settings={voteSeconds:clamp(parseInt($('createVote').value,10)||45,10,300),clueSeconds:clamp(parseInt($('createClueTime').value,10)||60,15,180),undercoverCount:uc,mrWhiteCount:mw,roundsTotal:clamp(parseInt($('createRounds').value,10)||3,1,20),turnsPerRound:clamp(parseInt($('createTurns').value,10)||2,1,20),gameMode:'custom',ranked:false,secretVotes:false};state.myName=nickname;try{await createFirebaseRoom(nickname,settings);SFX.success();}catch(e){alert(e.message||'Erreur.');}});
+$('btnCreateOffline').addEventListener('click',async()=>{SFX.tap();const nickname=($('createNickname').value||'').trim();if(!nickname)return alert('Entre un pseudo.');let uc=clamp(parseInt($('createUndercover').value,10)??0,0,1);let mw=clamp(parseInt($('createMrWhite').value,10)??0,0,1);if(uc>0&&mw>0)mw=0;const settings={voteSeconds:clamp(parseInt($('createVote').value,10)||45,10,300),clueSeconds:clamp(parseInt($('createClueTime').value,10)||60,15,180),undercoverCount:uc,mrWhiteCount:mw,roundsTotal:clamp(parseInt($('createRounds').value,10)||3,1,20),turnsPerRound:clamp(parseInt($('createTurns').value,10)||2,1,20),gameMode:'custom',ranked:false,secretVotes:false};createOfflineRoom(nickname,settings);SFX.success();});
 $('btnJoinRoom').addEventListener('click',async()=>{SFX.tap();const roomId=($('joinRoomCode').value||'').trim().toUpperCase();const nickname=($('joinNickname').value||'').trim();if(!roomId)return alert('Entre le code de la salle.');if(!nickname)return alert('Entre un pseudo.');if(!state.firebaseReady)return alert('Firebase non disponible.');state.myName=nickname;try{await joinFirebaseRoom(roomId,nickname);SFX.success();}catch(e){alert(e.message||'Erreur.');}});
 $('btnStartRound').addEventListener('click',async()=>{SFX.tap();if(state.mode==='firebase')firebaseStartRound();else offlineStartRound();});
 $('btnSeenWord').addEventListener('click',async()=>{SFX.tap();if(state.mode==='firebase')firebaseMarkSeen();else offlineMarkSeen();});
@@ -1437,7 +1658,7 @@ $('btnNextRound').addEventListener('click',async()=>{SFX.tap();if(state.mode==='
 $('btnResetGame').addEventListener('click',async()=>{SFX.tap();if(state.mode==='firebase')firebaseResetGame();else offlineResetGame();});
 $('btnAddOfflinePlayer').addEventListener('click',async()=>{SFX.tap();const name=($('offlinePlayerName').value||'').trim();if(!name)return;offlineAddPlayer(name);$('offlinePlayerName').value='';SFX.phase();});
 $('offlinePlayerName').addEventListener('keydown',e=>{if(e.key==='Enter')$('btnAddOfflinePlayer').click();});
-['createDiscussion','createVote','createUndercover','createMrWhite','createRounds','createTurns'].forEach(id=>{const el=$(id);if(el)el.addEventListener('input',syncSetupValues);});
+['createClueTime','createVote','createUndercover','createMrWhite','createRounds','createTurns'].forEach(id=>{const el=$(id);if(el)el.addEventListener('input',syncSetupValues);});
 document.querySelectorAll('.btn,.mode-btn').forEach(el=>{el.addEventListener('mouseenter',()=>SFX.hover());el.addEventListener('click',()=>SFX.tap());});
 document.querySelectorAll('.mode-card').forEach(el=>{el.addEventListener('mouseenter',()=>SFX.hover());});
 
