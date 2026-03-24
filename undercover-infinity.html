@@ -512,7 +512,7 @@ details[open] .summary-arrow{transform:rotate(180deg)}
   <h2 style="font-size:clamp(1.4rem,4vw,2rem);font-family:'Syne',sans-serif;letter-spacing:-.03em">Comment veux-tu jouer ?</h2>
 </div>
 <div class="mode-grid">
-  <div class="mode-card normal"><div class="mode-accent"></div><span class="mode-icon">⚡</span><div class="mode-title">Normal</div><p class="mode-desc">Cherche une partie et rejoins dès que 3+ joueurs sont prêts. Pas de pression, juste du fun.</p><div class="mode-tags"><span class="mode-tag">5 min</span><span class="mode-tag">3 manches</span><span class="mode-tag">2 mots/joueur</span><span class="mode-tag">Matchmaking</span></div><button class="mode-btn cy" id="btnNormalMode">Chercher une partie →</button></div>
+  <div class="mode-card normal"><div class="mode-accent"></div><span class="mode-icon">⚡</span><div class="mode-title">Normal</div><p class="mode-desc">Cherche une partie et rejoins dès que 3 à 5 joueurs sont prêts. 1min/indice, 2min pour voter.</p><div class="mode-tags"><span class="mode-tag">3–5 joueurs</span><span class="mode-tag">3 manches</span><span class="mode-tag">2 tours/manche</span><span class="mode-tag">Matchmaking</span></div><button class="mode-btn cy" id="btnNormalMode">Chercher une partie →</button></div>
   <div class="mode-card ranked"><div class="mode-accent"></div><span class="mode-icon">🏆</span><div class="mode-title">Ranked</div><p class="mode-desc">Gagne des LP, monte en grade. Votes secrets révélés simultanément. Prouve que tu es le meilleur.</p><div class="mode-tags"><span class="mode-tag">5 min</span><span class="mode-tag">6 manches</span><span class="mode-tag">2 mots/joueur</span><span class="mode-tag">LP & Grades</span><span class="mode-tag">Votes secrets</span></div><button class="mode-btn am" id="btnRankedMode">Jouer en Ranked →</button></div>
   <div class="mode-card custom"><div class="mode-accent"></div><span class="mode-icon">⚙️</span><div class="mode-title">Partie Perso</div><p class="mode-desc">Configure tout : temps, manches, rôles (dont Mr. White exclusif), thèmes. Local ou en ligne.</p><div class="mode-tags"><span class="mode-tag">Temps libre</span><span class="mode-tag">Mr. White</span><span class="mode-tag">Thèmes perso</span><span class="mode-tag">Local/Online</span></div><button class="mode-btn vi" id="btnCustomMode">Configurer →</button></div>
 </div>
@@ -1153,50 +1153,116 @@ function goMenu(){if(state.unsubRoom)state.unsubRoom();if(state.unsubPlayers)sta
 // ══════════════════════════════
 // NORMAL MATCHMAKING
 // ══════════════════════════════
+// NORMAL MATCHMAKING
+// ══════════════════════════════
 let searchInterval=null,searchRoomId=null;
+const NORMAL_MIN=3,NORMAL_MAX=5;
+const NORMAL_SETTINGS={voteSeconds:120,clueSeconds:60,undercoverCount:1,mrWhiteCount:0,roundsTotal:3,turnsPerRound:2,gameMode:'normal',ranked:false,secretVotes:false};
+
 function startNormalSearch(){
   if(!state.firebaseReady){toast('⚠ Firebase requis pour le mode Normal','#ffb800');return;}
   const p=getProfile();const nickname=p?.name||'Joueur'+Math.floor(Math.random()*1000);
   state.myName=nickname;
-  $('searchingOverlay').classList.add('active');$('searchingCount').textContent='1 / 3 joueurs';
+  $('searchingOverlay').classList.add('active');
+  $('searchingCount').textContent=`Recherche en cours...`;
+  $('searchingTitle').textContent='Recherche…';
+  $('searchingSub').textContent='En attente d\'autres joueurs';
   SFX.open();joinOrCreateNormalRoom(nickname);
 }
+
 async function joinOrCreateNormalRoom(nickname){
   try{
     const col=firebaseFns.collection(state.db,'matchmaking');
     const snap=await firebaseFns.getDocs(firebaseFns.query(col,firebaseFns.where('open','==',true),firebaseFns.where('gameMode','==','normal')));
     let roomId=null;
-    for(const doc of snap.docs){if((doc.data().players||[]).length<8){roomId=doc.id;break;}}
+    // Chercher un lobby ouvert avec moins de NORMAL_MAX joueurs
+    for(const doc of snap.docs){
+      const data=doc.data();
+      const players=data.players||[];
+      if(players.length<NORMAL_MAX){roomId=doc.id;break;}
+    }
     if(!roomId){
+      // Aucun lobby dispo → en créer un nouveau
       roomId=roomCode();
-      await firebaseFns.setDoc(firebaseFns.doc(state.db,'matchmaking',roomId),{roomId,open:true,gameMode:'normal',players:[{id:state.myId,nickname}],settings:{discussionSeconds:300,voteSeconds:60,clueSeconds:60,undercoverCount:1,mrWhiteCount:0,roundsTotal:3,turnsPerRound:2,gameMode:'normal',ranked:false,secretVotes:false},createdAt:firebaseFns.serverTimestamp()});
-    }else{await firebaseFns.updateDoc(firebaseFns.doc(state.db,'matchmaking',roomId),{players:firebaseFns.arrayUnion({id:state.myId,nickname})});}
-    searchRoomId=roomId;pollNormalRoom(roomId,nickname);
+      await firebaseFns.setDoc(firebaseFns.doc(state.db,'matchmaking',roomId),{
+        roomId,open:true,gameMode:'normal',
+        players:[{id:state.myId,nickname}],
+        settings:NORMAL_SETTINGS,
+        createdAt:firebaseFns.serverTimestamp()
+      });
+    }else{
+      // Rejoindre le lobby existant
+      await firebaseFns.updateDoc(firebaseFns.doc(state.db,'matchmaking',roomId),{
+        players:firebaseFns.arrayUnion({id:state.myId,nickname})
+      });
+    }
+    searchRoomId=roomId;
+    pollNormalRoom(roomId,nickname);
   }catch(e){console.error(e);toast('Erreur matchmaking','#ff3d6b');$('searchingOverlay').classList.remove('active');}
 }
+
 function pollNormalRoom(roomId,nickname){
+  let countdownStarted=false;let countdownLeft=8;
   searchInterval=setInterval(async()=>{
     try{
       const snap=await firebaseFns.getDoc(firebaseFns.doc(state.db,'matchmaking',roomId));
       if(!snap.exists()){clearInterval(searchInterval);$('searchingOverlay').classList.remove('active');return;}
       const d=snap.data();const players=d.players||[];
-      $('searchingCount').textContent=`${players.length} / 3 joueurs`;
-      if(players.length>=3){
-        clearInterval(searchInterval);$('searchingOverlay').classList.remove('active');
+      const count=players.length;
+
+      // Afficher le compteur
+      $('searchingCount').textContent=`${count} / ${NORMAL_MIN}–${NORMAL_MAX} joueurs`;
+
+      if(count>=NORMAL_MAX){
+        // Max atteint → lancer immédiatement
+        clearInterval(searchInterval);
+        $('searchingTitle').textContent='Partie trouvée !';
+        $('searchingCount').textContent=`${count} joueurs — Lancement...`;
         await firebaseFns.updateDoc(firebaseFns.doc(state.db,'matchmaking',roomId),{open:false});
-        toast('Partie trouvée !','#6ee7b7');
+        $('searchingOverlay').classList.remove('active');
+        toast('🎮 Partie trouvée !','#6ee7b7');SFX.success();
         await createRoomFromMatchmaking(roomId,d,players,nickname);
+      }else if(count>=NORMAL_MIN){
+        // Min atteint → countdown de 8s pour laisser d'autres rejoindre
+        if(!countdownStarted){
+          countdownStarted=true;countdownLeft=8;
+          $('searchingTitle').textContent='Partie trouvée !';
+        }
+        countdownLeft-=2;// poll toutes les 2s
+        if(countdownLeft<=0){
+          // Countdown terminé → lancer avec les joueurs présents
+          clearInterval(searchInterval);
+          $('searchingCount').textContent=`${count} joueurs — Lancement !`;
+          await firebaseFns.updateDoc(firebaseFns.doc(state.db,'matchmaking',roomId),{open:false});
+          $('searchingOverlay').classList.remove('active');
+          toast('🎮 Partie trouvée !','#6ee7b7');SFX.success();
+          await createRoomFromMatchmaking(roomId,d,players,nickname);
+        }else{
+          $('searchingCount').textContent=`${count} joueurs — Lancement dans ${countdownLeft}s...`;
+          $('searchingSub').textContent='D\'autres joueurs peuvent encore rejoindre';
+        }
+      }else{
+        // Pas assez de joueurs
+        countdownStarted=false;
+        $('searchingTitle').textContent='Recherche…';
+        $('searchingSub').textContent=`En attente (${NORMAL_MIN - count} joueur${NORMAL_MIN-count>1?'s':''} de plus)`;
       }
     }catch(e){console.error(e);}
   },2000);
 }
+
 async function createRoomFromMatchmaking(mmRoomId,mmData,players,nickname){
-  const gameRoomId=roomCode();const s=mmData.settings;
-  const room={roomId:gameRoomId,mode:'firebase',hostId:players[0].id,phase:'lobby',roundNumber:0,createdAt:firebaseFns.serverTimestamp(),updatedAt:firebaseFns.serverTimestamp(),winner:'',resultText:'',settings:{...s},current:{aliveIds:players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],mrWhiteIds:[],civilianWord:'',discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{},clues:[]}};
+  const gameRoomId=roomCode();
+  const room={roomId:gameRoomId,mode:'firebase',hostId:players[0].id,phase:'lobby',roundNumber:0,
+    createdAt:firebaseFns.serverTimestamp(),updatedAt:firebaseFns.serverTimestamp(),
+    winner:'',resultText:'',settings:{...NORMAL_SETTINGS},
+    current:{aliveIds:players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],mrWhiteIds:[],civilianWord:'',discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{},clues:[]}};
   await firebaseFns.setDoc(roomRef(gameRoomId),room);
   for(const p of players)await firebaseFns.setDoc(playerRef(gameRoomId,p.id),{id:p.id,secretId:p.id+'_s',nickname:p.nickname,host:p.id===players[0].id,alive:true,joinedAt:Date.now(),revealedRound:-1,votedRound:-1});
   state.mode='firebase';state.roomId=gameRoomId;state.isHost=players[0].id===state.myId;
   await subscribeFirebaseRoom(gameRoomId);
+  // Auto-start la première manche si on est l'hôte
+  if(state.isHost){setTimeout(()=>{const r=getRoom();if(r&&r.phase==='lobby')firebaseStartRound();},1500);}
 }
 $('btnCancelSearch').addEventListener('click',()=>{if(searchInterval)clearInterval(searchInterval);$('searchingOverlay').classList.remove('active');if(searchRoomId&&state.db&&firebaseFns){firebaseFns.updateDoc(firebaseFns.doc(state.db,'matchmaking',searchRoomId),{players:firebaseFns.arrayRemove({id:state.myId,nickname:state.myName})}).catch(()=>{});}SFX.close();toast('Recherche annulée');});
 
