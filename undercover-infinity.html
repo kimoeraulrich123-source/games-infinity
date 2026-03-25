@@ -1167,38 +1167,48 @@ function startNormalSearch(){
   $('searchingCount').textContent=`Recherche en cours...`;
   $('searchingTitle').textContent='Recherche…';
   $('searchingSub').textContent='En attente d\'autres joueurs';
-  SFX.open();joinOrCreateNormalRoom(nickname);
+  SFX.open();
+  joinOrCreateNormalRoom(nickname).then(()=>{
+    $('searchingOverlay').classList.remove('active');
+  }).catch(()=>{
+    $('searchingOverlay').classList.remove('active');
+  });
 }
 
 async function joinOrCreateNormalRoom(nickname){
   try{
-    const col=firebaseFns.collection(state.db,'matchmaking');
-    const snap=await firebaseFns.getDocs(firebaseFns.query(col,firebaseFns.where('open','==',true),firebaseFns.where('gameMode','==','normal')));
     let roomId=null;
-    // Chercher un lobby ouvert avec moins de NORMAL_MAX joueurs
-    for(const doc of snap.docs){
-      const data=doc.data();
-      const players=data.players||[];
-      if(players.length<NORMAL_MAX){roomId=doc.id;break;}
+    // Chercher dans la collection 'rooms' un lobby normal ouvert
+    try{
+      const col=firebaseFns.collection(state.db,'rooms');
+      const snap=await firebaseFns.getDocs(col);
+      for(const doc of snap.docs){
+        const data=doc.data();
+        if(data.phase!=='lobby'||data.settings?.gameMode!=='normal')continue;
+        // Vérifier que la room n'est pas trop vieille (< 5 min)
+        const age=Date.now()-(data.createdAt?.toMillis?.()|| data.createdAt||0);
+        if(age>300000)continue;
+        // Compter les joueurs via le subcollection players n'est pas possible en query
+        // On utilise aliveIds comme proxy
+        const playerCount=(data.current?.aliveIds||[]).length;
+        if(playerCount>0&&playerCount<NORMAL_MAX){roomId=doc.id;break;}
+      }
+    }catch(queryErr){
+      console.warn('Query rooms failed:',queryErr);
     }
     if(!roomId){
-      // Aucun lobby dispo → en créer un nouveau
-      roomId=roomCode();
-      await firebaseFns.setDoc(firebaseFns.doc(state.db,'matchmaking',roomId),{
-        roomId,open:true,gameMode:'normal',
-        players:[{id:state.myId,nickname}],
-        settings:NORMAL_SETTINGS,
-        createdAt:firebaseFns.serverTimestamp()
-      });
+      // Aucun lobby dispo → créer une salle normale comme une PP mais avec settings fixés
+      state.myName=nickname;
+      await createFirebaseRoom(nickname,NORMAL_SETTINGS);
+      // Maintenant on est dans la room, on attend juste d'autres joueurs
+      return;
     }else{
-      // Rejoindre le lobby existant
-      await firebaseFns.updateDoc(firebaseFns.doc(state.db,'matchmaking',roomId),{
-        players:firebaseFns.arrayUnion({id:state.myId,nickname})
-      });
+      // Rejoindre la salle existante (comme un join classique)
+      state.myName=nickname;
+      await joinFirebaseRoom(roomId,nickname);
+      return;
     }
-    searchRoomId=roomId;
-    pollNormalRoom(roomId,nickname);
-  }catch(e){console.error(e);toast('Erreur matchmaking','#ff3d6b');$('searchingOverlay').classList.remove('active');}
+  }catch(e){console.error('Matchmaking error:',e);toast('Erreur matchmaking : '+(e.code||e.message||'inconnue'),'#ff3d6b');$('searchingOverlay').classList.remove('active');}
 }
 
 function pollNormalRoom(roomId,nickname){
