@@ -152,7 +152,10 @@ input[type=checkbox]{accent-color:var(--vi);width:14px;height:14px;cursor:pointe
 .rs{padding:12px;border-radius:var(--r2);border:1px solid var(--b2);background:var(--s3);text-align:center}
 .rs-n{font-family:"Syne",sans-serif;font-size:1.1rem;font-weight:900}
 .rs-l{font-family:"Space Mono",monospace;font-size:.58rem;color:var(--di);text-transform:uppercase;margin-top:3px}
-.grade-tree{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.grade-tree{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.grade-tier{display:flex;flex-direction:column;gap:6px}
+.grade-tier-label{font-family:"Space Mono",monospace;font-size:.6rem;color:var(--di);text-transform:uppercase;letter-spacing:.1em;padding-bottom:4px;border-bottom:1px solid var(--b3)}
+.grade-tier-items{display:flex;gap:8px;flex-wrap:wrap}
 .grade-badge{padding:6px 12px;border-radius:999px;font-family:"Space Mono",monospace;font-size:.66rem;font-weight:700;border:1px solid;white-space:nowrap;transition:all .2s}
 .grade-badge.current{transform:scale(1.1);box-shadow:0 0 12px currentColor}
 .grade-badge.locked{opacity:.3}
@@ -512,9 +515,9 @@ details[open] .summary-arrow{transform:rotate(180deg)}
   <h2 style="font-size:clamp(1.4rem,4vw,2rem);font-family:'Syne',sans-serif;letter-spacing:-.03em">Comment veux-tu jouer ?</h2>
 </div>
 <div class="mode-grid">
-  <div class="mode-card normal"><div class="mode-accent"></div><span class="mode-icon">⚡</span><div class="mode-title">Normal</div><p class="mode-desc">Cherche une partie et rejoins dès que 3 à 5 joueurs sont prêts. 1min/indice, 2min pour voter.</p><div class="mode-tags"><span class="mode-tag">3–5 joueurs</span><span class="mode-tag">3 manches</span><span class="mode-tag">2 tours/manche</span><span class="mode-tag">Matchmaking</span></div><button class="mode-btn cy" id="btnNormalMode">Chercher une partie →</button></div>
-  <div class="mode-card ranked"><div class="mode-accent"></div><span class="mode-icon">🏆</span><div class="mode-title">Ranked</div><p class="mode-desc">Gagne des LP, monte en grade. 6 manches intenses. Tes votes comptent : bon vote = +LP, mauvais vote = -LP.</p><div class="mode-tags"><span class="mode-tag">3–5 joueurs</span><span class="mode-tag">6 manches</span><span class="mode-tag">2 tours/manche</span><span class="mode-tag">LP & Grades</span></div><button class="mode-btn am" id="btnRankedMode">Jouer en Ranked →</button></div>
-  <div class="mode-card custom"><div class="mode-accent"></div><span class="mode-icon">⚙️</span><div class="mode-title">Partie Perso</div><p class="mode-desc">Configure tout : temps, manches, rôles (dont Mr. White exclusif), thèmes. Local ou en ligne.</p><div class="mode-tags"><span class="mode-tag">Temps libre</span><span class="mode-tag">Mr. White</span><span class="mode-tag">Thèmes perso</span><span class="mode-tag">Local/Online</span></div><button class="mode-btn vi" id="btnCustomMode">Configurer →</button></div>
+  <div class="mode-card normal" id="cardNormal"><div class="mode-accent"></div><span class="mode-icon">⚡</span><div class="mode-title">Normal</div><p class="mode-desc">Rejoins une partie rapide entre 3 et 5 joueurs. Chacun a 1 minute pour donner son indice, puis 1 minute pour voter.</p><div class="mode-tags"><span class="mode-tag">3–5 joueurs</span><span class="mode-tag">3 manches</span><span class="mode-tag">1 min/indice</span></div><div class="mode-btn cy">Chercher une partie →</div></div>
+  <div class="mode-card ranked" id="cardRanked"><div class="mode-accent"></div><span class="mode-icon">🏆</span><div class="mode-title">Ranked</div><p class="mode-desc">Affronte d'autres joueurs sur 6 manches. Chaque vote compte : vote juste = +LP, erreur = −LP. Grimpe de Bronze à Diamant.</p><div class="mode-tags"><span class="mode-tag">3–5 joueurs</span><span class="mode-tag">6 manches</span><span class="mode-tag">LP & Grades</span></div><div class="mode-btn am">Jouer en Ranked →</div></div>
+  <div class="mode-card custom" id="cardCustom"><div class="mode-accent"></div><span class="mode-icon">⚙️</span><div class="mode-title">Partie Perso</div><p class="mode-desc">Crée ta partie sur mesure : nombre de manches, temps, rôles (dont Mr. White), thèmes. En local ou en ligne.</p><div class="mode-tags"><span class="mode-tag">Local / En ligne</span><span class="mode-tag">Mr. White</span><span class="mode-tag">Thèmes</span></div><div class="mode-btn vi">Configurer →</div></div>
 </div>
 </div>
 
@@ -1047,7 +1050,18 @@ function renderRankedPanel(){
   const pn=document.getElementById('promoNotice');
   if(pn)pn.classList.toggle('hidden',lpCur<(LP_PER_GRADE-60)||gi>=11);
   const tree=document.getElementById('gradeTree');
-  if(tree){tree.innerHTML=GRADES.map((g,i)=>{const ic=i===gi;const iu=i<=gi;return`<span class="grade-badge ${ic?'current':iu?'':'locked'}" style="color:${GRADE_COLORS[i]};border-color:${GRADE_COLORS[i]}44;background:${ic?GRADE_COLORS[i]+'22':'transparent'}">${GRADE_ICONS[i]} ${g}${ic?' ◀':''}</span>`;}).join('');}
+  if(tree){
+    const tiers=[
+      {name:'Bronze',range:[0,1,2],color:'#cd7f32'},
+      {name:'Argent',range:[3,4,5],color:'#aaaaaa'},
+      {name:'Or',range:[6,7,8],color:'#ffd700'},
+      {name:'Diamant',range:[9,10,11],color:'#00c9ff'}
+    ];
+    tree.innerHTML=tiers.map(t=>{
+      const items=t.range.map(i=>{const ic=i===gi;const iu=i<=gi;return`<span class="grade-badge ${ic?'current':iu?'':'locked'}" style="color:${GRADE_COLORS[i]};border-color:${GRADE_COLORS[i]}44;background:${ic?GRADE_COLORS[i]+'22':'transparent'}">${GRADE_ICONS[i]} ${GRADES[i]}${ic?' ◀':''}</span>`;}).join('');
+      return`<div class="grade-tier"><div class="grade-tier-label" style="color:${t.color}">${t.name}</div><div class="grade-tier-items">${items}</div></div>`;
+    }).join('');
+  }
 }
 
 function calcLPDelta(results){
@@ -1144,9 +1158,9 @@ window.showScreen=showScreen;
 function switchSetupTab(name){['config','roles','themes','join'].forEach(t=>{show($('tab-'+t),t===name);});document.querySelectorAll('.tab-btn').forEach((btn,i)=>{btn.classList.toggle('active',['config','roles','themes','join'][i]===name);});if(name==='themes')buildThemeSelector();SFX.tap();}
 window.switchSetupTab=switchSetupTab;
 document.querySelectorAll('details').forEach(d=>{const a=d.querySelector('.summary-arrow');if(!a)return;d.addEventListener('toggle',()=>a.style.transform=d.open?'rotate(180deg)':'');});
-document.getElementById('btnNormalMode').addEventListener('click',(e)=>{e.stopPropagation();SFX.tap();startNormalSearch();});
-document.getElementById('btnRankedMode').addEventListener('click',(e)=>{e.stopPropagation();SFX.tap();showScreen('ranked');});
-document.getElementById('btnCustomMode').addEventListener('click',(e)=>{e.stopPropagation();SFX.tap();showScreen('setup');});
+document.getElementById('cardNormal').addEventListener('click',()=>{SFX.tap();startNormalSearch();});
+document.getElementById('cardRanked').addEventListener('click',()=>{SFX.tap();showScreen('ranked');});
+document.getElementById('cardCustom').addEventListener('click',()=>{SFX.tap();showScreen('setup');});
 document.getElementById('btnGoMenu').addEventListener('click',()=>{
   const room=getRoom();const phase=room?.phase||'lobby';
   // En lobby : quitter directement sans confirmation
