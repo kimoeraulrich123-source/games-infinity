@@ -513,7 +513,7 @@ details[open] .summary-arrow{transform:rotate(180deg)}
 </div>
 <div class="mode-grid">
   <div class="mode-card normal"><div class="mode-accent"></div><span class="mode-icon">⚡</span><div class="mode-title">Normal</div><p class="mode-desc">Cherche une partie et rejoins dès que 3 à 5 joueurs sont prêts. 1min/indice, 2min pour voter.</p><div class="mode-tags"><span class="mode-tag">3–5 joueurs</span><span class="mode-tag">3 manches</span><span class="mode-tag">2 tours/manche</span><span class="mode-tag">Matchmaking</span></div><button class="mode-btn cy" id="btnNormalMode">Chercher une partie →</button></div>
-  <div class="mode-card ranked"><div class="mode-accent"></div><span class="mode-icon">🏆</span><div class="mode-title">Ranked</div><p class="mode-desc">Gagne des LP, monte en grade. Votes secrets révélés simultanément. Prouve que tu es le meilleur.</p><div class="mode-tags"><span class="mode-tag">5 min</span><span class="mode-tag">6 manches</span><span class="mode-tag">2 mots/joueur</span><span class="mode-tag">LP & Grades</span><span class="mode-tag">Votes secrets</span></div><button class="mode-btn am" id="btnRankedMode">Jouer en Ranked →</button></div>
+  <div class="mode-card ranked"><div class="mode-accent"></div><span class="mode-icon">🏆</span><div class="mode-title">Ranked</div><p class="mode-desc">Gagne des LP, monte en grade. 6 manches intenses. Tes votes comptent : bon vote = +LP, mauvais vote = -LP.</p><div class="mode-tags"><span class="mode-tag">3–5 joueurs</span><span class="mode-tag">6 manches</span><span class="mode-tag">2 tours/manche</span><span class="mode-tag">LP & Grades</span></div><button class="mode-btn am" id="btnRankedMode">Jouer en Ranked →</button></div>
   <div class="mode-card custom"><div class="mode-accent"></div><span class="mode-icon">⚙️</span><div class="mode-title">Partie Perso</div><p class="mode-desc">Configure tout : temps, manches, rôles (dont Mr. White exclusif), thèmes. Local ou en ligne.</p><div class="mode-tags"><span class="mode-tag">Temps libre</span><span class="mode-tag">Mr. White</span><span class="mode-tag">Thèmes perso</span><span class="mode-tag">Local/Online</span></div><button class="mode-btn vi" id="btnCustomMode">Configurer →</button></div>
 </div>
 </div>
@@ -614,7 +614,7 @@ details[open] .summary-arrow{transform:rotate(180deg)}
 <div id="screen-ranked" class="hidden">
 <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-top:8px">
   <button class="btn-back" onclick="showScreen('menu')">← Retour</button>
-  <div><h2 style="margin-bottom:2px">Mode Ranked</h2><div class="small muted">Votes secrets • 6 manches • LP basés sur ta performance</div></div>
+  <div><h2 style="margin-bottom:2px">Mode Ranked</h2><div class="small muted">6 manches • 1min/indice • 2min/vote • LP sur ta performance</div></div>
 </div>
 <div class="ranked-profile" id="rankedProfilePanel">
   <div class="rp-top">
@@ -636,19 +636,16 @@ details[open] .summary-arrow{transform:rotate(180deg)}
 <div class="card" style="margin-bottom:20px">
   <h3 style="margin-bottom:12px">Arbre des grades</h3>
   <div class="grade-tree" id="gradeTree"></div>
-  <div class="hint-note" style="margin-top:14px">💡 LP calculés sur ta performance : bons votes, survie, indices trompeurs. Plus tu montes, plus c'est exigeant.</div>
+  <div class="hint-note" style="margin-top:14px">💡 LP calculés sur 6 manches : bons votes (+LP), mauvais votes (-LP), victoire/défaite. Plus tu montes, plus c'est exigeant.</div>
 </div>
 <div class="card card-primary">
   <div class="section-tag amber">🏆 Lancer</div>
   <h2 style="margin-bottom:4px">Partie Ranked</h2>
-  <div class="small muted" style="margin-bottom:14px">5 min · 6 manches · 2 mots/joueur · Votes secrets simultanés</div>
+  <div class="small muted" style="margin-bottom:14px">3–5 joueurs · 6 manches · 2 tours · 1min/indice · 2min/vote</div>
   <div class="stack">
     <div class="field"><label>Ton pseudo</label><input id="rankedNickname" type="text" placeholder="Ex : Ulrich" maxlength="20"/></div>
-    <div class="action-row">
-      <button id="btnCreateRanked" class="btn btn-yellow btn-cta">🏆 Créer salle Ranked</button>
-      <button id="btnJoinRanked" class="btn btn-ghost btn-cta">🔗 Rejoindre</button>
-    </div>
-    <div class="hint-note">Votes secrets révélés simultanément par l'hôte pour plus de compétition.</div>
+    <button id="btnSearchRanked" class="btn btn-yellow btn-cta">🏆 Chercher une partie Ranked →</button>
+    <div class="hint-note">Matchmaking automatique. La partie démarre dès que 3 à 5 joueurs sont trouvés.</div>
   </div>
 </div>
 </div>
@@ -1058,18 +1055,20 @@ function calcLPDelta(results){
   const tier=tierOf(gradeIdx(p.lp||0));const table=LP_TABLE[tier];
   const rows=[];let total=0;
   const add=(label,val)=>{if(val!==0){rows.push({label,val});total+=val;}};
-  if(results.role==='civil'){
-    add('Votes corrects (×'+results.correctVotes+')',results.correctVotes*table.correctVote);
-    add('Mauvais votes (×'+results.wrongVotes+')',results.wrongVotes*table.wrongVote);
-    add(results.won?'Victoire équipe':'Défaite équipe',results.won?table.win:table.lose);
-  }else if(results.role==='undercover'){
-    if(results.survived)add('Survie Undercover',table.ucSurvive);
-    add('Votes contournés (×'+results.ucVotesEvaded+')',results.ucVotesEvaded*table.ucVoteEvade);
-    add(results.won?'Victoire Undercover':'Défaite Undercover',results.won?table.win:table.lose);
-  }else if(results.role==='mrwhite'){
-    if(results.mwGuessWin)add('Devinette correcte !',table.mwGuessWin);
-    add(results.won?'Victoire Mr. White':'Défaite',results.won?table.win:table.lose);
-  }
+  // Bons votes (voté pour l'undercover/mw) : +LP par vote correct
+  add(`Bons votes (×${results.correctVotes})`,results.correctVotes*table.correctVote);
+  // Mauvais votes (voté pour un civil) : -LP par mauvais vote
+  add(`Mauvais votes (×${results.wrongVotes})`,results.wrongVotes*table.wrongVote);
+  // Fois éliminé : -LP
+  if(results.timesEliminated>0)add(`Éliminé (×${results.timesEliminated})`,results.timesEliminated*table.lose);
+  // Bonus survie si undercover
+  if(results.ucVotesEvaded>0)add(`Votes esquivés UC (×${results.ucVotesEvaded})`,results.ucVotesEvaded*table.ucVoteEvade);
+  // Bonus Mr. White
+  if(results.mwGuessWin)add('Devinette Mr. White réussie !',table.mwGuessWin);
+  // Résultat global : manches gagnées vs perdues
+  const roundsLost=results.roundsPlayed-results.roundsWon;
+  if(results.roundsWon>0)add(`Manches gagnées (×${results.roundsWon})`,results.roundsWon*table.win);
+  if(roundsLost>0)add(`Manches perdues (×${roundsLost})`,roundsLost*Math.floor(table.lose/2));
   return{total,rows};
 }
 
@@ -1170,7 +1169,7 @@ function goMenu(){if(state.unsubRoom)state.unsubRoom();if(state.unsubPlayers)sta
 // ══════════════════════════════
 let searchInterval=null,searchRoomId=null;
 const NORMAL_MIN=3,NORMAL_MAX=5;
-const NORMAL_SETTINGS={voteSeconds:120,clueSeconds:60,undercoverCount:1,mrWhiteCount:0,roundsTotal:3,turnsPerRound:2,gameMode:'normal',ranked:false,secretVotes:false};
+const NORMAL_SETTINGS={voteSeconds:60,clueSeconds:60,undercoverCount:1,mrWhiteCount:0,roundsTotal:3,turnsPerRound:2,gameMode:'normal',ranked:false,secretVotes:false};
 
 function startNormalSearch(){
   if(!state.firebaseReady){toast('⚠ Firebase requis pour le mode Normal','#ffb800');return;}
@@ -1293,9 +1292,61 @@ $('btnCancelSearch').addEventListener('click',()=>{if(searchInterval)clearInterv
 // RANKED SESSION
 // ══════════════════════════════
 let rankedSessionResults=null;
-function initRankedSession(){rankedSessionResults={role:'civil',correctVotes:0,wrongVotes:0,survived:true,ucVotesEvaded:0,mwGuessWin:false,won:false};}
-$('btnCreateRanked').addEventListener('click',async()=>{SFX.tap();const nickname=($('rankedNickname').value||'').trim()||getProfile()?.name;if(!nickname){toast('⚠ Entre un pseudo','#ffb800');return;}if(!state.firebaseReady){toast('⚠ Firebase requis','#ffb800');return;}state.myName=nickname;const settings={discussionSeconds:300,voteSeconds:60,clueSeconds:60,undercoverCount:1,mrWhiteCount:0,roundsTotal:6,turnsPerRound:2,gameMode:'ranked',ranked:true,secretVotes:true};initRankedSession();try{await createFirebaseRoom(nickname,settings);SFX.success();}catch(e){toast('Erreur : '+e.message,'#ff3d6b');}});
-$('btnJoinRanked').addEventListener('click',async()=>{SFX.tap();const code=prompt('Code de la salle Ranked :');if(!code)return;const nickname=($('rankedNickname').value||'').trim()||getProfile()?.name;if(!nickname){toast('⚠ Entre un pseudo','#ffb800');return;}state.myName=nickname;initRankedSession();try{await joinFirebaseRoom(code.trim().toUpperCase(),nickname);}catch(e){toast('Erreur : '+e.message,'#ff3d6b');}});
+function initRankedSession(){
+  rankedSessionResults={
+    role:'civil',          // rôle actuel (change chaque manche)
+    correctVotes:0,        // total votes sur l'undercover/mw
+    wrongVotes:0,          // total votes sur des civils
+    timesEliminated:0,     // nombre de fois éliminé
+    roundsPlayed:0,        // manches jouées
+    roundsWon:0,           // manches gagnées (civils gagnent)
+    survived:true,         // survie manche actuelle
+    ucVotesEvaded:0,       // votes esquivés en tant qu'UC
+    mwGuessWin:false,      // MW a deviné le mot
+    won:false              // victoire finale
+  };
+}
+const RANKED_SETTINGS={voteSeconds:60,clueSeconds:60,undercoverCount:1,mrWhiteCount:0,roundsTotal:6,turnsPerRound:2,gameMode:'ranked',ranked:true,secretVotes:false};
+
+$('btnSearchRanked').addEventListener('click',async()=>{
+  SFX.tap();
+  const nickname=($('rankedNickname').value||'').trim()||getProfile()?.name;
+  if(!nickname){toast('⚠ Entre un pseudo','#ffb800');return;}
+  if(!state.firebaseReady){toast('⚠ Firebase requis','#ffb800');return;}
+  state.myName=nickname;
+  initRankedSession();
+  // Utiliser le même système de recherche que le Normal
+  $('searchingOverlay').classList.add('active');
+  $('searchingTitle').textContent='Recherche Ranked…';
+  $('searchingSub').textContent='En attente d\'adversaires';
+  $('searchingCount').textContent='Recherche en cours...';
+  SFX.open();
+  try{
+    let roomId=null;
+    try{
+      const col=firebaseFns.collection(state.db,'rooms');
+      const snap=await firebaseFns.getDocs(col);
+      for(const doc of snap.docs){
+        const data=doc.data();
+        if(data.phase!=='lobby'||data.settings?.gameMode!=='ranked')continue;
+        const age=Date.now()-(data.createdAt?.toMillis?.()|| data.createdAt||0);
+        if(age>300000)continue;
+        const playerCount=(data.current?.aliveIds||[]).length;
+        if(playerCount>0&&playerCount<NORMAL_MAX){roomId=doc.id;break;}
+      }
+    }catch(e){console.warn('Ranked query failed:',e);}
+    $('searchingOverlay').classList.remove('active');
+    if(!roomId){
+      await createFirebaseRoom(nickname,RANKED_SETTINGS);
+    }else{
+      await joinFirebaseRoom(roomId,nickname);
+    }
+    SFX.success();
+  }catch(e){
+    $('searchingOverlay').classList.remove('active');
+    toast('Erreur : '+(e.message||'inconnue'),'#ff3d6b');
+  }
+});
 
 // ══════════════════════════════
 // MR WHITE GUESS
@@ -1595,7 +1646,11 @@ function updateResultPanel(){const room=getRoom();if(!room)return;setText('resul
   if(room.winner&&room.winner!=='pending_mrwhite'){show(wb,true);const isCivil=room.winner==='civils';const isMW=room.winner==='mrwhite';wb.className=`winner-banner ${isCivil?'civils':isMW?'mrwhite':'undercover'}`;wb.innerHTML=`<div class="winner-icon">${isCivil?'🏆':isMW?'🤵':'🕵️'}</div><div><div class="winner-label">${isCivil?'Victoire des civils !':isMW?'Victoire de Mr. White !':'Victoire des undercovers !'}</div><div class="winner-desc">${isCivil?'Tous les imposteurs ont été démasqués.':isMW?'Mr. White a deviné le mot secret !':'Les undercovers ont survécu.'}</div></div>`;const total=room.settings?.roundsTotal||1;const cur=currentRoundNumber();setText('resultSub',cur<total?`Manche ${cur}/${total} — l'hôte peut continuer.`:'Dernière manche terminée !');
     // Toujours montrer l'animation de révélation des rôles
     setTimeout(()=>showRolesReveal(),600);
-    if(room.settings?.ranked&&rankedSessionResults&&cur>=total){rankedSessionResults.won=isCivil?(rankedSessionResults.role==='civil'):((rankedSessionResults.role==='undercover'&&!isCivil)||(rankedSessionResults.role==='mrwhite'&&isMW));const delta=calcLPDelta(rankedSessionResults);const lp=$('lpSummaryPanel');if(lp){show(lp,true);lp.innerHTML=`<div class="lp-summary"><div class="lp-summary-title">🏆 Bilan LP</div>${delta.rows.map(r=>`<div class="lp-row"><span>${escHtml(r.label)}</span><span class="${r.val>=0?'lp-pos':'lp-neg'}">${r.val>=0?'+':''}${r.val} LP</span></div>`).join('')}<div class="lp-row"><span>Total</span><span class="${delta.total>=0?'lp-pos':'lp-neg'}">${delta.total>=0?'+':''}${delta.total} LP</span></div></div>`;applyLPDelta(delta.total);}}}else if(room.phase==='result'&&room.resultText){
+    if(room.settings?.ranked&&rankedSessionResults&&cur>=total){
+      // Tracker la dernière manche
+      rankedSessionResults.roundsPlayed=cur;
+      // Calculer le winrate et le bilan LP
+      const delta=calcLPDelta(rankedSessionResults);const lp=$('lpSummaryPanel');if(lp){show(lp,true);lp.innerHTML=`<div class="lp-summary"><div class="lp-summary-title">🏆 Bilan LP</div>${delta.rows.map(r=>`<div class="lp-row"><span>${escHtml(r.label)}</span><span class="${r.val>=0?'lp-pos':'lp-neg'}">${r.val>=0?'+':''}${r.val} LP</span></div>`).join('')}<div class="lp-row"><span>Total</span><span class="${delta.total>=0?'lp-pos':'lp-neg'}">${delta.total>=0?'+':''}${delta.total} LP</span></div></div>`;applyLPDelta(delta.total);}}}else if(room.phase==='result'&&room.resultText){
     // Pas de winner final mais on est en result → montrer quand même le résultat
     show(wb,false);const total=room.settings?.roundsTotal||1;const cur=currentRoundNumber();
     setText('resultSub',cur<total?`Manche ${cur}/${total} — l'hôte peut continuer.`:'Dernière manche terminée !');
@@ -1689,7 +1744,20 @@ async function firebaseResolveVotes(){const room=getRoom();if(!state.isHost||roo
       batch.update(roomRef(state.roomId),{phase:'result',updatedAt:firebaseFns.serverTimestamp(),resultText,winner,'current.aliveIds':survivors.map(p=>p.id),'current.turnOrder':[],'current.speakerIndex':0,...(elimId?{'current.eliminatedIds':firebaseFns.arrayUnion(elimId)}:{})});
       await batch.commit();toast('Résultat prêt');
     }
-    if(rankedSessionResults){if(ucIds.includes(state.myId)){rankedSessionResults.survived=elimId!==state.myId;if(elimId!==state.myId)rankedSessionResults.ucVotesEvaded++;}}
+    if(rankedSessionResults){
+      // Tracker si le joueur a été éliminé cette manche
+      if(elimId===state.myId)rankedSessionResults.timesEliminated++;
+      // Tracker victoire de manche
+      if(winner==='civils'){
+        const myRole=rankedSessionResults.role;
+        if(myRole==='civil')rankedSessionResults.roundsWon++;
+      }else if(winner==='undercover'){
+        const myRole=rankedSessionResults.role;
+        if(myRole==='undercover')rankedSessionResults.roundsWon++;
+      }
+      rankedSessionResults.roundsPlayed++;
+      if(ucIds.includes(state.myId)){rankedSessionResults.survived=elimId!==state.myId;if(elimId!==state.myId)rankedSessionResults.ucVotesEvaded++;}
+    }
   });
 }
 async function firebaseNextRound(){const room=getRoom();if(!state.isHost||room.phase!=='result')return;rolesShownForRound=-1;closeRolesReveal();MWSnow.stop();const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast('Fin des manches');return;}const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));batch.update(roomRef(state.roomId),{phase:'lobby',winner:'',updatedAt:firebaseFns.serverTimestamp(),resultText:'','current.discussionEndsAt':0,'current.voteEndsAt':0,'current.turnOrder':[],'current.speakerIndex':0,'current.skipVotes':{},'current.clues':[]});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1},{merge:true});await batch.commit();toast('Retour au lobby');}
