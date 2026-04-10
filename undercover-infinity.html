@@ -42,6 +42,25 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opac
 .profile-av{width:20px;height:20px;border-radius:6px;display:grid;place-items:center;font-weight:900;font-size:.6rem;color:#fff;flex-shrink:0}
 .profile-nm{font-size:.72rem;font-weight:700;max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .profile-gr{font-family:"Space Mono",monospace;font-size:.52rem}
+/* PROFILE POPUP */
+.profile-popup{position:fixed;top:55px;right:18px;z-index:60;width:280px;border-radius:var(--r);border:1px solid var(--b1);background:rgba(11,13,26,.97);backdrop-filter:blur(24px);box-shadow:0 20px 60px rgba(0,0,0,.6);padding:22px;opacity:0;transform:translateY(-8px) scale(.96);pointer-events:none;transition:all .22s cubic-bezier(.4,0,.2,1)}
+.profile-popup.open{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.profile-popup-avatar{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;font-weight:900;font-size:1.6rem;color:#fff;margin:0 auto 12px;box-shadow:0 8px 24px rgba(0,0,0,.4);position:relative;overflow:hidden}
+.profile-popup-avatar::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);border-radius:20px}
+.profile-popup-name{font-family:"Syne",sans-serif;font-weight:900;font-size:1.1rem;text-align:center;margin-bottom:2px}
+.profile-popup-grade{font-family:"Space Mono",monospace;font-size:.72rem;text-align:center;margin-bottom:14px}
+.profile-popup-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.profile-popup-stat{text-align:center;padding:8px 4px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid var(--b3)}
+.profile-popup-stat-v{font-family:"Syne",sans-serif;font-weight:900;font-size:1rem}
+.profile-popup-stat-k{font-family:"Space Mono",monospace;font-size:.52rem;color:var(--di);text-transform:uppercase;margin-top:2px}
+.profile-popup-lp{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-radius:10px;background:rgba(255,184,0,.06);border:1px solid rgba(255,184,0,.15);margin-bottom:10px}
+.profile-popup-lp-label{font-size:.72rem;color:var(--mu)}
+.profile-popup-lp-val{font-family:"Syne",sans-serif;font-weight:900;font-size:.95rem;color:var(--am2)}
+.profile-popup-bar{height:6px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;margin-bottom:14px}
+.profile-popup-bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--am),#f97316);transition:width .5s ease}
+.profile-popup-edit{display:flex;gap:6px}
+.profile-popup-edit input{flex:1;padding:8px 10px;border-radius:8px;border:1px solid var(--b1);background:rgba(255,255,255,.05);color:var(--tx);font-size:.82rem;outline:none}
+.profile-popup-edit button{padding:8px 14px;border-radius:8px;border:none;background:var(--vi);color:#fff;font-weight:800;font-size:.78rem;cursor:pointer}
 /* CARDS */
 .card{background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.025));border:1px solid var(--b2);border-radius:var(--r);padding:22px;backdrop-filter:blur(12px);position:relative;overflow:hidden;box-shadow:var(--shadow)}
 .card::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent)}
@@ -533,6 +552,23 @@ details[open] .summary-arrow{transform:rotate(180deg)}
     </div>
   </div>
 </div>
+<!-- PROFILE POPUP -->
+<div id="profilePopup" class="profile-popup">
+  <div id="ppAvatar" class="profile-popup-avatar"></div>
+  <div id="ppName" class="profile-popup-name">—</div>
+  <div id="ppGrade" class="profile-popup-grade">—</div>
+  <div class="profile-popup-lp"><span class="profile-popup-lp-label">Points de ligue</span><span id="ppLP" class="profile-popup-lp-val">0 LP</span></div>
+  <div class="profile-popup-bar"><div id="ppBarFill" class="profile-popup-bar-fill" style="width:0%"></div></div>
+  <div class="profile-popup-stats">
+    <div class="profile-popup-stat"><div id="ppWins" class="profile-popup-stat-v">0</div><div class="profile-popup-stat-k">Victoires</div></div>
+    <div class="profile-popup-stat"><div id="ppGames" class="profile-popup-stat-v">0</div><div class="profile-popup-stat-k">Parties</div></div>
+    <div class="profile-popup-stat"><div id="ppWR" class="profile-popup-stat-v">—%</div><div class="profile-popup-stat-k">Win Rate</div></div>
+  </div>
+  <div class="profile-popup-edit">
+    <input id="ppEditName" type="text" placeholder="Changer de pseudo" maxlength="20"/>
+    <button id="ppSaveName">OK</button>
+  </div>
+</div>
 
 <!-- SCREEN MENU -->
 <div id="screen-menu">
@@ -895,21 +931,21 @@ const SFX=(()=>{
   function o(f,t,g,a,d,w=0){if(!ctx)return;const T=ctx.currentTime+w;const osc=ctx.createOscillator();const gn=ctx.createGain();osc.type=t;osc.frequency.setValueAtTime(f,T);gn.gain.setValueAtTime(.0001,T);gn.gain.linearRampToValueAtTime(g,T+a);gn.gain.exponentialRampToValueAtTime(.0001,T+a+d);osc.connect(gn);gn.connect(master);osc.start(T);osc.stop(T+a+d+.05);}
   function n(dur,cut,gain,when=0){if(!ctx)return;const T=ctx.currentTime+when;const buf=ctx.createBuffer(1,Math.min(ctx.sampleRate*.5,ctx.sampleRate*(dur+.1)),ctx.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1);const src=ctx.createBufferSource();src.buffer=buf;const f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=cut;f.Q.value=.8;const gn=ctx.createGain();gn.gain.setValueAtTime(.0001,T);gn.gain.linearRampToValueAtTime(gain,T+.005);gn.gain.exponentialRampToValueAtTime(.0001,T+dur);src.connect(f);f.connect(gn);gn.connect(master);src.start(T);src.stop(T+dur+.05);}
   return{
-    tap(){unlock();n(.038,2800,.06);o(1080,'sine',.022,.001,.06);},
-    hover(){unlock();o(920,'sine',.007,.002,.07);},
-    open(){unlock();o(523,'sine',.026,.003,.18);o(659,'sine',.02,.003,.22,.07);o(784,'sine',.012,.003,.28,.14);},
-    close(){unlock();o(659,'sine',.022,.002,.12);o(523,'sine',.016,.002,.16,.06);},
-    reveal(){unlock();o(370,'triangle',.038,.002,.14);o(510,'sine',.028,.003,.18,.07);o(660,'triangle',.022,.003,.22,.12);n(.05,2200,.018,.01);},
-    seen(){unlock();o(690,'sine',.032,.002,.12);o(920,'triangle',.025,.003,.16,.05);},
-    vote(){unlock();n(.06,180,.05);o(220,'triangle',.016,.003,.14);},
-    phase(){unlock();o(290,'triangle',.028,.003,.12);o(420,'triangle',.025,.004,.16,.05);o(530,'sine',.018,.004,.2,.1);},
-    countdown(){unlock();n(.025,3600,.02);o(1600,'sine',.006,.001,.022);},
-    success(){unlock();o(587,'triangle',.028,.004,.22);o(740,'triangle',.024,.004,.26,.09);o(880,'sine',.02,.004,.32,.18);},
-    win(civil){unlock();if(civil){o(523,'triangle',.036,.005,.22);o(659,'triangle',.032,.005,.28,.09);o(784,'sine',.026,.005,.36,.18);}else{o(220,'sawtooth',.028,.004,.22);o(196,'triangle',.024,.004,.28,.09);}},
-    skip(){unlock();o(440,'triangle',.026,.003,.1);o(330,'sine',.022,.003,.14,.06);},
-    chat(){unlock();o(600,'sine',.018,.001,.05);},
-    warn(){unlock();n(.06,180,.05);n(.05,200,.038,.09);},
-    wake(){unlock();o(220,'sine',.01,.06,.7);o(330,'sine',.008,.08,.8,.12);o(440,'sine',.006,.1,.9,.24);o(660,'sine',.005,.12,1,.4);},
+    tap(){unlock();o(880,'sine',.015,.005,.08);o(1320,'sine',.008,.003,.06,.02);},
+    hover(){unlock();o(660,'sine',.005,.008,.1);},
+    open(){unlock();o(440,'sine',.02,.008,.2);o(554,'sine',.016,.008,.24,.06);o(659,'sine',.012,.008,.28,.12);},
+    close(){unlock();o(554,'sine',.016,.006,.14);o(440,'sine',.012,.006,.18,.05);},
+    reveal(){unlock();o(330,'sine',.03,.008,.2);o(440,'sine',.025,.008,.24,.06);o(554,'sine',.02,.008,.28,.1);o(659,'sine',.014,.008,.32,.16);},
+    seen(){unlock();o(554,'sine',.025,.006,.14);o(740,'sine',.018,.006,.18,.04);},
+    vote(){unlock();o(294,'sine',.02,.006,.16);o(370,'sine',.015,.006,.2,.05);},
+    phase(){unlock();o(349,'sine',.022,.008,.16);o(440,'sine',.018,.008,.2,.05);o(523,'sine',.014,.008,.24,.1);},
+    countdown(){unlock();o(880,'sine',.008,.002,.04);o(1100,'sine',.005,.002,.035,.01);},
+    success(){unlock();o(523,'sine',.024,.008,.24);o(659,'sine',.02,.008,.28,.08);o(784,'sine',.016,.008,.32,.16);o(1047,'sine',.01,.008,.36,.24);},
+    win(civil){unlock();if(civil){o(523,'sine',.03,.01,.28);o(659,'sine',.025,.01,.34,.08);o(784,'sine',.02,.01,.4,.16);o(1047,'sine',.014,.01,.46,.26);}else{o(220,'sine',.025,.008,.28);o(277,'sine',.02,.008,.34,.08);o(330,'sine',.015,.008,.4,.16);}},
+    skip(){unlock();o(494,'sine',.02,.006,.12);o(392,'sine',.016,.006,.16,.05);},
+    chat(){unlock();o(587,'sine',.012,.004,.06);},
+    warn(){unlock();o(294,'sine',.018,.005,.12);o(262,'sine',.014,.005,.16,.08);},
+    wake(){unlock();o(262,'sine',.008,.08,.8);o(330,'sine',.006,.1,.9,.12);o(392,'sine',.005,.12,1,.24);o(523,'sine',.004,.14,1.1,.4);},
     // Jazzy piano melody for Mr. White reveal
     mrWhiteJazz(){
       unlock();if(!ctx)return;
@@ -1083,7 +1119,30 @@ function renderProfileUI(){
   av.style.background=avBgByName(p.name);av.textContent=(p.name||'?')[0].toUpperCase();
   nm.textContent=p.name;gr.textContent=GRADE_ICONS[gi]+' '+GRADES[gi];gr.style.color=GRADE_COLORS[gi];
   pill.style.display='flex';
+  pill.style.cursor='pointer';
+  pill.onclick=()=>{toggleProfilePopup();};
   ['createNickname','joinNickname','rankedNickname'].forEach(id=>{const el=document.getElementById(id);if(el&&!el.value)el.value=p.name;});
+}
+function toggleProfilePopup(){
+  const popup=document.getElementById('profilePopup');if(!popup)return;
+  const isOpen=popup.classList.contains('open');
+  if(isOpen){popup.classList.remove('open');return;}
+  const p=getProfile();if(!p)return;
+  const gi=gradeIdx(p.lp||0);const lpCur=lpInGrade(p.lp||0);const pct=Math.round(lpCur/LP_PER_GRADE*100);
+  const gid=id=>document.getElementById(id);
+  gid('ppAvatar').style.background=avBgByName(p.name);gid('ppAvatar').textContent=(p.name||'?')[0].toUpperCase();
+  gid('ppName').textContent=p.name;
+  gid('ppGrade').textContent=GRADE_ICONS[gi]+' '+GRADES[gi];gid('ppGrade').style.color=GRADE_COLORS[gi];
+  gid('ppLP').textContent=(p.lp||0)+' LP';
+  gid('ppBarFill').style.width=pct+'%';
+  gid('ppWins').textContent=p.wins||0;gid('ppGames').textContent=p.games||0;
+  const wr=p.games>0?Math.round((p.wins/p.games)*100):0;gid('ppWR').textContent=wr+'%';
+  gid('ppEditName').value=p.name||'';
+  popup.classList.add('open');SFX.open();
+}
+function initProfilePopupListeners(){
+  document.addEventListener('click',(e)=>{const popup=document.getElementById('profilePopup');const pill=document.getElementById('profilePill');if(!popup||!pill)return;if(!popup.contains(e.target)&&!pill.contains(e.target))popup.classList.remove('open');});
+  const saveBtn=document.getElementById('ppSaveName');if(saveBtn)saveBtn.addEventListener('click',()=>{const newName=(document.getElementById('ppEditName').value||'').trim();if(!newName)return;const p=getProfile();if(p){p.name=newName;saveProfile(p);renderProfileUI();toggleProfilePopup();toast('Pseudo mis à jour',newName);SFX.success();}});
 }
 
 function renderRankedPanel(){
@@ -1170,8 +1229,8 @@ const WORD_PAIRS_BY_THEME={
 "👗 Mode":[{a:"Jean slim",b:"Jean boyfriend"},{a:"Pull",b:"Sweat à capuche"},{a:"Veste",b:"Blazer"},{a:"Manteau",b:"Parka"},{a:"Robe",b:"Tunique"},{a:"Costume",b:"Smoking"},{a:"Escarpin",b:"Ballerine"},{a:"Basket",b:"Stan Smith"},{a:"Montre",b:"Bracelet connecté"},{a:"Collier",b:"Sautoir"},{a:"Sac à main",b:"Pochette"},{a:"Soie",b:"Satin"},{a:"Rayures",b:"Pois"},{a:"Haute couture",b:"Prêt-à-porter"},{a:"Chanel",b:"Dior"},{a:"Nike",b:"Adidas"},{a:"Vintage",b:"Rétro"},{a:"Streetwear",b:"Athleisure"},{a:"Rouge à lèvres",b:"Gloss"},{a:"Beret",b:"Chapeau fedora"},{a:"Cravate",b:"Nœud papillon"},{a:"Sandales",b:"Tongs"},{a:"Bottines",b:"Cuissardes"},{a:"Legging",b:"Jogging"},{a:"Chemise",b:"Polo"},{a:"Lingerie",b:"Pyjama"},{a:"Ceinture",b:"Bretelles"},{a:"Lunettes de soleil",b:"Lunettes de vue"},{a:"Perfecto",b:"Blouson aviateur"},{a:"Trench",b:"Imperméable"},{a:"Cachemire",b:"Mohair"},{a:"Denim",b:"Velours côtelé"},{a:"Broderie",b:"Dentelle"},{a:"Zara",b:"H&M"},{a:"Gucci",b:"Louis Vuitton"},{a:"Prada",b:"Versace"},{a:"Converse",b:"Vans"},{a:"Bandana",b:"Foulard"},{a:"Broche",b:"Pin's"},{a:"Bague",b:"Alliance"},{a:"Boucles d'oreilles",b:"Créoles"},{a:"Sneakers",b:"Mocassins"},{a:"Cargo",b:"Bermuda"},{a:"Poncho",b:"Cape"},{a:"Gilet",b:"Cardigan"},{a:"Combinaison",b:"Salopette"},{a:"Corset",b:"Bustier"},{a:"Bob",b:"Visière"},{a:"Survetement",b:"Ensemble sport"},{a:"Kimono",b:"Yukata"}],
 "🎨 Art":[{a:"Aquarelle",b:"Encre de Chine"},{a:"Fresque",b:"Mosaïque"},{a:"Sculpture",b:"Installation"},{a:"Art abstrait",b:"Art figuratif"},{a:"Impressionnisme",b:"Pointillisme"},{a:"Cubisme",b:"Surréalisme"},{a:"Pop art",b:"Op art"},{a:"Roman",b:"Nouvelle"},{a:"Poème",b:"Sonnet"},{a:"Fable",b:"Conte"},{a:"Bande dessinée",b:"Roman graphique"},{a:"Manga",b:"Manhwa"},{a:"Polar",b:"Thriller"},{a:"Fantasy",b:"Heroic fantasy"},{a:"Dystopie",b:"Post-apocalyptique"},{a:"Victor Hugo",b:"Balzac"},{a:"Proust",b:"Camus"},{a:"Shakespeare",b:"Cervantes"},{a:"Hemingway",b:"Fitzgerald"},{a:"Agatha Christie",b:"Arthur Conan Doyle"},{a:"Graffiti",b:"Street art"},{a:"Poterie",b:"Céramique"},{a:"Lithographie",b:"Sérigraphie"},{a:"Nature morte",b:"Vanité"},{a:"Autoportrait",b:"Portrait"},{a:"Art déco",b:"Art nouveau"},{a:"Baroque",b:"Rococo"},{a:"Expressionnisme",b:"Fauvisme"},{a:"Renaissance",b:"Classicisme"},{a:"Minimalisme",b:"Maximalisme"},{a:"Land art",b:"Art éphémère"},{a:"Ready-made",b:"Objet trouvé"},{a:"Haïku",b:"Limerick"},{a:"Sonnet",b:"Ballade"},{a:"Science-fiction",b:"Anticipation"},{a:"Biographie",b:"Autobiographie"},{a:"Essai",b:"Pamphlet"},{a:"Tragédie",b:"Comédie"},{a:"Drame",b:"Mélodrame"},{a:"Toile",b:"Chevalet"},{a:"Pinceau",b:"Palette"},{a:"Fusain",b:"Pastel"},{a:"Estampe",b:"Gravure"},{a:"Calligraphie",b:"Typographie"},{a:"Origami",b:"Papier mâché"},{a:"Tapisserie",b:"Broderie"},{a:"Vitrail",b:"Mosaïque romaine"},{a:"Photographie argentique",b:"Photographie numérique"},{a:"Dadaïsme",b:"Situationnisme"},{a:"Performance",b:"Happening"}],
 "💊 Santé":[{a:"Migraine",b:"Mal de tête"},{a:"Rhume",b:"Grippe"},{a:"Allergie",b:"Intolérance alimentaire"},{a:"Antibiotique",b:"Anti-inflammatoire"},{a:"Stéthoscope",b:"Tensiomètre"},{a:"Radio",b:"IRM"},{a:"Thérapie",b:"Rééducation"},{a:"Méditation",b:"Pleine conscience"},{a:"Sommeil profond",b:"Sommeil paradoxal"},{a:"Burnout",b:"Surmenage"},{a:"Anxiété",b:"Stress chronique"},{a:"Yoga",b:"Stretching"},{a:"Sauna",b:"Hammam"},{a:"Massage suédois",b:"Massage thaï"},{a:"Infusion",b:"Tisane"},{a:"Probiotique",b:"Prébiotique"},{a:"Acupuncture",b:"Acupression"},{a:"Homéopathie",b:"Naturopathie"},{a:"Kinésithérapie",b:"Ostéopathie"},{a:"Vaccin",b:"Rappel"},{a:"Tension artérielle",b:"Fréquence cardiaque"},{a:"Plâtre",b:"Attelle"},{a:"Sirop",b:"Comprimé"},{a:"Pansement",b:"Bandage"},{a:"Scanner",b:"Échographie"},{a:"Ophtalmologue",b:"Orthoptiste"},{a:"Dermatologue",b:"Esthéticien"},{a:"Otite",b:"Sinusite"},{a:"Tendinite",b:"Entorse"},{a:"Fracture",b:"Fissure"},{a:"Myopie",b:"Presbytie"},{a:"Astigmatisme",b:"Hypermétropie"},{a:"Colonne vertébrale",b:"Bassin"},{a:"Artère",b:"Veine"},{a:"Globule rouge",b:"Globule blanc"},{a:"Vitamine C",b:"Vitamine D"},{a:"Fer",b:"Calcium"},{a:"Oméga 3",b:"Oméga 6"},{a:"Régime",b:"Jeûne intermittent"},{a:"Aromathérapie",b:"Phytothérapie"},{a:"Hypnose",b:"Sophrologie"},{a:"Diététicien",b:"Nutritionniste"},{a:"Protéine",b:"Glucide"},{a:"Lipide",b:"Fibre"},{a:"Cardiologue",b:"Pneumologue"},{a:"Endocrinologue",b:"Diabétologue"},{a:"Anesthésie locale",b:"Anesthésie générale"},{a:"Greffe",b:"Transplantation"},{a:"Microbe",b:"Virus"},{a:"Bactérie",b:"Champignon"}],
-"🎌 Animé":[{a:"Naruto",b:"Boruto"},{a:"Goku",b:"Vegeta"},{a:"Luffy",b:"Zoro"},{a:"Sasuke",b:"Itachi"},{a:"Tanjiro",b:"Zenitsu"},{a:"Eren",b:"Mikasa"},{a:"Light Yagami",b:"L"},{a:"Gon",b:"Killua"},{a:"Saitama",b:"Genos"},{a:"Midoriya",b:"Bakugo"},{a:"Edward Elric",b:"Alphonse Elric"},{a:"Spike Spiegel",b:"Jet Black"},{a:"Sakura",b:"Hinata"},{a:"Pikachu",b:"Évoli"},{a:"Sailor Moon",b:"Sakura Chasseuse de cartes"},{a:"Totoro",b:"Sans-Visage"},{a:"Gojo",b:"Sukuna"},{a:"Asta",b:"Yuno"},{a:"Denji",b:"Power"},{a:"Lelouch",b:"Suzaku"},{a:"Levi Ackerman",b:"Erwin Smith"},{a:"Rem",b:"Ram"},{a:"Kirito",b:"Asuna"},{a:"Monkey D. Dragon",b:"Shanks"},{a:"Itadori",b:"Megumi"},{a:"Shoto Todoroki",b:"Endeavor"},{a:"Kakashi",b:"Minato"},{a:"Meliodas",b:"Escanor"},{a:"Natsu",b:"Gray"},{a:"Guts",b:"Griffith"},{a:"Saber",b:"Archer"},{a:"Shinji",b:"Rei"},{a:"Mob",b:"Reigen"},{a:"Senku",b:"Tsukasa"},{a:"Thorfinn",b:"Askeladd"},{a:"Jotaro",b:"Dio"},{a:"One Piece",b:"Dragon Ball"},{a:"Demon Slayer",b:"Jujutsu Kaisen"},{a:"L'Attaque des Titans",b:"Tokyo Ghoul"},{a:"Death Note",b:"Code Geass"},{a:"Hunter × Hunter",b:"Yu Yu Hakusho"},{a:"My Hero Academia",b:"Black Clover"},{a:"Fullmetal Alchemist",b:"Soul Eater"},{a:"Naruto Shippuden",b:"Bleach"},{a:"One Punch Man",b:"Mob Psycho 100"},{a:"Sword Art Online",b:"Log Horizon"},{a:"Re:Zero",b:"Konosuba"},{a:"Cowboy Bebop",b:"Samurai Champloo"},{a:"Neon Genesis Evangelion",b:"Darling in the Franxx"},{a:"Chainsaw Man",b:"Fire Force"}],
-"🎮 Jeux Vidéo":[{a:"Mario",b:"Luigi"},{a:"Zelda",b:"Link"},{a:"Pokémon Rouge",b:"Pokémon Bleu"},{a:"Minecraft",b:"Terraria"},{a:"Fortnite",b:"PUBG"},{a:"GTA V",b:"Red Dead Redemption"},{a:"FIFA",b:"PES"},{a:"Call of Duty",b:"Battlefield"},{a:"League of Legends",b:"Dota 2"},{a:"Overwatch",b:"Valorant"},{a:"The Witcher",b:"Skyrim"},{a:"Dark Souls",b:"Elden Ring"},{a:"Resident Evil",b:"Silent Hill"},{a:"Assassin's Creed",b:"Prince of Persia"},{a:"God of War",b:"Devil May Cry"},{a:"Final Fantasy",b:"Dragon Quest"},{a:"Super Smash Bros",b:"Tekken"},{a:"Animal Crossing",b:"Stardew Valley"},{a:"Among Us",b:"Fall Guys"},{a:"Sonic",b:"Crash Bandicoot"},{a:"Roblox",b:"Garry's Mod"},{a:"Counter-Strike",b:"Rainbow Six"},{a:"Apex Legends",b:"Warzone"},{a:"The Last of Us",b:"Uncharted"},{a:"Spider-Man PS5",b:"Batman Arkham"},{a:"Sekiro",b:"Bloodborne"},{a:"Hollow Knight",b:"Celeste"},{a:"Hades",b:"Dead Cells"},{a:"Portal",b:"Half-Life"},{a:"Mass Effect",b:"Star Wars KOTOR"},{a:"Cyberpunk 2077",b:"Deus Ex"},{a:"Metal Gear Solid",b:"Splinter Cell"},{a:"Monster Hunter",b:"Dauntless"},{a:"Splatoon",b:"Jet Set Radio"},{a:"Kirby",b:"Yoshi"},{a:"Pac-Man",b:"Space Invaders"},{a:"Tetris",b:"Puyo Puyo"},{a:"Donkey Kong",b:"Banjo-Kazooie"},{a:"Wii Sports",b:"Mario Party"},{a:"Street Fighter",b:"Mortal Kombat"},{a:"Horizon Zero Dawn",b:"Death Stranding"},{a:"Persona 5",b:"Fire Emblem"},{a:"Rocket League",b:"Mario Kart"},{a:"World of Warcraft",b:"Guild Wars"},{a:"Diablo",b:"Path of Exile"},{a:"Genshin Impact",b:"Honkai Star Rail"},{a:"Undertale",b:"Deltarune"},{a:"Metroid",b:"Mega Man"},{a:"Kingdom Hearts",b:"Ni no Kuni"},{a:"It Takes Two",b:"A Way Out"}]
+"🎌 Animé":[{a:"Naruto",b:"Luffy"},{a:"Goku",b:"Saitama"},{a:"Sasuke",b:"Killua"},{a:"Eren",b:"Kaneki"},{a:"Light Yagami",b:"Lelouch"},{a:"Gon",b:"Midoriya"},{a:"Tanjiro",b:"Ichigo"},{a:"Vegeta",b:"Bakugo"},{a:"Zoro",b:"Levi"},{a:"Gojo",b:"Kakashi"},{a:"Itachi",b:"Aizen"},{a:"Luffy",b:"Natsu"},{a:"Naruto",b:"Gon"},{a:"Sukuna",b:"Muzan"},{a:"Mikasa",b:"Erza"},{a:"Hinata",b:"Orihime"},{a:"Sakura",b:"Nami"},{a:"Edward Elric",b:"Tanjiro"},{a:"Levi Ackerman",b:"Roronoa Zoro"},{a:"Spike Spiegel",b:"Mugen"},{a:"Guts",b:"Thorfinn"},{a:"Saber",b:"Erza Scarlet"},{a:"Rem",b:"Emilia"},{a:"Kirito",b:"Bell Cranel"},{a:"Denji",b:"Yuji Itadori"},{a:"Mob",b:"Saiki Kusuo"},{a:"Senku",b:"L"},{a:"All Might",b:"Goku"},{a:"Meliodas",b:"Asta"},{a:"Jotaro",b:"Guts"},{a:"Dio",b:"Griffith"},{a:"Pain",b:"Madara"},{a:"Shanks",b:"Gildarts"},{a:"Todoroki",b:"Gray"},{a:"Pikachu",b:"Agumon"},{a:"Chopper",b:"Happy"},{a:"Gaara",b:"Shoto Todoroki"},{a:"Rock Lee",b:"Might Guy"},{a:"Kurapika",b:"Sasuke"},{a:"One Piece",b:"Naruto"},{a:"Dragon Ball",b:"My Hero Academia"},{a:"Demon Slayer",b:"Bleach"},{a:"Jujutsu Kaisen",b:"Naruto Shippuden"},{a:"L'Attaque des Titans",b:"Vinland Saga"},{a:"Death Note",b:"Psycho-Pass"},{a:"Hunter × Hunter",b:"Dragon Ball Z"},{a:"Fullmetal Alchemist",b:"Demon Slayer"},{a:"One Punch Man",b:"Dragon Ball Super"},{a:"Cowboy Bebop",b:"Trigun"},{a:"Chainsaw Man",b:"Jujutsu Kaisen"},{a:"Neon Genesis Evangelion",b:"Code Geass"},{a:"Sword Art Online",b:"No Game No Life"},{a:"Re:Zero",b:"Steins;Gate"},{a:"Tokyo Ghoul",b:"Parasyte"},{a:"Black Clover",b:"Fairy Tail"},{a:"Fire Force",b:"Blue Exorcist"},{a:"Sailor Moon",b:"Cardcaptor Sakura"},{a:"Fruits Basket",b:"Kamisama Kiss"},{a:"Your Name",b:"A Silent Voice"},{a:"Totoro",b:"Ponyo"},{a:"Spirited Away",b:"Howl's Moving Castle"},{a:"Akira",b:"Ghost in the Shell"},{a:"Berserk",b:"Claymore"},{a:"Mob Psycho 100",b:"The Disastrous Life of Saiki K."},{a:"Assassination Classroom",b:"Great Teacher Onizuka"},{a:"Haikyuu",b:"Kuroko no Basket"},{a:"Slam Dunk",b:"Haikyuu"},{a:"Inuyasha",b:"Yashahime"},{a:"Yu-Gi-Oh",b:"Pokémon"}],
+"🎮 Jeux Vidéo":[{a:"Mario",b:"Sonic"},{a:"Zelda",b:"Genshin Impact"},{a:"Minecraft",b:"Terraria"},{a:"Fortnite",b:"PUBG"},{a:"GTA V",b:"Red Dead Redemption"},{a:"FIFA",b:"PES"},{a:"Call of Duty",b:"Battlefield"},{a:"League of Legends",b:"Dota 2"},{a:"Overwatch",b:"Valorant"},{a:"The Witcher",b:"Skyrim"},{a:"Dark Souls",b:"Elden Ring"},{a:"Resident Evil",b:"Silent Hill"},{a:"Assassin's Creed",b:"Prince of Persia"},{a:"God of War",b:"Devil May Cry"},{a:"Final Fantasy",b:"Dragon Quest"},{a:"Super Smash Bros",b:"Tekken"},{a:"Animal Crossing",b:"Stardew Valley"},{a:"Among Us",b:"Fall Guys"},{a:"Crash Bandicoot",b:"Spyro"},{a:"Roblox",b:"Garry's Mod"},{a:"Counter-Strike",b:"Rainbow Six"},{a:"Apex Legends",b:"Warzone"},{a:"The Last of Us",b:"Uncharted"},{a:"Spider-Man PS5",b:"Batman Arkham"},{a:"Sekiro",b:"Bloodborne"},{a:"Hollow Knight",b:"Celeste"},{a:"Hades",b:"Dead Cells"},{a:"Portal",b:"Half-Life"},{a:"Mass Effect",b:"Star Wars KOTOR"},{a:"Cyberpunk 2077",b:"Deus Ex"},{a:"Metal Gear Solid",b:"Splinter Cell"},{a:"Monster Hunter",b:"Dauntless"},{a:"Splatoon",b:"Jet Set Radio"},{a:"Kirby",b:"Yoshi"},{a:"Pac-Man",b:"Space Invaders"},{a:"Tetris",b:"Puyo Puyo"},{a:"Donkey Kong",b:"Banjo-Kazooie"},{a:"Wii Sports",b:"Mario Party"},{a:"Street Fighter",b:"Mortal Kombat"},{a:"Horizon Zero Dawn",b:"Death Stranding"},{a:"Persona 5",b:"Fire Emblem"},{a:"Rocket League",b:"Mario Kart"},{a:"World of Warcraft",b:"Guild Wars"},{a:"Diablo",b:"Path of Exile"},{a:"Genshin Impact",b:"Honkai Star Rail"},{a:"Undertale",b:"Deltarune"},{a:"Metroid",b:"Mega Man"},{a:"Kingdom Hearts",b:"Ni no Kuni"},{a:"It Takes Two",b:"A Way Out"},{a:"Luigi",b:"Tails"},{a:"Bowser",b:"Eggman"},{a:"Master Chief",b:"Doom Slayer"},{a:"Kratos",b:"Dante"},{a:"Cloud Strife",b:"Noctis"},{a:"Link",b:"Aether"},{a:"Geralt",b:"Dovahkiin"},{a:"Lara Croft",b:"Nathan Drake"},{a:"Pikachu",b:"Jibanyan"},{a:"Minecraft",b:"Roblox"},{a:"Fortnite",b:"Apex Legends"},{a:"Pokémon",b:"Digimon"},{a:"Zelda",b:"Dark Souls"},{a:"Ratchet",b:"Jak"},{a:"Samus",b:"Mega Man"},{a:"Bayonetta",b:"2B"},{a:"Ellie",b:"Clementine"},{a:"Leon Kennedy",b:"Chris Redfield"},{a:"Ezio",b:"Altair"},{a:"Steve (Minecraft)",b:"Terrarian"}]
 };
 
 let activeThemes=new Set(Object.keys(WORD_PAIRS_BY_THEME));
@@ -1232,7 +1291,7 @@ document.getElementById('btnGoMenu').addEventListener('click',()=>{
   // En jeu : demander confirmation
   if(confirm('Retourner au menu ? La partie sera quittée.'))goMenu();
 });
-function goMenu(){if(state.unsubRoom)state.unsubRoom();if(state.unsubPlayers)state.unsubPlayers();if(state.tickInterval)clearInterval(state.tickInterval);clearClueTimer();localStorage.removeItem('uc_offline_v6');state.mode='offline';state.roomId=null;state.isHost=false;state.roomData=null;state.players=[];state.myPrivateWord=null;state.offline=null;state.lastPhase='';state.lastWinner='';lastSeenClueCount=0;mrWhiteGuessActive=false;rankedSessionResults=null;MWSnow.stop();hideRevealOverlay();closeRolesReveal();closePeek();history.replaceState(null,'',location.pathname);showScreen('menu');SFX.close();}
+function goMenu(){if(state.unsubRoom)state.unsubRoom();if(state.unsubPlayers)state.unsubPlayers();if(state.tickInterval)clearInterval(state.tickInterval);clearClueTimer();clearAllVotedCountdown();localStorage.removeItem('uc_offline_v6');state.mode='offline';state.roomId=null;state.isHost=false;state.roomData=null;state.players=[];state.myPrivateWord=null;state.offline=null;state.lastPhase='';state.lastWinner='';lastSeenClueCount=0;mrWhiteGuessActive=false;rankedSessionResults=null;MWSnow.stop();hideRevealOverlay();closeRolesReveal();closePeek();history.replaceState(null,'',location.pathname);showScreen('menu');SFX.close();}
 
 // ══════════════════════════════
 // NORMAL MATCHMAKING
@@ -1823,7 +1882,21 @@ async function firebaseResolveVotes(){const room=getRoom();if(!state.isHost||roo
 }
 async function firebaseNextRound(){const room=getRoom();if(!state.isHost||room.phase!=='result')return;rolesShownForRound=-1;closeRolesReveal();MWSnow.stop();const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast('Fin des manches');return;}const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));batch.update(roomRef(state.roomId),{phase:'lobby',winner:'',updatedAt:firebaseFns.serverTimestamp(),resultText:'','current.discussionEndsAt':0,'current.voteEndsAt':0,'current.turnOrder':[],'current.speakerIndex':0,'current.skipVotes':{},'current.clues':[]});for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1},{merge:true});await batch.commit();toast('Retour au lobby');}
 async function firebaseResetGame(){if(!state.isHost)return;rolesShownForRound=-1;closeRolesReveal();MWSnow.stop();const vs=await firebaseFns.getDocs(votesCol(state.roomId));const batch=firebaseFns.writeBatch(state.db);vs.forEach(d=>batch.delete(d.ref));for(const p of getPlayers())batch.set(playerRef(state.roomId,p.id),{alive:true,votedRound:-1,revealedRound:-1},{merge:true});batch.update(roomRef(state.roomId),{phase:'lobby',roundNumber:0,winner:'',resultText:'',updatedAt:firebaseFns.serverTimestamp(),current:{aliveIds:getPlayers().map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],mrWhiteIds:[],civilianWord:'',undercoverWord:'',discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{},clues:[]}});await batch.commit();toast('Partie réinitialisée');}
-function autoPhaseProgress(){if(state.mode!=='firebase'||!state.isHost)return;const room=getRoom();if(!room)return;if(room.phase==='vote'&&room.current?.voteEndsAt&&Date.now()>=room.current.voteEndsAt&&!room.settings?.ranked)firebaseResolveVotes();}
+let allVotedCountdown=null,allVotedTimer=0;
+function checkAllVoted(){const room=getRoom();if(!room||room.phase!=='vote')return false;const alive=getAlivePlayers();return alive.every(p=>p.votedRound===currentRoundNumber());}
+function startAllVotedCountdown(){if(allVotedCountdown)return;// already counting
+allVotedTimer=5;toast('✅ Tous ont voté !',`Résolution dans ${allVotedTimer}s...`);SFX.success();
+const bigT=$('gameTimerBig');const bigL=$('gameTimerLabel');const bigBlock=$('gameTimerBlock');
+if(bigBlock)bigBlock.classList.remove('hidden');
+allVotedCountdown=setInterval(()=>{allVotedTimer--;
+if(bigT)bigT.textContent=`00:0${Math.max(0,allVotedTimer)}`;
+if(bigL)bigL.textContent='Résolution imminente…';
+if(allVotedTimer<=0){clearInterval(allVotedCountdown);allVotedCountdown=null;
+if(state.isHost){if(state.mode==='firebase')firebaseResolveVotes();else offlineResolveVotes();}}
+},1000);}
+function clearAllVotedCountdown(){if(allVotedCountdown){clearInterval(allVotedCountdown);allVotedCountdown=null;}}
+
+function autoPhaseProgress(){if(state.mode!=='firebase'||!state.isHost)return;const room=getRoom();if(!room)return;if(room.phase==='vote'){if(checkAllVoted()){startAllVotedCountdown();}else if(room.current?.voteEndsAt&&Date.now()>=room.current.voteEndsAt&&!room.settings?.ranked){clearAllVotedCountdown();firebaseResolveVotes();}}}
 
 // ── OFFLINE ──
 function createOfflineRoom(nickname,settings){state.offline={mode:'offline',roomId:'LOCAL',hostId:state.myId,phase:'lobby',roundNumber:0,winner:'',resultText:'',settings,players:[{id:state.myId,secretId:state.mySecret,nickname,host:true,alive:true,joinedAt:now(),revealedRound:-1,votedRound:-1}],current:{aliveIds:[state.myId],eliminatedIds:[],pairIndex:-1,undercoverIds:[],mrWhiteIds:[],civilianWord:'',undercoverWord:'',discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{},clues:[]},privateWords:{},votes:{},offlineRevealQueue:[],offlineRevealIndex:0,offlineVoteQueue:[],offlineVoteIndex:0};state.mode='offline';state.roomId='LOCAL';state.myName=nickname;state.isHost=true;state.myPrivateWord=null;persistOffline();mountOfflineRoom();toast('Partie locale créée');}
@@ -1861,7 +1934,7 @@ function offlineResolveVotes(){const room=state.offline;if(!room||!state.isHost|
 }
 function offlineNextRound(){const room=state.offline;if(!room||!state.isHost||room.phase!=='result')return;const total=room.settings?.roundsTotal||1;if(currentRoundNumber()>=total){toast('Fin des manches');return;}room.phase='lobby';room.winner='';room.resultText='';room.votes={};room.current.discussionEndsAt=0;room.current.voteEndsAt=0;room.current.turnOrder=[];room.current.speakerIndex=0;room.current.skipVotes={};room.current.clues=[];room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.alive=true;p.votedRound=-1;}room.current.aliveIds=room.players.map(p=>p.id);room.current.eliminatedIds=[];rolesShownForRound=-1;closeRolesReveal();MWSnow.stop();persistOffline();renderPlayers();updateRoomHeader();toast('Retour au lobby');}
 function offlineResetGame(){const room=state.offline;if(!room||!state.isHost)return;room.phase='lobby';room.roundNumber=0;room.winner='';room.resultText='';room.current={aliveIds:room.players.map(p=>p.id),eliminatedIds:[],pairIndex:-1,undercoverIds:[],mrWhiteIds:[],civilianWord:'',undercoverWord:'',discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{},clues:[]};room.privateWords={};room.votes={};room.offlineRevealQueue=[];room.offlineRevealIndex=0;room.offlineVoteQueue=[];room.offlineVoteIndex=0;for(const p of room.players){p.alive=true;p.votedRound=-1;p.revealedRound=-1;}rolesShownForRound=-1;closeRolesReveal();MWSnow.stop();lastSeenClueCount=0;persistOffline();renderPlayers();updateRoomHeader();toast('Partie réinitialisée');}
-function offlineAutoProgress(){const room=state.offline;if(!room||!state.isHost)return;if(room.phase==='vote'&&room.current.voteEndsAt&&now()>=room.current.voteEndsAt)offlineResolveVotes();}
+function offlineAutoProgress(){const room=state.offline;if(!room||!state.isHost)return;if(room.phase==='vote'){if(checkAllVoted()){startAllVotedCountdown();}else if(room.current.voteEndsAt&&now()>=room.current.voteEndsAt){clearAllVotedCountdown();offlineResolveVotes();}}}
 
 // ── PEEK ──
 let peekFlipped=false;
@@ -2007,6 +2080,7 @@ document.querySelectorAll('.mode-card').forEach(el=>{el.addEventListener('mousee
 // ── BOOT ──
 async function boot(){
   loadSoundPrefs();syncSetupValues();updateActivePills();
+  initProfilePopupListeners();
   await initFirebase();updateBadges();
   const gvProfile=getProfile();
   if(gvProfile){['createNickname','joinNickname','rankedNickname'].forEach(id=>{const el=$(id);if(el&&!el.value)el.value=gvProfile.name;});renderProfileUI();}
