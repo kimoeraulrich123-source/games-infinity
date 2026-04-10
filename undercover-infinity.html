@@ -162,8 +162,29 @@ input[type=checkbox]{accent-color:var(--vi);width:14px;height:14px;cursor:pointe
 /* GAME LAYOUT */
 .main-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
 @media(max-width:800px){.main-grid{grid-template-columns:1fr}}
-.game-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;margin-top:16px}
-@media(max-width:960px){.game-grid{grid-template-columns:1fr!important}}
+.game-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
+/* AVATAR BAR — top of game screen */
+.avatar-bar{display:flex;align-items:center;justify-content:center;gap:12px;padding:18px 10px 10px;flex-wrap:wrap}
+.avatar-bar-item{display:flex;flex-direction:column;align-items:center;gap:5px;transition:all .3s;position:relative}
+.avatar-bar-item .player-avatar{width:48px;height:48px;border-radius:16px;font-size:1.1rem;border:2.5px solid transparent;transition:all .3s;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.avatar-bar-item.speaking .player-avatar{border-color:var(--am);box-shadow:0 0 18px rgba(255,184,0,.4);animation:dp 1s ease infinite alternate}
+.avatar-bar-item.is-me .player-avatar{border-color:rgba(124,58,237,.6);box-shadow:0 0 14px rgba(124,58,237,.3)}
+.avatar-bar-item.dead{opacity:.3;filter:grayscale(.7)}
+.avatar-bar-item.dead .player-avatar{border-color:rgba(255,61,107,.3)}
+.avatar-bar-name{font-size:.7rem;font-weight:700;max-width:68px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:center;color:var(--mu)}
+.avatar-bar-item.speaking .avatar-bar-name{color:var(--am)}
+.avatar-bar-item.is-me .avatar-bar-name{color:var(--vi2)}
+.avatar-bar-item.dead .avatar-bar-name{text-decoration:line-through}
+.avatar-bar-badge{position:absolute;top:-4px;right:-4px;font-size:.6rem;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--am);color:#000;font-weight:900;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+/* GAME TIMER — centered big timer */
+.game-timer-block{text-align:center;padding:12px 0}
+.game-timer-big{font-family:"Space Mono",monospace;font-size:clamp(2.5rem,7vw,4.5rem);font-weight:700;letter-spacing:.08em;color:var(--tx);transition:color .3s;line-height:1}
+.game-timer-big.urgent{color:var(--rs);animation:up .6s ease infinite alternate;text-shadow:0 0 36px rgba(255,61,107,.5)}
+.game-timer-label{font-family:"Space Mono",monospace;font-size:.72rem;color:var(--di);text-transform:uppercase;letter-spacing:.12em;margin-top:6px}
+/* GAME CENTER PANEL */
+.game-center{max-width:700px;margin:0 auto;width:100%}
+.game-side-panels{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:700px){.game-side-panels{grid-template-columns:1fr}}
 /* PHASE BAR */
 .phasebar{display:flex;gap:6px;flex-wrap:wrap}
 .phase-step{font-family:"Space Mono",monospace;font-size:.68rem;padding:5px 11px;border-radius:999px;border:1px solid var(--b2);color:var(--di);transition:all .3s}
@@ -211,7 +232,7 @@ input[type=checkbox]{accent-color:var(--vi);width:14px;height:14px;cursor:pointe
 .clue-waiting{padding:16px;border-radius:var(--r2);background:var(--s3);border:1px solid var(--b2);text-align:center}
 .clue-waiting-name{font-family:"Syne",sans-serif;font-weight:900;font-size:1rem;color:var(--am)}
 .clue-waiting-sub{font-size:.8rem;color:var(--di);margin-top:4px}
-.clue-bar-wrap{display:flex;flex-direction:column;gap:11px;padding:16px;border-radius:var(--r);background:linear-gradient(160deg,rgba(124,58,237,.14),rgba(0,201,255,.07));border:2px solid rgba(124,58,237,.38);animation:cbi .35s cubic-bezier(.34,1.56,.64,1)}
+.clue-bar-wrap{display:flex;flex-direction:column;gap:11px;padding:20px;border-radius:var(--r);background:linear-gradient(160deg,rgba(124,58,237,.1),rgba(0,201,255,.05));border:1.5px solid rgba(124,58,237,.3);animation:cbi .35s cubic-bezier(.34,1.56,.64,1)}
 @keyframes cbi{from{opacity:0;transform:translateY(18px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 .clue-bar-label{font-family:"Syne",sans-serif;font-weight:900;font-size:.92rem;color:var(--vi2)}
 .clue-bar-timer{display:flex;align-items:center;gap:10px;margin:-2px 0 2px}
@@ -439,7 +460,7 @@ details[open] .summary-arrow{transform:rotate(180deg)}
 @keyframes wg{from{transform:scale(.8);opacity:.45}to{transform:scale(1.2);opacity:.9}}
 .wa-author{font-family:"Space Mono",monospace;font-size:.8rem;color:var(--mu);text-transform:uppercase;letter-spacing:.15em;opacity:0;animation:wsu .5s ease .1s forwards;transform:translateY(20px)}
 .wa-wrote{font-size:.86rem;color:var(--di);margin-top:6px;opacity:0;animation:wsu .5s ease .25s forwards;transform:translateY(20px)}
-.wa-word{font-family:"Syne",sans-serif;font-size:clamp(2.2rem,10vw,5.5rem);font-weight:900;letter-spacing:-.04em;margin-top:16px;background:linear-gradient(135deg,#fff 8%,var(--vi2) 38%,var(--cy) 68%,var(--em));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;max-width:90vw;word-break:break-word;opacity:0;transform:rotateX(40deg) scale(.5) translateZ(-100px);animation:wwp .7s cubic-bezier(.34,1.56,.64,1) .4s forwards}
+.wa-word{font-family:"Syne",sans-serif;font-size:clamp(2.8rem,12vw,6.5rem);font-weight:900;letter-spacing:-.04em;margin-top:16px;background:linear-gradient(135deg,#fff 8%,var(--vi2) 38%,var(--cy) 68%,var(--em));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;max-width:90vw;word-break:break-word;opacity:0;transform:rotateX(40deg) scale(.5) translateZ(-100px);animation:wwp .7s cubic-bezier(.34,1.56,.64,1) .4s forwards}
 @keyframes wsu{to{opacity:1;transform:translateY(0)}}
 @keyframes wwp{0%{opacity:0;transform:rotateX(40deg) scale(.5) translateZ(-100px)}60%{opacity:1;transform:rotateX(-5deg) scale(1.08) translateZ(20px)}100%{opacity:1;transform:rotateX(0) scale(1) translateZ(0)}}
 .wa-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
@@ -533,7 +554,7 @@ details[open] .summary-arrow{transform:rotate(180deg)}
   <button class="tab-btn" onclick="switchSetupTab('themes')">🎨 Thèmes</button>
   <button class="tab-btn" onclick="switchSetupTab('join')">🔗 Rejoindre</button>
 </div>
-<div id="tab-config" class="main-grid">
+<div id="tab-config" class="main-grid" style="grid-template-columns:1.2fr .8fr">
   <div class="card card-primary">
     <div class="section-tag">✦ Créer</div>
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;flex-wrap:wrap">
@@ -655,108 +676,132 @@ details[open] .summary-arrow{transform:rotate(180deg)}
 
 <!-- SCREEN GAME -->
 <div id="screen-room" class="hidden">
-<div class="game-grid">
-  <div class="stack">
-    <div class="card">
-      <div class="game-header">
-        <div><h2 id="roomTitle">Salle —</h2><div class="small muted" id="roomMeta">En attente…</div></div>
-        <div class="row">
-          <span id="hostBadge" class="badge badge-ok hidden">★ Hôte</span>
-          <span id="modeLabelBadge" class="badge badge-purple hidden"></span>
-          <span id="phaseBadge" class="badge badge-warn">Lobby</span>
-        </div>
-      </div>
-      <div class="phasebar" style="margin-bottom:14px">
-        <div id="step-lobby" class="phase-step active">Lobby</div>
-        <div id="step-reveal" class="phase-step">Révélation</div>
-        <div id="step-discussion" class="phase-step">Discussion</div>
-        <div id="step-vote" class="phase-step">Vote</div>
-        <div id="step-result" class="phase-step">Résultat</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-        <span class="small muted">Manches :</span>
-        <div id="roundsDots" class="rounds-display"></div>
-        <span id="roundsLabel" class="badge badge-purple mono">0 / 0</span>
-      </div>
-      <div class="copy-row" id="shareLinkRow" style="margin-bottom:13px">
-        <input id="shareLinkInput" type="text" readonly/>
-        <button id="btnCopyLink" class="btn btn-ghost btn-sm">📋</button>
-      </div>
-      <div class="stats-grid" style="margin-bottom:13px">
-        <div class="stat"><div class="stat-k">Undercovers</div><div class="stat-v" id="settingsUndercover">1</div></div>
-        <div class="stat"><div class="stat-k">Mr. White</div><div class="stat-v" id="settingsMrWhite">0</div></div>
-        <div class="stat"><div class="stat-k">Temps/indice</div><div class="stat-v" id="settingsClueTime">60s</div></div>
-        <div class="stat"><div class="stat-k">Vote</div><div class="stat-v" id="settingsVote">45s</div></div>
-        <div class="stat"><div class="stat-k">Manches</div><div class="stat-v" id="settingsRounds">3</div></div>
-        <div class="stat"><div class="stat-k">Vivants</div><div class="stat-v" id="aliveCount">0</div></div>
-      </div>
-      <div id="skipWordBanner" class="skip-word-banner hidden">
-        <div><div class="skip-title">🔄 Ce mot ne plaît pas ?</div><div class="skip-count" id="skipVoteCount">0 / 0 votes</div></div>
-        <div style="display:flex;gap:8px"><button id="btnSkipWord" class="btn btn-orange btn-sm">Changer</button></div>
-      </div>
-      <div class="row" id="hostActions" style="margin-top:10px">
-        <button id="btnStartRound" class="btn btn-primary hidden">▶ Démarrer</button>
-        <button id="btnLeaveLobby" class="btn btn-ghost hidden">← Quitter le lobby</button>
-        <button id="btnForceDiscussion" class="btn btn-cyan hidden">💬 Discussion</button>
-        <button id="btnNextSpeaker" class="btn btn-yellow hidden">⏭ Suivant</button>
-        <button id="btnForceVote" class="btn btn-red hidden">🗳 Vote</button>
-        <button id="btnResolveVote" class="btn btn-red hidden">⚡ Résoudre</button>
-        <button id="btnNextRound" class="btn btn-primary hidden">↺ Suite</button>
-        <button id="btnResetGame" class="btn btn-ghost hidden">🔄 Reset</button>
-      </div>
-      <div id="panel-offline-admin" class="hidden" style="margin-top:12px">
-        <div class="sep" style="margin:10px 0"></div>
-        <h3>Ajouter joueurs (local)</h3>
-        <div class="row" style="margin-top:8px">
-          <input id="offlinePlayerName" type="text" placeholder="Pseudo" maxlength="20" style="flex:1"/>
-          <button id="btnAddOfflinePlayer" class="btn btn-ghost btn-sm">+ Ajouter</button>
-        </div>
-      </div>
-      <div id="statusBox" class="card-sm" style="margin-top:12px">
-        <div id="statusTitle" style="font-weight:800;font-size:.86rem">Prêt</div>
-        <div id="statusText" class="small muted" style="margin-top:3px">Configure et démarre quand tout le monde est là.</div>
+<!-- AVATAR BAR -->
+<div id="avatarBar" class="avatar-bar"></div>
+
+<!-- GAME TIMER -->
+<div id="gameTimerBlock" class="game-timer-block hidden">
+  <div id="gameTimerBig" class="game-timer-big">00:00</div>
+  <div class="progress-bar" style="max-width:400px;margin:10px auto 0"><div id="gameTimerProgress" class="progress-fill"></div></div>
+  <div id="gameTimerLabel" class="game-timer-label">—</div>
+</div>
+
+<div class="game-center">
+  <!-- LOBBY / STATUS CARD -->
+  <div id="panel-lobby" class="card" style="margin-top:16px">
+    <div class="game-header">
+      <div><h2 id="roomTitle">Salle —</h2><div class="small muted" id="roomMeta">En attente…</div></div>
+      <div class="row">
+        <span id="hostBadge" class="badge badge-ok hidden">★ Hôte</span>
+        <span id="modeLabelBadge" class="badge badge-purple hidden"></span>
+        <span id="phaseBadge" class="badge badge-warn">Lobby</span>
       </div>
     </div>
-    <div id="panel-discussion" class="card hidden">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
-        <div><h2>Tour d'indices</h2><div class="small muted">Chaque joueur a <strong id="clueTimeDisplay">60s</strong> pour donner un indice.</div></div>
-      </div>
-      <div id="speakerNow" class="speaker-now" style="margin-top:13px">
-        <div class="speaker-dot"></div>
-        <div style="flex:1"><div id="currentSpeakerText" class="speaker-name">—</div><div id="speakerProgressBadge" class="speaker-sub">—</div></div>
-        <div id="speakerAvatar" class="player-avatar" style="width:36px;height:36px;border-radius:10px;font-size:.9rem"></div>
-      </div>
-      <div id="clueInputSection" class="clue-input-section"></div>
+    <div class="phasebar" style="margin-bottom:14px">
+      <div id="step-lobby" class="phase-step active">Lobby</div>
+      <div id="step-reveal" class="phase-step">Révélation</div>
+      <div id="step-discussion" class="phase-step">Discussion</div>
+      <div id="step-vote" class="phase-step">Vote</div>
+      <div id="step-result" class="phase-step">Résultat</div>
     </div>
-    <div id="panel-vote" class="card hidden">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
-        <div><h2>Qui est l'imposteur ?</h2><div class="small muted" id="voteTypeLabel">Votez pour éliminer un suspect.</div></div>
-        <div style="text-align:right">
-          <div id="voteTimer" class="timer-display" style="font-size:1.65rem">00:00</div>
-          <div id="voteTimerAdjust" class="hidden" style="margin-top:3px"><div class="timer-adj"><button class="btn btn-ghost btn-sm" onclick="adjustTimer('vote',-15)">−15s</button><button class="btn btn-ghost btn-sm" onclick="adjustTimer('vote',15)">+15s</button></div></div>
-        </div>
-      </div>
-      <div class="progress-bar" style="margin:9px 0 13px"><div id="voteProgress" class="progress-fill"></div></div>
-      <div class="vote-deliberation"><div class="vote-deliberation-title">🗣 Discutez entre vous !</div><div class="vote-deliberation-sub">Regardez les indices et débattez à voix haute</div></div>
-      <div id="voteInfo" class="badge badge-warn" style="margin-bottom:12px;display:inline-flex">En attente du vote…</div>
-      <div id="offlineVoteVoter" class="hidden card-sm small muted" style="margin-bottom:10px"></div>
-      <div id="voteGrid" class="vote-profiles"></div>
-      <div id="revealVotesPanel" class="hidden" style="margin-top:14px;text-align:center">
-        <button id="btnRevealVotes" class="btn btn-yellow">⚡ Révéler les votes simultanément</button>
-      </div>
-      <div id="revealedVotesDisplay" class="hidden" style="margin-top:14px"></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+      <span class="small muted">Manches :</span>
+      <div id="roundsDots" class="rounds-display"></div>
+      <span id="roundsLabel" class="badge badge-purple mono">0 / 0</span>
     </div>
-    <div id="panel-result" class="card hidden">
-      <h2 style="margin-bottom:13px">Résultat du vote</h2>
-      <div id="resultText" class="result-big">—</div>
-      <div id="winnerBanner" class="hidden"></div>
-      <div id="resultSub" class="small muted" style="margin-top:10px">—</div>
-      <div id="lpSummaryPanel" class="hidden"></div>
+    <div class="copy-row" id="shareLinkRow" style="margin-bottom:13px">
+      <input id="shareLinkInput" type="text" readonly/>
+      <button id="btnCopyLink" class="btn btn-ghost btn-sm">📋</button>
+    </div>
+    <div class="stats-grid" style="margin-bottom:13px">
+      <div class="stat"><div class="stat-k">Undercovers</div><div class="stat-v" id="settingsUndercover">1</div></div>
+      <div class="stat"><div class="stat-k">Mr. White</div><div class="stat-v" id="settingsMrWhite">0</div></div>
+      <div class="stat"><div class="stat-k">Temps/indice</div><div class="stat-v" id="settingsClueTime">60s</div></div>
+      <div class="stat"><div class="stat-k">Vote</div><div class="stat-v" id="settingsVote">45s</div></div>
+      <div class="stat"><div class="stat-k">Manches</div><div class="stat-v" id="settingsRounds">3</div></div>
+      <div class="stat"><div class="stat-k">Vivants</div><div class="stat-v" id="aliveCount">0</div></div>
+    </div>
+    <div id="skipWordBanner" class="skip-word-banner hidden">
+      <div><div class="skip-title">🔄 Ce mot ne plaît pas ?</div><div class="skip-count" id="skipVoteCount">0 / 0 votes</div></div>
+      <div style="display:flex;gap:8px"><button id="btnSkipWord" class="btn btn-orange btn-sm">Changer</button></div>
+    </div>
+    <div class="row" id="hostActions" style="margin-top:10px">
+      <button id="btnStartRound" class="btn btn-primary hidden">▶ Démarrer</button>
+      <button id="btnLeaveLobby" class="btn btn-ghost hidden">← Quitter le lobby</button>
+      <button id="btnForceDiscussion" class="btn btn-cyan hidden">💬 Discussion</button>
+      <button id="btnNextSpeaker" class="btn btn-yellow hidden">⏭ Suivant</button>
+      <button id="btnForceVote" class="btn btn-red hidden">🗳 Vote</button>
+      <button id="btnResolveVote" class="btn btn-red hidden">⚡ Résoudre</button>
+      <button id="btnNextRound" class="btn btn-primary hidden">↺ Suite</button>
+      <button id="btnResetGame" class="btn btn-ghost hidden">🔄 Reset</button>
+    </div>
+    <div id="panel-offline-admin" class="hidden" style="margin-top:12px">
+      <div class="sep" style="margin:10px 0"></div>
+      <h3>Ajouter joueurs (local)</h3>
+      <div class="row" style="margin-top:8px">
+        <input id="offlinePlayerName" type="text" placeholder="Pseudo" maxlength="20" style="flex:1"/>
+        <button id="btnAddOfflinePlayer" class="btn btn-ghost btn-sm">+ Ajouter</button>
+      </div>
+    </div>
+    <div id="statusBox" class="card-sm" style="margin-top:12px">
+      <div id="statusTitle" style="font-weight:800;font-size:.86rem">Prêt</div>
+      <div id="statusText" class="small muted" style="margin-top:3px">Configure et démarre quand tout le monde est là.</div>
     </div>
   </div>
-  <div class="stack">
-    <div class="card"><h2 style="margin-bottom:11px">Joueurs</h2><div id="playersList" class="players-grid"></div></div>
-    <div id="panel-clue-feed" class="card hidden"><h2 style="margin-bottom:4px">Indices</h2><div class="small muted" style="margin-bottom:9px">Mots donnés par chaque joueur</div><div id="clueFeed" class="clue-feed"></div></div>
+
+  <!-- DISCUSSION PANEL -->
+  <div id="panel-discussion" class="card hidden" style="margin-top:16px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+      <div><h2>Tour d'indices</h2><div class="small muted">Chaque joueur a <strong id="clueTimeDisplay">60s</strong> pour donner un indice.</div></div>
+    </div>
+    <div id="speakerNow" class="speaker-now" style="margin-top:13px">
+      <div class="speaker-dot"></div>
+      <div style="flex:1"><div id="currentSpeakerText" class="speaker-name">—</div><div id="speakerProgressBadge" class="speaker-sub">—</div></div>
+      <div id="speakerAvatar" class="player-avatar" style="width:36px;height:36px;border-radius:10px;font-size:.9rem"></div>
+    </div>
+    <div id="clueInputSection" class="clue-input-section"></div>
+  </div>
+
+  <!-- VOTE PANEL -->
+  <div id="panel-vote" class="card hidden" style="margin-top:16px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+      <div><h2>Qui est l'imposteur ?</h2><div class="small muted" id="voteTypeLabel">Votez pour éliminer un suspect.</div></div>
+      <div style="text-align:right">
+        <div id="voteTimer" class="timer-display" style="font-size:1.65rem;display:none">00:00</div>
+        <div id="voteTimerAdjust" class="hidden" style="margin-top:3px"><div class="timer-adj"><button class="btn btn-ghost btn-sm" onclick="adjustTimer('vote',-15)">−15s</button><button class="btn btn-ghost btn-sm" onclick="adjustTimer('vote',15)">+15s</button></div></div>
+      </div>
+    </div>
+    <div class="vote-deliberation"><div class="vote-deliberation-title">🗣 Discutez entre vous !</div><div class="vote-deliberation-sub">Regardez les indices et débattez à voix haute</div></div>
+    <div id="voteProgress" class="progress-fill" style="display:none"></div>
+    <div id="voteInfo" class="badge badge-warn" style="margin-bottom:12px;display:inline-flex">En attente du vote…</div>
+    <div id="offlineVoteVoter" class="hidden card-sm small muted" style="margin-bottom:10px"></div>
+    <div id="voteGrid" class="vote-profiles"></div>
+    <div id="revealVotesPanel" class="hidden" style="margin-top:14px;text-align:center">
+      <button id="btnRevealVotes" class="btn btn-yellow">⚡ Révéler les votes simultanément</button>
+    </div>
+    <div id="revealedVotesDisplay" class="hidden" style="margin-top:14px"></div>
+  </div>
+
+  <!-- RESULT PANEL -->
+  <div id="panel-result" class="card hidden" style="margin-top:16px">
+    <h2 style="margin-bottom:13px">Résultat du vote</h2>
+    <div id="resultText" class="result-big">—</div>
+    <div id="winnerBanner" class="hidden"></div>
+    <div id="resultSub" class="small muted" style="margin-top:10px">—</div>
+    <div id="lpSummaryPanel" class="hidden"></div>
+  </div>
+
+  <!-- CLUE FEED -->
+  <div id="panel-clue-feed" class="card hidden" style="margin-top:16px">
+    <h2 style="margin-bottom:4px">Indices</h2>
+    <div class="small muted" style="margin-bottom:9px">Mots donnés par chaque joueur</div>
+    <div id="clueFeed" class="clue-feed"></div>
+  </div>
+
+  <!-- PLAYERS LIST (lobby only) -->
+  <div id="panel-players-list" class="card" style="margin-top:16px">
+    <h2 style="margin-bottom:11px">Joueurs</h2>
+    <div id="playersList" class="players-grid"></div>
   </div>
 </div>
 </div>
@@ -1098,22 +1143,24 @@ function applyLPDelta(delta){
 // THEME SYSTEM
 // ══════════════════════════════
 const WORD_PAIRS_BY_THEME={
-"🎬 Films":[{a:"Titanic",b:"Naufrage"},{a:"Avatar",b:"Pandora"},{a:"Le Parrain",b:"Scarface"},{a:"Star Wars",b:"Star Trek"},{a:"Harry Potter",b:"Le Seigneur des Anneaux"},{a:"Batman",b:"Superman"},{a:"Iron Man",b:"Captain America"},{a:"Toy Story",b:"Shrek"},{a:"Le Roi Lion",b:"Bambi"},{a:"Inception",b:"Interstellar"},{a:"Matrix",b:"Blade Runner"},{a:"Indiana Jones",b:"Lara Croft"},{a:"James Bond",b:"Jason Bourne"},{a:"Forrest Gump",b:"La Vie est belle"},{a:"The Dark Knight",b:"Spider-Man"},{a:"John Wick",b:"Taken"},{a:"Intouchables",b:"Patients"},{a:"Amélie Poulain",b:"Delicatessen"},{a:"Frozen",b:"Raiponce"},{a:"Coco",b:"Soul"},{a:"Spirited Away",b:"Princesse Mononoké"},{a:"Parasite",b:"Oldboy"},{a:"Breaking Bad",b:"Better Call Saul"},{a:"Stranger Things",b:"Dark"},{a:"La Casa de Papel",b:"Lupin"},{a:"Black Mirror",b:"Westworld"},{a:"Oscar",b:"Palme d'or"},{a:"CGI",b:"Effets spéciaux"},{a:"Western",b:"Péplum"},{a:"Biopic",b:"Film historique"},{a:"Trailer",b:"Teaser"},{a:"Cliffhanger",b:"Plot twist"}],
-"🏠 Objets":[{a:"Parapluie",b:"Parasol"},{a:"Bougie",b:"Encens"},{a:"Miroir",b:"Vitre"},{a:"Coussin",b:"Oreiller"},{a:"Couverture",b:"Plaid"},{a:"Rideau",b:"Store"},{a:"Horloge murale",b:"Pendule"},{a:"Sablier",b:"Minuteur"},{a:"Clé",b:"Badge magnétique"},{a:"Portefeuille",b:"Porte-monnaie"},{a:"Écharpe",b:"Foulard"},{a:"Bonnet",b:"Casquette"},{a:"Sac à dos",b:"Sac de voyage"},{a:"Crayon",b:"Stylo"},{a:"Agrafeuse",b:"Trombone"},{a:"Casque audio",b:"Écouteurs"},{a:"Télécommande",b:"Manette de jeu"},{a:"Thermostat",b:"Thermomètre"},{a:"Aspirateur",b:"Balai"},{a:"Nappe",b:"Set de table"},{a:"Poêle",b:"Casserole"},{a:"Ouvre-boîte",b:"Tire-bouchon"},{a:"Cadre photo",b:"Tableau"},{a:"Vase",b:"Pot de fleurs"},{a:"Réveil",b:"Minuterie"}],
-"🌍 Lieux":[{a:"France",b:"Belgique"},{a:"Espagne",b:"Portugal"},{a:"Italie",b:"Grèce"},{a:"Allemagne",b:"Autriche"},{a:"Japon",b:"Corée du Sud"},{a:"Chine",b:"Taiwan"},{a:"Brésil",b:"Argentine"},{a:"Mexique",b:"Colombie"},{a:"Maroc",b:"Tunisie"},{a:"Paris",b:"Lyon"},{a:"Tokyo",b:"Osaka"},{a:"New York",b:"Los Angeles"},{a:"Londres",b:"Manchester"},{a:"Rome",b:"Milan"},{a:"Sydney",b:"Melbourne"},{a:"Dubaï",b:"Abu Dhabi"},{a:"Tour Eiffel",b:"Tour de Pise"},{a:"Colisée",b:"Acropole"},{a:"Taj Mahal",b:"Alhambra"},{a:"Himalaya",b:"Andes"},{a:"Alpes",b:"Pyrénées"},{a:"Sahara",b:"Désert de Gobi"},{a:"Amazonie",b:"Congo (forêt)"},{a:"Atlantique",b:"Pacifique"}],
-"🌟 Personnalités":[{a:"Einstein",b:"Oppenheimer"},{a:"Newton",b:"Galilée"},{a:"Curie (Marie)",b:"Curie (Pierre)"},{a:"Tesla (Nikola)",b:"Edison"},{a:"Picasso",b:"Braque"},{a:"Van Gogh",b:"Gauguin"},{a:"Michael Jackson",b:"Prince"},{a:"Elvis Presley",b:"Chuck Berry"},{a:"The Beatles",b:"The Rolling Stones"},{a:"Madonna",b:"Beyoncé"},{a:"David Bowie",b:"Freddie Mercury"},{a:"Mozart",b:"Beethoven"},{a:"Spielberg",b:"Scorsese"},{a:"Chaplin",b:"Buster Keaton"},{a:"Pelé",b:"Maradona"},{a:"Cristiano Ronaldo",b:"Messi"},{a:"Muhammad Ali",b:"Mike Tyson"},{a:"Federer",b:"Nadal"},{a:"Michael Jordan",b:"LeBron James"},{a:"Napoléon",b:"César"},{a:"Gandhi",b:"Mandela"},{a:"Elon Musk",b:"Jeff Bezos"},{a:"Steve Jobs",b:"Bill Gates"}],
-"🍽️ Nourriture":[{a:"Cappuccino",b:"Latte"},{a:"Expresso",b:"Ristretto"},{a:"Thé vert",b:"Thé blanc"},{a:"Mozzarella",b:"Burrata"},{a:"Brie",b:"Camembert"},{a:"Croissant",b:"Pain au chocolat"},{a:"Macaron",b:"Meringue"},{a:"Tiramisu",b:"Panna cotta"},{a:"Crêpe",b:"Galette"},{a:"Risotto",b:"Paella"},{a:"Ramen",b:"Pho"},{a:"Sushi",b:"Sashimi"},{a:"Kebab",b:"Shawarma"},{a:"Mojito",b:"Caïpirinha"},{a:"Champagne",b:"Prosecco"},{a:"Raclette",b:"Fondue"},{a:"Baguette",b:"Ciabatta"},{a:"Sorbet",b:"Glace"},{a:"Pizza",b:"Focaccia"},{a:"Burrito",b:"Enchilada"},{a:"Pad thaï",b:"Chow mein"}],
-"💭 Concepts":[{a:"Nostalgie",b:"Mélancolie"},{a:"Fierté",b:"Orgueil"},{a:"Empathie",b:"Compassion"},{a:"Courage",b:"Témérité"},{a:"Intuition",b:"Instinct"},{a:"Liberté",b:"Indépendance"},{a:"Solitude",b:"Isolement"},{a:"Rêve",b:"Cauchemar"},{a:"Secret",b:"Mystère"},{a:"Ironie",b:"Sarcasme"},{a:"Bonheur",b:"Euphorie"},{a:"Tristesse",b:"Chagrin"},{a:"Trahison",b:"Déception"},{a:"Pardon",b:"Indulgence"},{a:"Espoir",b:"Optimisme"},{a:"Imagination",b:"Créativité"},{a:"Justice",b:"Équité"},{a:"Harmonie",b:"Sérénité"},{a:"Chaos",b:"Désordre"},{a:"Résilience",b:"Endurance"}],
-"👔 Métiers":[{a:"Architecte",b:"Designer d'intérieur"},{a:"Photographe",b:"Vidéaste"},{a:"Chirurgien",b:"Dentiste"},{a:"Psychologue",b:"Psychiatre"},{a:"Avocat",b:"Notaire"},{a:"Chef cuisinier",b:"Pâtissier"},{a:"Pilote",b:"Capitaine de navire"},{a:"Détective",b:"Espion"},{a:"DJ",b:"Producteur musical"},{a:"Acteur",b:"Doubleur"},{a:"Écrivain",b:"Scénariste"},{a:"Danseur",b:"Chorégraphe"},{a:"Traducteur",b:"Interprète"},{a:"Ingénieur",b:"Technicien"},{a:"Pompier",b:"Secouriste"},{a:"Vétérinaire",b:"Zoologiste"},{a:"Astronaute",b:"Cosmonaute"},{a:"Styliste",b:"Couturier"},{a:"Magicien",b:"Illusionniste"},{a:"Jardinier",b:"Paysagiste"},{a:"Développeur",b:"Data scientist"}],
-"📱 Tech":[{a:"Algorithme",b:"Intelligence artificielle"},{a:"Bug",b:"Glitch"},{a:"Wi-Fi",b:"Bluetooth"},{a:"Emoji",b:"Sticker"},{a:"Podcast",b:"Audiobook"},{a:"Cloud",b:"Serveur"},{a:"VPN",b:"Proxy"},{a:"Notification",b:"Alerte"},{a:"Dark mode",b:"Mode nuit"},{a:"Firewall",b:"Antivirus"},{a:"SSD",b:"Disque dur"},{a:"QR code",b:"Code-barres"},{a:"Touch ID",b:"Face ID"},{a:"Machine learning",b:"Deep learning"},{a:"Chatbot",b:"Assistant vocal"},{a:"Réalité virtuelle",b:"Réalité augmentée"},{a:"Drone",b:"Robot"},{a:"Blockchain",b:"Cryptomonnaie"},{a:"Startup",b:"Licorne tech"},{a:"Frontend",b:"Backend"},{a:"Instagram",b:"TikTok"},{a:"Netflix",b:"Disney+"}],
-"🎵 Musique":[{a:"Guitare électrique",b:"Basse"},{a:"Piano",b:"Synthétiseur"},{a:"Violon",b:"Violoncelle"},{a:"Batterie",b:"Djembé"},{a:"Trompette",b:"Saxophone"},{a:"Rap",b:"Slam"},{a:"Jazz",b:"Blues"},{a:"Reggae",b:"Dancehall"},{a:"Techno",b:"House"},{a:"Rock",b:"Métal"},{a:"Pop",b:"Variété"},{a:"Bossa nova",b:"Samba"},{a:"Flamenco",b:"Tango"},{a:"Disco",b:"Funk"},{a:"Soul",b:"R&B"},{a:"Country",b:"Folk"},{a:"Lo-fi",b:"Chillhop"},{a:"Afrobeat",b:"Afropop"},{a:"Concert",b:"Festival"},{a:"Vinyl",b:"CD"},{a:"Remix",b:"Cover"}],
-"⚽ Sport":[{a:"Football",b:"Rugby"},{a:"Tennis",b:"Badminton"},{a:"Basket-ball",b:"Handball"},{a:"Natation",b:"Water-polo"},{a:"Cyclisme",b:"VTT"},{a:"Ski alpin",b:"Snowboard"},{a:"Boxe",b:"MMA"},{a:"Judo",b:"Karaté"},{a:"Golf",b:"Pétanque"},{a:"Hockey sur glace",b:"Hockey sur gazon"},{a:"Surf",b:"Bodyboard"},{a:"Escalade",b:"Alpinisme"},{a:"Marathon",b:"Semi-marathon"},{a:"Yoga",b:"Pilates"},{a:"Penalty",b:"Coup franc"},{a:"Stade",b:"Aréna"},{a:"Carton rouge",b:"Carton jaune"},{a:"Tour de France",b:"Giro d'Italia"},{a:"Formule 1",b:"MotoGP"},{a:"Jeux Olympiques",b:"Jeux Paralympiques"},{a:"Champions League",b:"Ligue Europa"}],
-"🐾 Animaux":[{a:"Lion",b:"Tigre"},{a:"Panthère",b:"Léopard"},{a:"Loup",b:"Renard"},{a:"Ours brun",b:"Ours polaire"},{a:"Gorille",b:"Chimpanzé"},{a:"Koala",b:"Paresseux"},{a:"Kangourou",b:"Wallaby"},{a:"Crocodile",b:"Alligator"},{a:"Hibou",b:"Chouette"},{a:"Pieuvre",b:"Calmar"},{a:"Requin blanc",b:"Requin marteau"},{a:"Dauphin",b:"Marsouin"},{a:"Orque",b:"Baleine bleue"},{a:"Flamant rose",b:"Pélican"},{a:"Aigle",b:"Faucon"},{a:"Coccinelle",b:"Scarabée"},{a:"Papillon",b:"Libellule"},{a:"Abeille",b:"Bourdon"},{a:"Araignée",b:"Scorpion"},{a:"Caméléon",b:"Gecko"},{a:"Cobra",b:"Vipère"},{a:"Panda géant",b:"Panda roux"},{a:"Castor",b:"Loutre"}],
-"🌿 Nature":[{a:"Aurore boréale",b:"Arc-en-ciel"},{a:"Éclipse solaire",b:"Éclipse lunaire"},{a:"Tsunami",b:"Raz-de-marée"},{a:"Fossile",b:"Ambre"},{a:"Galaxie",b:"Nébuleuse"},{a:"Comète",b:"Astéroïde"},{a:"Trou noir",b:"Étoile à neutrons"},{a:"ADN",b:"ARN"},{a:"Séisme",b:"Éruption volcanique"},{a:"Tornade",b:"Cyclone"},{a:"Orchidée",b:"Lys"},{a:"Rose",b:"Pivoine"},{a:"Lavande",b:"Romarin"},{a:"Chêne",b:"Hêtre"},{a:"Séquoia",b:"Baobab"},{a:"Volcan actif",b:"Volcan éteint"},{a:"Quartz",b:"Améthyste"},{a:"Magma",b:"Lave"},{a:"Orage",b:"Tempête"},{a:"Mousson",b:"Alizé"},{a:"Neurone",b:"Synapse"},{a:"Photosynthèse",b:"Respiration cellulaire"}],
-"🎲 Jeux":[{a:"Échecs",b:"Dames"},{a:"Poker",b:"Black-jack"},{a:"Monopoly",b:"La Bonne Paye"},{a:"Loup-Garou",b:"Mafia"},{a:"Escape game",b:"Chasse au trésor"},{a:"Bowling",b:"Pétanque"},{a:"Scrabble",b:"Boggle"},{a:"Trivial Pursuit",b:"Quiz"},{a:"Risk",b:"Stratego"},{a:"Catan",b:"Carcassonne"},{a:"Uno",b:"Phase 10"},{a:"Dominos",b:"Mikado"},{a:"Jenga",b:"Kapla"},{a:"Lego",b:"Playmobil"},{a:"RPG",b:"MMORPG"},{a:"FPS",b:"Battle royale"},{a:"Origami",b:"Kirigami"},{a:"Randonnée",b:"Géocaching"},{a:"Sudoku",b:"Mots croisés"},{a:"Mahjong",b:"Jeu de go"}],
-"👗 Mode":[{a:"Jean slim",b:"Jean boyfriend"},{a:"Pull",b:"Sweat à capuche"},{a:"Veste",b:"Blazer"},{a:"Manteau",b:"Parka"},{a:"Robe",b:"Tunique"},{a:"Costume",b:"Smoking"},{a:"Escarpin",b:"Ballerine"},{a:"Basket",b:"Stan Smith"},{a:"Montre",b:"Bracelet connecté"},{a:"Collier",b:"Sautoir"},{a:"Sac à main",b:"Pochette"},{a:"Soie",b:"Satin"},{a:"Rayures",b:"Pois"},{a:"Haute couture",b:"Prêt-à-porter"},{a:"Chanel",b:"Dior"},{a:"Nike",b:"Adidas"},{a:"Vintage",b:"Rétro"},{a:"Streetwear",b:"Athleisure"},{a:"Rouge à lèvres",b:"Gloss"}],
-"🎨 Art":[{a:"Aquarelle",b:"Encre de Chine"},{a:"Fresque",b:"Mosaïque"},{a:"Sculpture",b:"Installation"},{a:"Art abstrait",b:"Art figuratif"},{a:"Impressionnisme",b:"Pointillisme"},{a:"Cubisme",b:"Surréalisme"},{a:"Pop art",b:"Op art"},{a:"Roman",b:"Nouvelle"},{a:"Poème",b:"Sonnet"},{a:"Fable",b:"Conte"},{a:"Bande dessinée",b:"Roman graphique"},{a:"Manga",b:"Manhwa"},{a:"Polar",b:"Thriller"},{a:"Fantasy",b:"Heroic fantasy"},{a:"Dystopie",b:"Post-apocalyptique"},{a:"Victor Hugo",b:"Balzac"},{a:"Proust",b:"Camus"},{a:"Shakespeare",b:"Cervantes"},{a:"Hemingway",b:"Fitzgerald"},{a:"Agatha Christie",b:"Arthur Conan Doyle"}],
-"💊 Santé":[{a:"Migraine",b:"Mal de tête"},{a:"Rhume",b:"Grippe"},{a:"Allergie",b:"Intolérance alimentaire"},{a:"Antibiotique",b:"Anti-inflammatoire"},{a:"Stéthoscope",b:"Tensiomètre"},{a:"Radio",b:"IRM"},{a:"Thérapie",b:"Rééducation"},{a:"Méditation",b:"Pleine conscience"},{a:"Sommeil profond",b:"Sommeil paradoxal"},{a:"Burnout",b:"Surmenage"},{a:"Anxiété",b:"Stress chronique"},{a:"Yoga",b:"Stretching"},{a:"Sauna",b:"Hammam"},{a:"Massage suédois",b:"Massage thaï"},{a:"Infusion",b:"Tisane"},{a:"Probiotique",b:"Prébiotique"}]
+"🎬 Films":[{a:"Titanic",b:"Naufrage"},{a:"Avatar",b:"Pandora"},{a:"Le Parrain",b:"Scarface"},{a:"Star Wars",b:"Star Trek"},{a:"Harry Potter",b:"Le Seigneur des Anneaux"},{a:"Batman",b:"Superman"},{a:"Iron Man",b:"Captain America"},{a:"Toy Story",b:"Shrek"},{a:"Le Roi Lion",b:"Bambi"},{a:"Inception",b:"Interstellar"},{a:"Matrix",b:"Blade Runner"},{a:"Indiana Jones",b:"Lara Croft"},{a:"James Bond",b:"Jason Bourne"},{a:"Forrest Gump",b:"La Vie est belle"},{a:"The Dark Knight",b:"Spider-Man"},{a:"John Wick",b:"Taken"},{a:"Intouchables",b:"Patients"},{a:"Amélie Poulain",b:"Delicatessen"},{a:"Frozen",b:"Raiponce"},{a:"Coco",b:"Soul"},{a:"Spirited Away",b:"Princesse Mononoké"},{a:"Parasite",b:"Oldboy"},{a:"Breaking Bad",b:"Better Call Saul"},{a:"Stranger Things",b:"Dark"},{a:"La Casa de Papel",b:"Lupin"},{a:"Black Mirror",b:"Westworld"},{a:"Oscar",b:"Palme d'or"},{a:"CGI",b:"Effets spéciaux"},{a:"Western",b:"Péplum"},{a:"Biopic",b:"Film historique"},{a:"Trailer",b:"Teaser"},{a:"Cliffhanger",b:"Plot twist"},{a:"Gladiator",b:"Troie"},{a:"Pulp Fiction",b:"Reservoir Dogs"},{a:"Jurassic Park",b:"King Kong"},{a:"E.T.",b:"Alien"},{a:"Rocky",b:"Creed"},{a:"Terminator",b:"Robocop"},{a:"Shutter Island",b:"Gone Girl"},{a:"Avengers",b:"Justice League"},{a:"Fight Club",b:"American History X"},{a:"Titane",b:"Grave"},{a:"Dune",b:"Fondation"},{a:"Top Gun",b:"Pearl Harbor"},{a:"Joker",b:"Venom"},{a:"Deadpool",b:"Kick-Ass"},{a:"Taxi Driver",b:"Drive"},{a:"Retour vers le futur",b:"Doctor Who"},{a:"Kill Bill",b:"Sin City"},{a:"Wall-E",b:"Ratatouille"}],
+"🏠 Objets":[{a:"Parapluie",b:"Parasol"},{a:"Bougie",b:"Encens"},{a:"Miroir",b:"Vitre"},{a:"Coussin",b:"Oreiller"},{a:"Couverture",b:"Plaid"},{a:"Rideau",b:"Store"},{a:"Horloge murale",b:"Pendule"},{a:"Sablier",b:"Minuteur"},{a:"Clé",b:"Badge magnétique"},{a:"Portefeuille",b:"Porte-monnaie"},{a:"Écharpe",b:"Foulard"},{a:"Bonnet",b:"Casquette"},{a:"Sac à dos",b:"Sac de voyage"},{a:"Crayon",b:"Stylo"},{a:"Agrafeuse",b:"Trombone"},{a:"Casque audio",b:"Écouteurs"},{a:"Télécommande",b:"Manette de jeu"},{a:"Thermostat",b:"Thermomètre"},{a:"Aspirateur",b:"Balai"},{a:"Nappe",b:"Set de table"},{a:"Poêle",b:"Casserole"},{a:"Ouvre-boîte",b:"Tire-bouchon"},{a:"Cadre photo",b:"Tableau"},{a:"Vase",b:"Pot de fleurs"},{a:"Réveil",b:"Minuterie"},{a:"Lampe de chevet",b:"Lampadaire"},{a:"Carafe",b:"Gourde"},{a:"Tabouret",b:"Chaise haute"},{a:"Commode",b:"Armoire"},{a:"Tapis",b:"Moquette"},{a:"Briquet",b:"Allumette"},{a:"Ciseau",b:"Cutter"},{a:"Épingle",b:"Broche"},{a:"Enveloppe",b:"Carte postale"},{a:"Livre",b:"Liseuse"},{a:"Canapé",b:"Fauteuil"},{a:"Louche",b:"Spatule"},{a:"Pelle",b:"Râteau"},{a:"Marteau",b:"Maillet"},{a:"Vis",b:"Clou"},{a:"Ampoule",b:"Néon"},{a:"Bouteille",b:"Flacon"},{a:"Mouchoir",b:"Serviette"},{a:"Sèche-cheveux",b:"Fer à lisser"},{a:"Panier",b:"Corbeille"},{a:"Cage",b:"Aquarium"},{a:"Cadenas",b:"Serrure"},{a:"Aiguille",b:"Épingle à nourrice"},{a:"Ventilateur",b:"Climatiseur"},{a:"Éponge",b:"Brosse"}],
+"🌍 Lieux":[{a:"France",b:"Belgique"},{a:"Espagne",b:"Portugal"},{a:"Italie",b:"Grèce"},{a:"Allemagne",b:"Autriche"},{a:"Japon",b:"Corée du Sud"},{a:"Chine",b:"Taiwan"},{a:"Brésil",b:"Argentine"},{a:"Mexique",b:"Colombie"},{a:"Maroc",b:"Tunisie"},{a:"Paris",b:"Lyon"},{a:"Tokyo",b:"Osaka"},{a:"New York",b:"Los Angeles"},{a:"Londres",b:"Manchester"},{a:"Rome",b:"Milan"},{a:"Sydney",b:"Melbourne"},{a:"Dubaï",b:"Abu Dhabi"},{a:"Tour Eiffel",b:"Tour de Pise"},{a:"Colisée",b:"Acropole"},{a:"Taj Mahal",b:"Alhambra"},{a:"Himalaya",b:"Andes"},{a:"Alpes",b:"Pyrénées"},{a:"Sahara",b:"Désert de Gobi"},{a:"Amazonie",b:"Congo (forêt)"},{a:"Atlantique",b:"Pacifique"},{a:"Canada",b:"États-Unis"},{a:"Égypte",b:"Soudan"},{a:"Russie",b:"Ukraine"},{a:"Thaïlande",b:"Vietnam"},{a:"Islande",b:"Norvège"},{a:"Cuba",b:"Jamaïque"},{a:"Berlin",b:"Vienne"},{a:"Barcelone",b:"Madrid"},{a:"Séoul",b:"Busan"},{a:"Le Caire",b:"Istanbul"},{a:"Venise",b:"Amsterdam"},{a:"Moscou",b:"Saint-Pétersbourg"},{a:"La Réunion",b:"Maurice"},{a:"Hawaii",b:"Bali"},{a:"Martinique",b:"Guadeloupe"},{a:"Machu Picchu",b:"Chichén Itzá"},{a:"Grand Canyon",b:"Uluru"},{a:"Mont Blanc",b:"Mont Everest"},{a:"Niagara",b:"Victoria (chutes)"},{a:"Antarctique",b:"Arctique"},{a:"Méditerranée",b:"Mer Noire"},{a:"Maldives",b:"Seychelles"},{a:"Madagascar",b:"Sri Lanka"},{a:"Pérou",b:"Chili"},{a:"Irlande",b:"Écosse"},{a:"Zanzibar",b:"Bora Bora"}],
+"🌟 Personnalités":[{a:"Einstein",b:"Oppenheimer"},{a:"Newton",b:"Galilée"},{a:"Curie (Marie)",b:"Curie (Pierre)"},{a:"Tesla (Nikola)",b:"Edison"},{a:"Picasso",b:"Braque"},{a:"Van Gogh",b:"Gauguin"},{a:"Michael Jackson",b:"Prince"},{a:"Elvis Presley",b:"Chuck Berry"},{a:"The Beatles",b:"The Rolling Stones"},{a:"Madonna",b:"Beyoncé"},{a:"David Bowie",b:"Freddie Mercury"},{a:"Mozart",b:"Beethoven"},{a:"Spielberg",b:"Scorsese"},{a:"Chaplin",b:"Buster Keaton"},{a:"Pelé",b:"Maradona"},{a:"Cristiano Ronaldo",b:"Messi"},{a:"Muhammad Ali",b:"Mike Tyson"},{a:"Federer",b:"Nadal"},{a:"Michael Jordan",b:"LeBron James"},{a:"Napoléon",b:"César"},{a:"Gandhi",b:"Mandela"},{a:"Elon Musk",b:"Jeff Bezos"},{a:"Steve Jobs",b:"Bill Gates"},{a:"Da Vinci",b:"Michel-Ange"},{a:"Shakespeare",b:"Molière"},{a:"Cléopâtre",b:"Néfertiti"},{a:"Darwin",b:"Pasteur"},{a:"Hitchcock",b:"Kubrick"},{a:"Bob Marley",b:"Jimmy Hendrix"},{a:"Serena Williams",b:"Venus Williams"},{a:"Zidane",b:"Platini"},{a:"Usain Bolt",b:"Carl Lewis"},{a:"Léonard de Vinci",b:"Raphaël"},{a:"Daft Punk",b:"Justice"},{a:"Banksy",b:"Basquiat"},{a:"Coco Chanel",b:"Yves Saint Laurent"},{a:"Marie-Antoinette",b:"Joséphine de Beauharnais"},{a:"Victor Hugo",b:"Alexandre Dumas"},{a:"Platon",b:"Aristote"},{a:"Frida Kahlo",b:"Georgia O'Keeffe"},{a:"Houdini",b:"David Copperfield"},{a:"Clint Eastwood",b:"John Wayne"},{a:"Kendrick Lamar",b:"J. Cole"},{a:"Taylor Swift",b:"Ariana Grande"},{a:"Drake",b:"Kanye West"},{a:"Mbappé",b:"Haaland"},{a:"Lewis Hamilton",b:"Max Verstappen"},{a:"Hawking",b:"Sagan"},{a:"Freud",b:"Jung"},{a:"De Gaulle",b:"Churchill"}],
+"🍽️ Nourriture":[{a:"Cappuccino",b:"Latte"},{a:"Expresso",b:"Ristretto"},{a:"Thé vert",b:"Thé blanc"},{a:"Mozzarella",b:"Burrata"},{a:"Brie",b:"Camembert"},{a:"Croissant",b:"Pain au chocolat"},{a:"Macaron",b:"Meringue"},{a:"Tiramisu",b:"Panna cotta"},{a:"Crêpe",b:"Galette"},{a:"Risotto",b:"Paella"},{a:"Ramen",b:"Pho"},{a:"Sushi",b:"Sashimi"},{a:"Kebab",b:"Shawarma"},{a:"Mojito",b:"Caïpirinha"},{a:"Champagne",b:"Prosecco"},{a:"Raclette",b:"Fondue"},{a:"Baguette",b:"Ciabatta"},{a:"Sorbet",b:"Glace"},{a:"Pizza",b:"Focaccia"},{a:"Burrito",b:"Enchilada"},{a:"Pad thaï",b:"Chow mein"},{a:"Tartiflette",b:"Gratin dauphinois"},{a:"Guacamole",b:"Houmous"},{a:"Pancake",b:"Gaufre"},{a:"Brownie",b:"Cookie"},{a:"Steak",b:"Entrecôte"},{a:"Dim sum",b:"Gyoza"},{a:"Falafel",b:"Samossa"},{a:"Gruyère",b:"Emmental"},{a:"Couscous",b:"Tajine"},{a:"Crème brûlée",b:"Flan"},{a:"Brioche",b:"Pain de mie"},{a:"Ceviche",b:"Tartare"},{a:"Gnocchi",b:"Ravioli"},{a:"Vinaigrette",b:"Mayonnaise"},{a:"Wasabi",b:"Moutarde"},{a:"Naan",b:"Pita"},{a:"Smoothie",b:"Milkshake"},{a:"Churros",b:"Beignet"},{a:"Miso",b:"Bouillon"},{a:"Matcha",b:"Chaï"},{a:"Mochi",b:"Dango"},{a:"Cannoli",b:"Éclair"},{a:"Croûton",b:"Bruschetta"},{a:"Beurre",b:"Margarine"},{a:"Confiture",b:"Marmelade"},{a:"Poivre",b:"Curcuma"},{a:"Miel",b:"Sirop d'érable"},{a:"Tofu",b:"Tempeh"},{a:"Cacao",b:"Caroube"}],
+"💭 Concepts":[{a:"Nostalgie",b:"Mélancolie"},{a:"Fierté",b:"Orgueil"},{a:"Empathie",b:"Compassion"},{a:"Courage",b:"Témérité"},{a:"Intuition",b:"Instinct"},{a:"Liberté",b:"Indépendance"},{a:"Solitude",b:"Isolement"},{a:"Rêve",b:"Cauchemar"},{a:"Secret",b:"Mystère"},{a:"Ironie",b:"Sarcasme"},{a:"Bonheur",b:"Euphorie"},{a:"Tristesse",b:"Chagrin"},{a:"Trahison",b:"Déception"},{a:"Pardon",b:"Indulgence"},{a:"Espoir",b:"Optimisme"},{a:"Imagination",b:"Créativité"},{a:"Justice",b:"Équité"},{a:"Harmonie",b:"Sérénité"},{a:"Chaos",b:"Désordre"},{a:"Résilience",b:"Endurance"},{a:"Passion",b:"Obsession"},{a:"Pudeur",b:"Timidité"},{a:"Amour",b:"Amitié"},{a:"Respect",b:"Admiration"},{a:"Jalousie",b:"Envie"},{a:"Honte",b:"Culpabilité"},{a:"Sagesse",b:"Intelligence"},{a:"Destin",b:"Hasard"},{a:"Éternité",b:"Infini"},{a:"Conscience",b:"Subconscient"},{a:"Vérité",b:"Sincérité"},{a:"Mensonge",b:"Hypocrisie"},{a:"Ambition",b:"Motivation"},{a:"Vengeance",b:"Rancune"},{a:"Gratitude",b:"Reconnaissance"},{a:"Patience",b:"Persévérance"},{a:"Colère",b:"Frustration"},{a:"Humilité",b:"Modestie"},{a:"Sacrifice",b:"Dévouement"},{a:"Utopie",b:"Idéal"},{a:"Paradoxe",b:"Dilemme"},{a:"Conscience",b:"Morale"},{a:"Loyauté",b:"Fidélité"},{a:"Innocence",b:"Naïveté"},{a:"Doute",b:"Incertitude"},{a:"Destin",b:"Providence"},{a:"Absurde",b:"Nonsense"},{a:"Extase",b:"Béatitude"},{a:"Angoisse",b:"Anxiété"},{a:"Révolution",b:"Rébellion"}],
+"👔 Métiers":[{a:"Architecte",b:"Designer d'intérieur"},{a:"Photographe",b:"Vidéaste"},{a:"Chirurgien",b:"Dentiste"},{a:"Psychologue",b:"Psychiatre"},{a:"Avocat",b:"Notaire"},{a:"Chef cuisinier",b:"Pâtissier"},{a:"Pilote",b:"Capitaine de navire"},{a:"Détective",b:"Espion"},{a:"DJ",b:"Producteur musical"},{a:"Acteur",b:"Doubleur"},{a:"Écrivain",b:"Scénariste"},{a:"Danseur",b:"Chorégraphe"},{a:"Traducteur",b:"Interprète"},{a:"Ingénieur",b:"Technicien"},{a:"Pompier",b:"Secouriste"},{a:"Vétérinaire",b:"Zoologiste"},{a:"Astronaute",b:"Cosmonaute"},{a:"Styliste",b:"Couturier"},{a:"Magicien",b:"Illusionniste"},{a:"Jardinier",b:"Paysagiste"},{a:"Développeur",b:"Data scientist"},{a:"Journaliste",b:"Chroniqueur"},{a:"Sommelier",b:"Barista"},{a:"Sage-femme",b:"Infirmier"},{a:"Archéologue",b:"Anthropologue"},{a:"Boulanger",b:"Meunier"},{a:"Cascadeur",b:"Doublure"},{a:"Antiquaire",b:"Brocanteur"},{a:"Diplomate",b:"Ambassadeur"},{a:"Coach sportif",b:"Kinésithérapeute"},{a:"Libraire",b:"Éditeur"},{a:"Ébéniste",b:"Menuisier"},{a:"Viticulteur",b:"Brasseur"},{a:"Commissaire-priseur",b:"Galeriste"},{a:"Guide touristique",b:"Animateur"},{a:"Réalisateur",b:"Producteur"},{a:"Cordonnier",b:"Bottier"},{a:"Plombier",b:"Électricien"},{a:"Opticien",b:"Audioprothésiste"},{a:"Huissier",b:"Greffier"},{a:"Tatoueur",b:"Piercer"},{a:"Taxidermiste",b:"Restaurateur d'art"},{a:"Géomètre",b:"Cartographe"},{a:"Horloger",b:"Bijoutier"},{a:"Luthier",b:"Accordeur"},{a:"Ostéopathe",b:"Chiropracteur"},{a:"Palefrenier",b:"Dresseur"},{a:"Souffleur de verre",b:"Céramiste"},{a:"Urgentiste",b:"Anesthésiste"},{a:"Conservateur",b:"Archiviste"}],
+"📱 Tech":[{a:"Algorithme",b:"Intelligence artificielle"},{a:"Bug",b:"Glitch"},{a:"Wi-Fi",b:"Bluetooth"},{a:"Emoji",b:"Sticker"},{a:"Podcast",b:"Audiobook"},{a:"Cloud",b:"Serveur"},{a:"VPN",b:"Proxy"},{a:"Notification",b:"Alerte"},{a:"Dark mode",b:"Mode nuit"},{a:"Firewall",b:"Antivirus"},{a:"SSD",b:"Disque dur"},{a:"QR code",b:"Code-barres"},{a:"Touch ID",b:"Face ID"},{a:"Machine learning",b:"Deep learning"},{a:"Chatbot",b:"Assistant vocal"},{a:"Réalité virtuelle",b:"Réalité augmentée"},{a:"Drone",b:"Robot"},{a:"Blockchain",b:"Cryptomonnaie"},{a:"Startup",b:"Licorne tech"},{a:"Frontend",b:"Backend"},{a:"Instagram",b:"TikTok"},{a:"Netflix",b:"Disney+"},{a:"API",b:"SDK"},{a:"Open source",b:"Logiciel libre"},{a:"Pixel",b:"Voxel"},{a:"RAM",b:"ROM"},{a:"USB",b:"HDMI"},{a:"Spam",b:"Phishing"},{a:"Selfie",b:"Story"},{a:"Hashtag",b:"Mention"},{a:"Bitcoin",b:"Ethereum"},{a:"GPT",b:"Claude"},{a:"Metaverse",b:"Web3"},{a:"4G",b:"5G"},{a:"Twitter",b:"Threads"},{a:"YouTube",b:"Twitch"},{a:"Spotify",b:"Apple Music"},{a:"Tesla",b:"SpaceX"},{a:"Google",b:"Bing"},{a:"Linux",b:"Windows"},{a:"Python",b:"JavaScript"},{a:"Apple",b:"Samsung"},{a:"Uber",b:"Lyft"},{a:"Discord",b:"Slack"},{a:"Zoom",b:"Teams"},{a:"Github",b:"GitLab"},{a:"Docker",b:"Kubernetes"},{a:"NFT",b:"Token"},{a:"Deepfake",b:"Filtre"},{a:"Streaming",b:"Téléchargement"}],
+"🎵 Musique":[{a:"Guitare électrique",b:"Basse"},{a:"Piano",b:"Synthétiseur"},{a:"Violon",b:"Violoncelle"},{a:"Batterie",b:"Djembé"},{a:"Trompette",b:"Saxophone"},{a:"Rap",b:"Slam"},{a:"Jazz",b:"Blues"},{a:"Reggae",b:"Dancehall"},{a:"Techno",b:"House"},{a:"Rock",b:"Métal"},{a:"Pop",b:"Variété"},{a:"Bossa nova",b:"Samba"},{a:"Flamenco",b:"Tango"},{a:"Disco",b:"Funk"},{a:"Soul",b:"R&B"},{a:"Country",b:"Folk"},{a:"Lo-fi",b:"Chillhop"},{a:"Afrobeat",b:"Afropop"},{a:"Concert",b:"Festival"},{a:"Vinyl",b:"CD"},{a:"Remix",b:"Cover"},{a:"Chœur",b:"A cappella"},{a:"Harmonica",b:"Accordéon"},{a:"Harpe",b:"Lyre"},{a:"Platine",b:"Table de mixage"},{a:"Mélodie",b:"Harmonie"},{a:"Refrain",b:"Couplet"},{a:"Beatbox",b:"Human beatbox"},{a:"K-pop",b:"J-pop"},{a:"Grunge",b:"Punk"},{a:"Trap",b:"Drill"},{a:"Gospel",b:"Spiritual"},{a:"Opéra",b:"Comédie musicale"},{a:"Dubstep",b:"Drum and bass"},{a:"Ukulélé",b:"Banjo"},{a:"Chorale",b:"Fanfare"},{a:"Clarinette",b:"Hautbois"},{a:"Flûte",b:"Fifre"},{a:"Xylophone",b:"Marimba"},{a:"Castagnettes",b:"Tambourin"},{a:"Playback",b:"Live"},{a:"EP",b:"Album"},{a:"Single",b:"Featuring"},{a:"Karaoké",b:"Jam session"},{a:"Autotune",b:"Vocoder"},{a:"Partition",b:"Tablature"},{a:"Crescendo",b:"Decrescendo"},{a:"Soprano",b:"Alto"},{a:"Ténor",b:"Baryton"},{a:"Diapason",b:"Métronome"}],
+"⚽ Sport":[{a:"Football",b:"Rugby"},{a:"Tennis",b:"Badminton"},{a:"Basket-ball",b:"Handball"},{a:"Natation",b:"Water-polo"},{a:"Cyclisme",b:"VTT"},{a:"Ski alpin",b:"Snowboard"},{a:"Boxe",b:"MMA"},{a:"Judo",b:"Karaté"},{a:"Golf",b:"Pétanque"},{a:"Hockey sur glace",b:"Hockey sur gazon"},{a:"Surf",b:"Bodyboard"},{a:"Escalade",b:"Alpinisme"},{a:"Marathon",b:"Semi-marathon"},{a:"Yoga",b:"Pilates"},{a:"Penalty",b:"Coup franc"},{a:"Stade",b:"Aréna"},{a:"Carton rouge",b:"Carton jaune"},{a:"Tour de France",b:"Giro d'Italia"},{a:"Formule 1",b:"MotoGP"},{a:"Jeux Olympiques",b:"Jeux Paralympiques"},{a:"Champions League",b:"Ligue Europa"},{a:"Dribble",b:"Feinte"},{a:"Touchdown",b:"Essai"},{a:"Saut en longueur",b:"Triple saut"},{a:"Lancer de poids",b:"Lancer de javelot"},{a:"Aviron",b:"Canoë"},{a:"Escrime",b:"Kendo"},{a:"Patinage artistique",b:"Danse sur glace"},{a:"Rallye",b:"Endurance"},{a:"Trampoline",b:"Gymnastique"},{a:"Cricket",b:"Baseball"},{a:"Sumo",b:"Lutte"},{a:"Taekwondo",b:"Kung-fu"},{a:"Plongeon",b:"Natation synchronisée"},{a:"Tir à l'arc",b:"Tir sportif"},{a:"Biathlon",b:"Triathlon"},{a:"Polo",b:"Équitation"},{a:"Lacrosse",b:"Crosse"},{a:"Squash",b:"Padel"},{a:"Volley-ball",b:"Beach-volley"},{a:"Skateboard",b:"Roller"},{a:"Parapente",b:"Deltaplane"},{a:"Rafting",b:"Kayak"},{a:"Bobsleigh",b:"Luge"},{a:"Curling",b:"Shuffleboard"},{a:"Fléchettes",b:"Billard"},{a:"Catch",b:"Boxe thaïlandaise"},{a:"Haltérophilie",b:"Powerlifting"},{a:"Crossfit",b:"Musculation"},{a:"Wakeboard",b:"Kitesurf"}],
+"🐾 Animaux":[{a:"Lion",b:"Tigre"},{a:"Panthère",b:"Léopard"},{a:"Loup",b:"Renard"},{a:"Ours brun",b:"Ours polaire"},{a:"Gorille",b:"Chimpanzé"},{a:"Koala",b:"Paresseux"},{a:"Kangourou",b:"Wallaby"},{a:"Crocodile",b:"Alligator"},{a:"Hibou",b:"Chouette"},{a:"Pieuvre",b:"Calmar"},{a:"Requin blanc",b:"Requin marteau"},{a:"Dauphin",b:"Marsouin"},{a:"Orque",b:"Baleine bleue"},{a:"Flamant rose",b:"Pélican"},{a:"Aigle",b:"Faucon"},{a:"Coccinelle",b:"Scarabée"},{a:"Papillon",b:"Libellule"},{a:"Abeille",b:"Bourdon"},{a:"Araignée",b:"Scorpion"},{a:"Caméléon",b:"Gecko"},{a:"Cobra",b:"Vipère"},{a:"Panda géant",b:"Panda roux"},{a:"Castor",b:"Loutre"},{a:"Morse",b:"Phoque"},{a:"Autruche",b:"Émeu"},{a:"Toucan",b:"Perroquet"},{a:"Cygne",b:"Oie"},{a:"Cerf",b:"Élan"},{a:"Bison",b:"Buffle"},{a:"Gazelle",b:"Antilope"},{a:"Hyène",b:"Chacal"},{a:"Tortue marine",b:"Tortue terrestre"},{a:"Salamandre",b:"Triton"},{a:"Piranha",b:"Barracuda"},{a:"Poisson-clown",b:"Poisson-chirurgien"},{a:"Méduse",b:"Anémone de mer"},{a:"Hippocampe",b:"Poisson-globe"},{a:"Colibri",b:"Martin-pêcheur"},{a:"Cigale",b:"Grillon"},{a:"Mante religieuse",b:"Phasme"},{a:"Hamster",b:"Cochon d'Inde"},{a:"Furet",b:"Hermine"},{a:"Alpaga",b:"Lama"},{a:"Girafe",b:"Okapi"},{a:"Rhinocéros",b:"Hippopotame"},{a:"Suricate",b:"Mangouste"},{a:"Lynx",b:"Ocelot"},{a:"Vautour",b:"Condor"},{a:"Raie manta",b:"Raie pastenague"},{a:"Axolotl",b:"Grenouille"}],
+"🌿 Nature":[{a:"Aurore boréale",b:"Arc-en-ciel"},{a:"Éclipse solaire",b:"Éclipse lunaire"},{a:"Tsunami",b:"Raz-de-marée"},{a:"Fossile",b:"Ambre"},{a:"Galaxie",b:"Nébuleuse"},{a:"Comète",b:"Astéroïde"},{a:"Trou noir",b:"Étoile à neutrons"},{a:"ADN",b:"ARN"},{a:"Séisme",b:"Éruption volcanique"},{a:"Tornade",b:"Cyclone"},{a:"Orchidée",b:"Lys"},{a:"Rose",b:"Pivoine"},{a:"Lavande",b:"Romarin"},{a:"Chêne",b:"Hêtre"},{a:"Séquoia",b:"Baobab"},{a:"Volcan actif",b:"Volcan éteint"},{a:"Quartz",b:"Améthyste"},{a:"Magma",b:"Lave"},{a:"Orage",b:"Tempête"},{a:"Mousson",b:"Alizé"},{a:"Neurone",b:"Synapse"},{a:"Photosynthèse",b:"Respiration cellulaire"},{a:"Stalactite",b:"Stalagmite"},{a:"Grêle",b:"Giboulée"},{a:"Brouillard",b:"Brume"},{a:"Marée haute",b:"Marée basse"},{a:"Pleine lune",b:"Nouvelle lune"},{a:"Récif corallien",b:"Atoll"},{a:"Geyser",b:"Source chaude"},{a:"Iceberg",b:"Banquise"},{a:"Glacier",b:"Fjord"},{a:"Mangrove",b:"Marais"},{a:"Savane",b:"Steppe"},{a:"Toundra",b:"Taïga"},{a:"Coucher de soleil",b:"Lever de soleil"},{a:"Étoile filante",b:"Météore"},{a:"Cactus",b:"Aloès"},{a:"Bambou",b:"Roseau"},{a:"Mousse",b:"Lichen"},{a:"Champignon",b:"Truffe"},{a:"Dune",b:"Falaise"},{a:"Grotte",b:"Caverne"},{a:"Cascade",b:"Rapide"},{a:"Lac",b:"Étang"},{a:"Fleuve",b:"Rivière"},{a:"Île",b:"Presqu'île"},{a:"Volcan sous-marin",b:"Fosse océanique"},{a:"Diamant",b:"Rubis"},{a:"Saphir",b:"Émeraude"},{a:"Pluie",b:"Crachin"}],
+"🎲 Jeux":[{a:"Échecs",b:"Dames"},{a:"Poker",b:"Black-jack"},{a:"Monopoly",b:"La Bonne Paye"},{a:"Loup-Garou",b:"Mafia"},{a:"Escape game",b:"Chasse au trésor"},{a:"Bowling",b:"Pétanque"},{a:"Scrabble",b:"Boggle"},{a:"Trivial Pursuit",b:"Quiz"},{a:"Risk",b:"Stratego"},{a:"Catan",b:"Carcassonne"},{a:"Uno",b:"Phase 10"},{a:"Dominos",b:"Mikado"},{a:"Jenga",b:"Kapla"},{a:"Lego",b:"Playmobil"},{a:"RPG",b:"MMORPG"},{a:"FPS",b:"Battle royale"},{a:"Origami",b:"Kirigami"},{a:"Randonnée",b:"Géocaching"},{a:"Sudoku",b:"Mots croisés"},{a:"Mahjong",b:"Jeu de go"},{a:"Puzzle",b:"Casse-tête"},{a:"Tarot",b:"Belote"},{a:"Backgammon",b:"Trictrac"},{a:"Pictionary",b:"Dessinez c'est gagné"},{a:"Timeline",b:"Frise chronologique"},{a:"Bingo",b:"Loterie"},{a:"Puissance 4",b:"Morpion"},{a:"Baby-foot",b:"Air hockey"},{a:"Billard",b:"Snooker"},{a:"Paintball",b:"Laser game"},{a:"Action ou vérité",b:"Cap ou pas cap"},{a:"Pierre-feuille-ciseau",b:"Shifumi"},{a:"Course en sac",b:"Tir à la corde"},{a:"Cerf-volant",b:"Frisbee"},{a:"Karting",b:"Bumper car"},{a:"Time's Up",b:"Taboo"},{a:"Jungle Speed",b:"Dobble"},{a:"Dixit",b:"Mysterium"},{a:"7 Wonders",b:"Splendor"},{a:"Codenames",b:"Undercover"},{a:"Cards Against Humanity",b:"Blanc-Manger Coco"},{a:"Azul",b:"Sagrada"},{a:"Pandémie",b:"Les Aventuriers du Rail"},{a:"Werewolf",b:"Secret Hitler"},{a:"Just Dance",b:"Dance Dance Revolution"},{a:"Arcade",b:"Borne de jeu"},{a:"Rubik's Cube",b:"Solitaire"},{a:"Chasse à l'homme",b:"Cache-cache"},{a:"Badminton de plage",b:"Beach tennis"},{a:"Fléchettes",b:"Tir à la carabine"}],
+"👗 Mode":[{a:"Jean slim",b:"Jean boyfriend"},{a:"Pull",b:"Sweat à capuche"},{a:"Veste",b:"Blazer"},{a:"Manteau",b:"Parka"},{a:"Robe",b:"Tunique"},{a:"Costume",b:"Smoking"},{a:"Escarpin",b:"Ballerine"},{a:"Basket",b:"Stan Smith"},{a:"Montre",b:"Bracelet connecté"},{a:"Collier",b:"Sautoir"},{a:"Sac à main",b:"Pochette"},{a:"Soie",b:"Satin"},{a:"Rayures",b:"Pois"},{a:"Haute couture",b:"Prêt-à-porter"},{a:"Chanel",b:"Dior"},{a:"Nike",b:"Adidas"},{a:"Vintage",b:"Rétro"},{a:"Streetwear",b:"Athleisure"},{a:"Rouge à lèvres",b:"Gloss"},{a:"Beret",b:"Chapeau fedora"},{a:"Cravate",b:"Nœud papillon"},{a:"Sandales",b:"Tongs"},{a:"Bottines",b:"Cuissardes"},{a:"Legging",b:"Jogging"},{a:"Chemise",b:"Polo"},{a:"Lingerie",b:"Pyjama"},{a:"Ceinture",b:"Bretelles"},{a:"Lunettes de soleil",b:"Lunettes de vue"},{a:"Perfecto",b:"Blouson aviateur"},{a:"Trench",b:"Imperméable"},{a:"Cachemire",b:"Mohair"},{a:"Denim",b:"Velours côtelé"},{a:"Broderie",b:"Dentelle"},{a:"Zara",b:"H&M"},{a:"Gucci",b:"Louis Vuitton"},{a:"Prada",b:"Versace"},{a:"Converse",b:"Vans"},{a:"Bandana",b:"Foulard"},{a:"Broche",b:"Pin's"},{a:"Bague",b:"Alliance"},{a:"Boucles d'oreilles",b:"Créoles"},{a:"Sneakers",b:"Mocassins"},{a:"Cargo",b:"Bermuda"},{a:"Poncho",b:"Cape"},{a:"Gilet",b:"Cardigan"},{a:"Combinaison",b:"Salopette"},{a:"Corset",b:"Bustier"},{a:"Bob",b:"Visière"},{a:"Survetement",b:"Ensemble sport"},{a:"Kimono",b:"Yukata"}],
+"🎨 Art":[{a:"Aquarelle",b:"Encre de Chine"},{a:"Fresque",b:"Mosaïque"},{a:"Sculpture",b:"Installation"},{a:"Art abstrait",b:"Art figuratif"},{a:"Impressionnisme",b:"Pointillisme"},{a:"Cubisme",b:"Surréalisme"},{a:"Pop art",b:"Op art"},{a:"Roman",b:"Nouvelle"},{a:"Poème",b:"Sonnet"},{a:"Fable",b:"Conte"},{a:"Bande dessinée",b:"Roman graphique"},{a:"Manga",b:"Manhwa"},{a:"Polar",b:"Thriller"},{a:"Fantasy",b:"Heroic fantasy"},{a:"Dystopie",b:"Post-apocalyptique"},{a:"Victor Hugo",b:"Balzac"},{a:"Proust",b:"Camus"},{a:"Shakespeare",b:"Cervantes"},{a:"Hemingway",b:"Fitzgerald"},{a:"Agatha Christie",b:"Arthur Conan Doyle"},{a:"Graffiti",b:"Street art"},{a:"Poterie",b:"Céramique"},{a:"Lithographie",b:"Sérigraphie"},{a:"Nature morte",b:"Vanité"},{a:"Autoportrait",b:"Portrait"},{a:"Art déco",b:"Art nouveau"},{a:"Baroque",b:"Rococo"},{a:"Expressionnisme",b:"Fauvisme"},{a:"Renaissance",b:"Classicisme"},{a:"Minimalisme",b:"Maximalisme"},{a:"Land art",b:"Art éphémère"},{a:"Ready-made",b:"Objet trouvé"},{a:"Haïku",b:"Limerick"},{a:"Sonnet",b:"Ballade"},{a:"Science-fiction",b:"Anticipation"},{a:"Biographie",b:"Autobiographie"},{a:"Essai",b:"Pamphlet"},{a:"Tragédie",b:"Comédie"},{a:"Drame",b:"Mélodrame"},{a:"Toile",b:"Chevalet"},{a:"Pinceau",b:"Palette"},{a:"Fusain",b:"Pastel"},{a:"Estampe",b:"Gravure"},{a:"Calligraphie",b:"Typographie"},{a:"Origami",b:"Papier mâché"},{a:"Tapisserie",b:"Broderie"},{a:"Vitrail",b:"Mosaïque romaine"},{a:"Photographie argentique",b:"Photographie numérique"},{a:"Dadaïsme",b:"Situationnisme"},{a:"Performance",b:"Happening"}],
+"💊 Santé":[{a:"Migraine",b:"Mal de tête"},{a:"Rhume",b:"Grippe"},{a:"Allergie",b:"Intolérance alimentaire"},{a:"Antibiotique",b:"Anti-inflammatoire"},{a:"Stéthoscope",b:"Tensiomètre"},{a:"Radio",b:"IRM"},{a:"Thérapie",b:"Rééducation"},{a:"Méditation",b:"Pleine conscience"},{a:"Sommeil profond",b:"Sommeil paradoxal"},{a:"Burnout",b:"Surmenage"},{a:"Anxiété",b:"Stress chronique"},{a:"Yoga",b:"Stretching"},{a:"Sauna",b:"Hammam"},{a:"Massage suédois",b:"Massage thaï"},{a:"Infusion",b:"Tisane"},{a:"Probiotique",b:"Prébiotique"},{a:"Acupuncture",b:"Acupression"},{a:"Homéopathie",b:"Naturopathie"},{a:"Kinésithérapie",b:"Ostéopathie"},{a:"Vaccin",b:"Rappel"},{a:"Tension artérielle",b:"Fréquence cardiaque"},{a:"Plâtre",b:"Attelle"},{a:"Sirop",b:"Comprimé"},{a:"Pansement",b:"Bandage"},{a:"Scanner",b:"Échographie"},{a:"Ophtalmologue",b:"Orthoptiste"},{a:"Dermatologue",b:"Esthéticien"},{a:"Otite",b:"Sinusite"},{a:"Tendinite",b:"Entorse"},{a:"Fracture",b:"Fissure"},{a:"Myopie",b:"Presbytie"},{a:"Astigmatisme",b:"Hypermétropie"},{a:"Colonne vertébrale",b:"Bassin"},{a:"Artère",b:"Veine"},{a:"Globule rouge",b:"Globule blanc"},{a:"Vitamine C",b:"Vitamine D"},{a:"Fer",b:"Calcium"},{a:"Oméga 3",b:"Oméga 6"},{a:"Régime",b:"Jeûne intermittent"},{a:"Aromathérapie",b:"Phytothérapie"},{a:"Hypnose",b:"Sophrologie"},{a:"Diététicien",b:"Nutritionniste"},{a:"Protéine",b:"Glucide"},{a:"Lipide",b:"Fibre"},{a:"Cardiologue",b:"Pneumologue"},{a:"Endocrinologue",b:"Diabétologue"},{a:"Anesthésie locale",b:"Anesthésie générale"},{a:"Greffe",b:"Transplantation"},{a:"Microbe",b:"Virus"},{a:"Bactérie",b:"Champignon"}],
+"🎌 Animé":[{a:"Naruto",b:"Boruto"},{a:"Goku",b:"Vegeta"},{a:"Luffy",b:"Zoro"},{a:"Sasuke",b:"Itachi"},{a:"Tanjiro",b:"Zenitsu"},{a:"Eren",b:"Mikasa"},{a:"Light Yagami",b:"L"},{a:"Gon",b:"Killua"},{a:"Saitama",b:"Genos"},{a:"Midoriya",b:"Bakugo"},{a:"Edward Elric",b:"Alphonse Elric"},{a:"Spike Spiegel",b:"Jet Black"},{a:"Sakura",b:"Hinata"},{a:"Pikachu",b:"Évoli"},{a:"Sailor Moon",b:"Sakura Chasseuse de cartes"},{a:"Totoro",b:"Sans-Visage"},{a:"Gojo",b:"Sukuna"},{a:"Asta",b:"Yuno"},{a:"Denji",b:"Power"},{a:"Lelouch",b:"Suzaku"},{a:"Levi Ackerman",b:"Erwin Smith"},{a:"Rem",b:"Ram"},{a:"Kirito",b:"Asuna"},{a:"Monkey D. Dragon",b:"Shanks"},{a:"Itadori",b:"Megumi"},{a:"Shoto Todoroki",b:"Endeavor"},{a:"Kakashi",b:"Minato"},{a:"Meliodas",b:"Escanor"},{a:"Natsu",b:"Gray"},{a:"Guts",b:"Griffith"},{a:"Saber",b:"Archer"},{a:"Shinji",b:"Rei"},{a:"Mob",b:"Reigen"},{a:"Senku",b:"Tsukasa"},{a:"Thorfinn",b:"Askeladd"},{a:"Jotaro",b:"Dio"},{a:"One Piece",b:"Dragon Ball"},{a:"Demon Slayer",b:"Jujutsu Kaisen"},{a:"L'Attaque des Titans",b:"Tokyo Ghoul"},{a:"Death Note",b:"Code Geass"},{a:"Hunter × Hunter",b:"Yu Yu Hakusho"},{a:"My Hero Academia",b:"Black Clover"},{a:"Fullmetal Alchemist",b:"Soul Eater"},{a:"Naruto Shippuden",b:"Bleach"},{a:"One Punch Man",b:"Mob Psycho 100"},{a:"Sword Art Online",b:"Log Horizon"},{a:"Re:Zero",b:"Konosuba"},{a:"Cowboy Bebop",b:"Samurai Champloo"},{a:"Neon Genesis Evangelion",b:"Darling in the Franxx"},{a:"Chainsaw Man",b:"Fire Force"}],
+"🎮 Jeux Vidéo":[{a:"Mario",b:"Luigi"},{a:"Zelda",b:"Link"},{a:"Pokémon Rouge",b:"Pokémon Bleu"},{a:"Minecraft",b:"Terraria"},{a:"Fortnite",b:"PUBG"},{a:"GTA V",b:"Red Dead Redemption"},{a:"FIFA",b:"PES"},{a:"Call of Duty",b:"Battlefield"},{a:"League of Legends",b:"Dota 2"},{a:"Overwatch",b:"Valorant"},{a:"The Witcher",b:"Skyrim"},{a:"Dark Souls",b:"Elden Ring"},{a:"Resident Evil",b:"Silent Hill"},{a:"Assassin's Creed",b:"Prince of Persia"},{a:"God of War",b:"Devil May Cry"},{a:"Final Fantasy",b:"Dragon Quest"},{a:"Super Smash Bros",b:"Tekken"},{a:"Animal Crossing",b:"Stardew Valley"},{a:"Among Us",b:"Fall Guys"},{a:"Sonic",b:"Crash Bandicoot"},{a:"Roblox",b:"Garry's Mod"},{a:"Counter-Strike",b:"Rainbow Six"},{a:"Apex Legends",b:"Warzone"},{a:"The Last of Us",b:"Uncharted"},{a:"Spider-Man PS5",b:"Batman Arkham"},{a:"Sekiro",b:"Bloodborne"},{a:"Hollow Knight",b:"Celeste"},{a:"Hades",b:"Dead Cells"},{a:"Portal",b:"Half-Life"},{a:"Mass Effect",b:"Star Wars KOTOR"},{a:"Cyberpunk 2077",b:"Deus Ex"},{a:"Metal Gear Solid",b:"Splinter Cell"},{a:"Monster Hunter",b:"Dauntless"},{a:"Splatoon",b:"Jet Set Radio"},{a:"Kirby",b:"Yoshi"},{a:"Pac-Man",b:"Space Invaders"},{a:"Tetris",b:"Puyo Puyo"},{a:"Donkey Kong",b:"Banjo-Kazooie"},{a:"Wii Sports",b:"Mario Party"},{a:"Street Fighter",b:"Mortal Kombat"},{a:"Horizon Zero Dawn",b:"Death Stranding"},{a:"Persona 5",b:"Fire Emblem"},{a:"Rocket League",b:"Mario Kart"},{a:"World of Warcraft",b:"Guild Wars"},{a:"Diablo",b:"Path of Exile"},{a:"Genshin Impact",b:"Honkai Star Rail"},{a:"Undertale",b:"Deltarune"},{a:"Metroid",b:"Mega Man"},{a:"Kingdom Hearts",b:"Ni no Kuni"},{a:"It Takes Two",b:"A Way Out"}]
 };
 
 let activeThemes=new Set(Object.keys(WORD_PAIRS_BY_THEME));
@@ -1594,12 +1641,19 @@ function hideRevealOverlay(){MWSnow.stop();$('revealOverlay').classList.remove('
 function maybePlayPhaseAudio(){const room=getRoom();if(!room)return;if(state.lastPhase!==room.phase){if(['discussion','vote','result'].includes(room.phase))sfxPhase();state.lastPhase=room.phase;}if(!room.winner)state.lastWinner='';}
 function renderRoundDots(){const room=getRoom();const total=room?.settings?.roundsTotal||1;const cur=currentRoundNumber();const dots=$('roundsDots');if(!dots)return;dots.innerHTML='';for(let i=1;i<=total;i++){const d=document.createElement('div');d.className='round-dot'+(i<cur?' done':i===cur?' current':'');dots.appendChild(d);}setText('roundsLabel',`${cur} / ${total}`);}
 function renderPlayers(){const players=getPlayers();const speakerId=currentSpeakerId();const room=getRoom();const phase=room?.phase||'lobby';// Au lobby : afficher le total, en jeu : afficher les vivants
-const displayCount=phase==='lobby'?players.length:players.filter(p=>p.alive).length;setText('aliveCount',displayCount);const list=$('playersList');if(!list)return;list.innerHTML=players.map(p=>{const tags=[];if(p.id===state.myId)tags.push('Toi');if(p.host)tags.push('Hôte');if(!p.alive&&phase!=='lobby')tags.push('Éliminé');if(p.id===speakerId&&phase==='discussion')tags.push('🎙');return`<div class="player-card ${p.id===state.myId?'is-me':''} ${!p.alive&&phase!=='lobby'?'dead':''} ${p.id===speakerId&&phase==='discussion'?'speaking':''}"><div style="display:flex;align-items:center;gap:9px"><div class="player-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div><div class="player-name">${escHtml(p.nickname||'?')}</div><div class="player-meta">${tags.join(' · ')||'En jeu'}</div></div></div></div>`;}).join('')||`<div class="small muted">Aucun joueur</div>`;}
+const displayCount=phase==='lobby'?players.length:players.filter(p=>p.alive).length;setText('aliveCount',displayCount);
+// Avatar bar (visible during game phases)
+const bar=$('avatarBar');if(bar){const inGame=phase!=='lobby';bar.style.display=inGame?'flex':'none';if(inGame){bar.innerHTML=players.map(p=>{const isSpeaking=p.id===speakerId&&phase==='discussion';const isDead=!p.alive;const isMe=p.id===state.myId;return`<div class="avatar-bar-item ${isSpeaking?'speaking':''} ${isDead?'dead':''} ${isMe?'is-me':''}"><div class="player-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div class="avatar-bar-name">${escHtml(p.nickname||'?')}</div>${isSpeaking?'<div class="avatar-bar-badge">🎙</div>':''}</div>`;}).join('');}}
+// Players list panel (lobby only)
+const plPanel=$('panel-players-list');if(plPanel)plPanel.style.display=phase==='lobby'?'':'none';
+const list=$('playersList');if(!list)return;list.innerHTML=players.map(p=>{const tags=[];if(p.id===state.myId)tags.push('Toi');if(p.host)tags.push('Hôte');if(!p.alive&&phase!=='lobby')tags.push('Éliminé');if(p.id===speakerId&&phase==='discussion')tags.push('🎙');return`<div class="player-card ${p.id===state.myId?'is-me':''} ${!p.alive&&phase!=='lobby'?'dead':''} ${p.id===speakerId&&phase==='discussion'?'speaking':''}"><div style="display:flex;align-items:center;gap:9px"><div class="player-avatar" style="background:${avatarColor(p.id)}">${avatarInitial(p.nickname)}</div><div><div class="player-name">${escHtml(p.nickname||'?')}</div><div class="player-meta">${tags.join(' · ')||'En jeu'}</div></div></div></div>`;}).join('')||`<div class="small muted">Aucun joueur</div>`;}
 
 function updateBadges(){const inGame=currentScreen==='room'||currentScreen==='mrwhite-guess';show($('btnGoMenu'),inGame);if(!inGame){setText('modeBadge','Accueil');$('modeBadge').classList.add('active');show($('roomBadge'),false);show($('roundBadge'),false);return;}const room=getRoom();const total=room?.settings?.roundsTotal||1;const cur=currentRoundNumber();setText('modeBadge',`Mode : ${state.mode==='firebase'?'en ligne':'local'}`);setText('roomBadge',`Salle : ${state.roomId||'—'}`);setText('roundBadge',`Manche : ${cur}/${total}`);show($('roomBadge'),true);show($('roundBadge'),true);const mlb=$('modeLabelBadge');if(mlb){const rm=room?.settings?.gameMode;if(rm==='ranked'){mlb.textContent='🏆 Ranked';mlb.className='badge badge-warn';show(mlb,true);}else if(rm==='normal'){mlb.textContent='⚡ Normal';mlb.className='badge badge-info';show(mlb,true);}else{show(mlb,false);}}}
 
 const PHASE_ORDER=['lobby','reveal','discussion','vote','result'];
-function updateStepUI(phase){const idx=PHASE_ORDER.indexOf(phase);PHASE_ORDER.forEach((p,i)=>{const el=$('step-'+p);if(!el)return;el.classList.remove('active','done');if(i<idx)el.classList.add('done');else if(i===idx)el.classList.add('active');});setText('phaseBadge',phaseLabel(phase));show($('panel-discussion'),phase==='discussion');show($('panel-vote'),phase==='vote');show($('panel-result'),phase==='result');show($('panel-clue-feed'),phase==='discussion'||phase==='vote');const vt=$('voteTypeLabel');if(vt)vt.textContent=getRoom()?.settings?.ranked?'Votes secrets — révélation simultanée.':'Votez pour éliminer un suspect.';}
+function updateStepUI(phase){const idx=PHASE_ORDER.indexOf(phase);PHASE_ORDER.forEach((p,i)=>{const el=$('step-'+p);if(!el)return;el.classList.remove('active','done');if(i<idx)el.classList.add('done');else if(i===idx)el.classList.add('active');});setText('phaseBadge',phaseLabel(phase));show($('panel-discussion'),phase==='discussion');show($('panel-vote'),phase==='vote');show($('panel-result'),phase==='result');show($('panel-clue-feed'),phase==='discussion'||phase==='vote');// Show lobby panel always but collapse stats when in game
+const lobbyPanel=$('panel-lobby');if(lobbyPanel){const inActiveGame=['discussion','vote'].includes(phase);lobbyPanel.style.display=phase==='reveal'&&!state.isHost?'none':'';}const vt=$('voteTypeLabel');if(vt)vt.textContent=getRoom()?.settings?.ranked?'Votes secrets — révélation simultanée.':'Votez pour éliminer un suspect.';// Hide big timer when not voting
+const bigBlock=$('gameTimerBlock');if(bigBlock&&phase!=='vote')bigBlock.classList.add('hidden');}
 
 function updateButtons(){const room=getRoom();const phase=room?.phase||'lobby';const alive=getAlivePlayers();const allPlayers=getPlayers();const lobbyCount=phase==='lobby'?allPlayers.length:alive.length;const allSeen=alive.every(p=>p.revealedRound===currentRoundNumber());const order=room?.current?.turnOrder||[];const idx=room?.current?.speakerIndex||0;const totalTurns=order.length;show($('btnStartRound'),state.isHost&&phase==='lobby'&&lobbyCount>=3);show($('btnLeaveLobby'),phase==='lobby');show($('btnForceDiscussion'),state.isHost&&phase==='reveal');if($('btnForceDiscussion'))$('btnForceDiscussion').disabled=!allSeen;show($('btnNextSpeaker'),state.isHost&&phase==='discussion');if($('btnNextSpeaker'))$('btnNextSpeaker').disabled=idx>=Math.max(0,totalTurns-1);show($('btnForceVote'),state.isHost&&phase==='discussion');show($('btnResolveVote'),state.isHost&&phase==='vote'&&!room?.settings?.ranked);show($('revealVotesPanel'),state.isHost&&phase==='vote'&&!!room?.settings?.ranked);show($('btnNextRound'),state.isHost&&phase==='result'&&currentRoundNumber()<(room?.settings?.roundsTotal||1));show($('btnResetGame'),state.isHost);show($('voteTimerAdjust'),state.isHost&&phase==='vote');if($('btnSeenWord'))$('btnSeenWord').disabled=state.mode==='firebase'?hasSeenCurrentWord():!offlineCurrentRevealPlayer();show($('panel-offline-admin'),state.mode==='offline'&&state.isHost&&phase==='lobby');updateSkipBanner();}
 
@@ -1645,12 +1699,17 @@ function updateResultPanel(){const room=getRoom();if(!room)return;setText('resul
     if(cur>=total)setTimeout(()=>showRolesReveal(),600);
   }else{show(wb,false);setText('resultSub',room.resultText?'L\'hôte peut lancer la suite.':'');}}
 
-function updateTimerVisual(timerId,progressId,endAt,totalSecs){const ms=Math.max(0,(endAt||0)-Date.now());const totalMs=Math.max(1000,(totalSecs||1)*1000);const ratio=((totalMs-ms)/totalMs)*100;const total=Math.max(0,Math.ceil(ms/1000));const m=String(Math.floor(total/60)).padStart(2,'0');const s=String(total%60).padStart(2,'0');const el=$(timerId);if(!el)return;el.textContent=`${m}:${s}`;el.classList.toggle('urgent',ms<=5000&&ms>0);const prog=$(progressId);if(prog)prog.style.width=`${Math.max(0,Math.min(100,ratio))}%`;const secLeft=Math.ceil(ms/1000);const room=getRoom();if(ms>0&&secLeft<=5&&secLeft>=1){const key=`${room?.phase}_${secLeft}`;if(audio.lastCountKey!==key){audio.lastCountKey=key;sfxCountdown();}}if(ms<=0)audio.lastCountKey=null;}
+function updateTimerVisual(timerId,progressId,endAt,totalSecs){const ms=Math.max(0,(endAt||0)-Date.now());const totalMs=Math.max(1000,(totalSecs||1)*1000);const ratio=((totalMs-ms)/totalMs)*100;const total=Math.max(0,Math.ceil(ms/1000));const m=String(Math.floor(total/60)).padStart(2,'0');const s=String(total%60).padStart(2,'0');
+// Update centralized big timer
+const bigT=$('gameTimerBig');const bigP=$('gameTimerProgress');const bigL=$('gameTimerLabel');const bigBlock=$('gameTimerBlock');
+if(bigT&&bigBlock){bigBlock.classList.remove('hidden');bigT.textContent=`${m}:${s}`;bigT.classList.toggle('urgent',ms<=5000&&ms>0);if(bigP)bigP.style.width=`${Math.max(0,Math.min(100,ratio))}%`;const room=getRoom();if(bigL)bigL.textContent=room?.phase==='vote'?'Phase de vote':'Phase de discussion';}
+// Keep old timer too
+const el=$(timerId);if(el){el.textContent=`${m}:${s}`;el.classList.toggle('urgent',ms<=5000&&ms>0);}const prog=$(progressId);if(prog)prog.style.width=`${Math.max(0,Math.min(100,ratio))}%`;const secLeft=Math.ceil(ms/1000);const room2=getRoom();if(ms>0&&secLeft<=5&&secLeft>=1){const key=`${room2?.phase}_${secLeft}`;if(audio.lastCountKey!==key){audio.lastCountKey=key;sfxCountdown();}}if(ms<=0)audio.lastCountKey=null;}
 
 function adjustTimer(type,delta){const room=getRoom();if(!room||!state.isHost)return;if(type==='vote'&&room.phase==='vote'&&room.current?.voteEndsAt){const ne=room.current.voteEndsAt+delta*1000;if(state.mode==='offline'){state.offline.current.voteEndsAt=Math.max(Date.now()+2000,ne);persistOffline();}else if(firebaseFns)firebaseFns.updateDoc(roomRef(state.roomId),{'current.voteEndsAt':Math.max(Date.now()+2000,ne)});toast('Timer ajusté',`${delta>0?'+':''}${delta}s`);}}
 window.adjustTimer=adjustTimer;
 
-function startTick(){if(state.tickInterval)clearInterval(state.tickInterval);state.tickInterval=setInterval(()=>{const room=getRoom();if(!room)return;if(room.phase==='vote')updateTimerVisual('voteTimer','voteProgress',room.current?.voteEndsAt||0,room.settings?.voteSeconds||45);if(state.mode==='firebase')autoPhaseProgress();else offlineAutoProgress();},250);}
+function startTick(){if(state.tickInterval)clearInterval(state.tickInterval);state.tickInterval=setInterval(()=>{const room=getRoom();if(!room)return;const bigBlock=$('gameTimerBlock');if(room.phase==='vote'){updateTimerVisual('voteTimer','voteProgress',room.current?.voteEndsAt||0,room.settings?.voteSeconds||45);}else{if(bigBlock&&!bigBlock.classList.contains('hidden')&&room.phase!=='discussion')bigBlock.classList.add('hidden');}if(state.mode==='firebase')autoPhaseProgress();else offlineAutoProgress();},250);}
 
 // ── FIREBASE ──
 let firebaseFns=null;
