@@ -1107,6 +1107,8 @@ function avatarInitial(name){return(name||'?')[0].toUpperCase();}
 function avBgByName(n){return AVCS[(n||'a').charCodeAt(0)%AVCS.length];}
 function getProfile(){try{return JSON.parse(localStorage.getItem('gv_profile'))||null;}catch{return null;}}
 function saveProfile(p){localStorage.setItem('gv_profile',JSON.stringify(p));}
+function ensureProfile(name){let p=getProfile();if(!p)p={name:name||'Joueur',lp:0,wins:0,games:0};if(name)p.name=name;if(typeof p.wins!=='number')p.wins=0;if(typeof p.games!=='number')p.games=0;if(typeof p.lp!=='number')p.lp=0;saveProfile(p);return p;}
+function trackGameResult(won){const p=ensureProfile();p.games=(p.games||0)+1;if(won)p.wins=(p.wins||0)+1;saveProfile(p);}
 function gradeIdx(lp){return Math.min(11,Math.floor((lp||0)/LP_PER_GRADE));}
 function lpInGrade(lp){return(lp||0)%LP_PER_GRADE;}
 function tierOf(gi){return Math.min(3,Math.floor(gi/3));}
@@ -1202,11 +1204,17 @@ function calcLPDelta(results){
 }
 
 function applyLPDelta(delta){
-  const p=getProfile();if(!p)return;
+  const p=ensureProfile();
   const oldGi=gradeIdx(p.lp||0);p.lp=Math.max(0,(p.lp||0)+delta);const newGi=gradeIdx(p.lp);
-  p.games=(p.games||0)+1;if(delta>0)p.wins=(p.wins||0)+1;saveProfile(p);
-  if(newGi>oldGi)setTimeout(()=>{toast('🎉 PROMOTION ! '+GRADE_ICONS[newGi]+' '+GRADES[newGi],'#ffd700');SFX.win(true);},800);
+  saveProfile(p);
+  if(newGi>oldGi)setTimeout(()=>{toast('🎉 PROMOTION ! '+GRADE_ICONS[newGi]+' '+GRADES[newGi],'#ffd700');SFX.win(true);showGradeUpOverlay(newGi);},800);
   else if(newGi<oldGi)setTimeout(()=>{toast('💀 Rétrogradation : '+GRADE_ICONS[newGi]+' '+GRADES[newGi],'#ff3d6b');SFX.warn();},800);
+}
+function showGradeUpOverlay(gi){
+  // Quick grade-up visual on the big timer area
+  const bigT=$('gameTimerBig');const bigL=$('gameTimerLabel');const bigBlock=$('gameTimerBlock');
+  if(bigT&&bigBlock){bigBlock.classList.remove('hidden');bigT.textContent=GRADE_ICONS[gi];bigT.style.fontSize='4rem';bigL.textContent=GRADES[gi]+' !';bigT.classList.remove('urgent');
+  setTimeout(()=>{bigT.style.fontSize='';bigBlock.classList.add('hidden');},3500);}
 }
 
 // ══════════════════════════════
@@ -1736,8 +1744,8 @@ const word=isMW?(isCPP?'MR. WHITE':'???'):state.myPrivateWord.word;showRevealOve
 
 let lastRenderedSpeakerIdx=-1;
 function updateDiscussionPanel(){const room=getRoom();if(!room||room.phase!=='discussion'){lastRenderedSpeakerIdx=-1;return;}const order=room.current?.turnOrder||[];const idx=room.current?.speakerIndex||0;const totalTurns=order.length;const curId=idx<totalTurns?order[idx]:'';const alivePlayers=getAlivePlayers();const playersCount=alivePlayers.length;const passNum=playersCount>0?Math.floor(idx/playersCount)+1:1;const totalPasses=playersCount>0?Math.ceil(totalTurns/playersCount):1;const playerNum=playersCount>0?(idx%playersCount)+1:0;setText('currentSpeakerText',curId?getPlayerName(curId):'Terminé');if(idx>=totalTurns)setText('speakerProgressBadge','Tous les indices sont donnés !');else if(totalPasses>1)setText('speakerProgressBadge',`Passage ${passNum}/${totalPasses} · Joueur ${playerNum}/${playersCount}`);else setText('speakerProgressBadge',`Joueur ${playerNum} sur ${playersCount}`);const av=$('speakerAvatar');if(av&&curId){av.style.background=avatarColor(curId);av.textContent=avatarInitial(getPlayerName(curId));}
-// Ne re-render l'input que si le speaker a changé (sinon ça reset le timer)
-if(lastRenderedSpeakerIdx!==idx||!clueTimerInterval){lastRenderedSpeakerIdx=idx;renderClueInput();}
+// Reset clue submitted flag when speaker changes
+if(lastRenderedSpeakerIdx!==idx){clueSubmittedBySpeaker=false;lastRenderedSpeakerIdx=idx;renderClueInput();}else if(!clueTimerInterval){renderClueInput();}
 renderClueFeed();}
 
 function updateVotePanel(){const room=getRoom();if(!room||room.phase!=='vote')return;const alive=getAlivePlayers();const grid=$('voteGrid');if(!grid)return;// Show round info
@@ -1761,6 +1769,10 @@ function updateResultPanel(){const room=getRoom();if(!room)return;setText('resul
   if(room.winner&&room.winner!=='pending_mrwhite'){show(wb,true);const isCivil=room.winner==='civils';const isMW=room.winner==='mrwhite';wb.className=`winner-banner ${isCivil?'civils':isMW?'mrwhite':'undercover'}`;wb.innerHTML=`<div class="winner-icon">${isCivil?'🏆':isMW?'🤵':'🕵️'}</div><div><div class="winner-label">${isCivil?'Victoire des civils !':isMW?'Victoire de Mr. White !':'Victoire des undercovers !'}</div><div class="winner-desc">${isCivil?'Tous les imposteurs ont été démasqués.':isMW?'Mr. White a deviné le mot secret !':'Les undercovers ont survécu.'}</div></div>`;const total=room.settings?.roundsTotal||1;const cur=currentRoundNumber();setText('resultSub',cur<total?`Manche ${cur}/${total} — l'hôte peut continuer.`:'Dernière manche terminée !');
     // Toujours montrer l'animation de révélation des rôles
     setTimeout(()=>showRolesReveal(),600);
+    // Track stats for ALL modes
+    const myRole=state.myPrivateWord?.role||'civil';
+    const iWon=(isCivil&&myRole==='civil')||(isMW&&myRole==='mrwhite')||(!isCivil&&!isMW&&myRole==='undercover');
+    trackGameResult(iWon);
     if(room.settings?.ranked&&rankedSessionResults&&cur>=total){
       // Tracker la dernière manche
       rankedSessionResults.roundsPlayed=cur;
@@ -1797,7 +1809,8 @@ const voteRef=(r,p)=>firebaseFns.doc(state.db,'rooms',r,'votes',p);
 
 async function createFirebaseRoom(nickname,settings){const roomId=roomCode();const room={roomId,mode:'firebase',hostId:state.myId,phase:'lobby',roundNumber:0,createdAt:firebaseFns.serverTimestamp(),updatedAt:firebaseFns.serverTimestamp(),winner:'',resultText:'',settings,current:{aliveIds:[state.myId],eliminatedIds:[],pairIndex:-1,undercoverIds:[],mrWhiteIds:[],civilianWord:'',undercoverWord:'',discussionEndsAt:0,voteEndsAt:0,turnOrder:[],speakerIndex:0,skipVotes:{},clues:[]}};await firebaseFns.setDoc(roomRef(roomId),room);await firebaseFns.setDoc(playerRef(roomId,state.myId),{id:state.myId,secretId:state.mySecret,nickname,host:true,alive:true,joinedAt:Date.now(),revealedRound:-1,votedRound:-1});state.mode='firebase';state.roomId=roomId;state.myName=nickname;state.isHost=true;history.replaceState(null,'',(location.pathname+'?room='+encodeURIComponent(roomId)));await subscribeFirebaseRoom(roomId);toast('Salle créée','Code : '+roomId);}
 async function joinFirebaseRoom(roomId,nickname){const snap=await firebaseFns.getDoc(roomRef(roomId));if(!snap.exists())throw new Error('Salle introuvable.');state.mode='firebase';state.roomId=roomId;state.myName=nickname;state.isHost=snap.data().hostId===state.myId;await firebaseFns.setDoc(playerRef(roomId,state.myId),{id:state.myId,secretId:state.mySecret,nickname,host:state.isHost,alive:true,joinedAt:Date.now(),revealedRound:-1,votedRound:-1},{merge:true});history.replaceState(null,'',(location.pathname+'?room='+encodeURIComponent(roomId)));await subscribeFirebaseRoom(roomId);toast('Salle rejointe','Bienvenue '+nickname);}
-async function subscribeFirebaseRoom(roomId){if(state.unsubRoom)state.unsubRoom();if(state.unsubPlayers)state.unsubPlayers();showScreen('room');initGameSession();state.unsubRoom=firebaseFns.onSnapshot(roomRef(roomId),async snap=>{if(!snap.exists()){alert('Salle supprimée.');location.href=location.pathname;return;}state.roomData=snap.data();state.isHost=state.roomData.hostId===state.myId;syncCluesAndAnimate();updateRoomHeader();renderPlayers();await fetchMyPrivateWord();autoPhaseProgress();});state.unsubPlayers=firebaseFns.onSnapshot(playersCol(roomId),qsnap=>{state.players=qsnap.docs.map(d=>d.data()).sort((a,b)=>(a.joinedAt||0)-(b.joinedAt||0));renderPlayers();updateRoomHeader();});startTick();}
+async function subscribeFirebaseRoom(roomId){if(state.unsubRoom)state.unsubRoom();if(state.unsubPlayers)state.unsubPlayers();showScreen('room');initGameSession();state.unsubRoom=firebaseFns.onSnapshot(roomRef(roomId),async snap=>{if(!snap.exists()){alert('Salle supprimée.');location.href=location.pathname;return;}state.roomData=snap.data();state.isHost=state.roomData.hostId===state.myId;// Auto-init ranked session for ALL players in ranked rooms
+if(state.roomData.settings?.ranked&&!rankedSessionResults)initRankedSession();syncCluesAndAnimate();updateRoomHeader();renderPlayers();await fetchMyPrivateWord();autoPhaseProgress();});state.unsubPlayers=firebaseFns.onSnapshot(playersCol(roomId),qsnap=>{state.players=qsnap.docs.map(d=>d.data()).sort((a,b)=>(a.joinedAt||0)-(b.joinedAt||0));renderPlayers();updateRoomHeader();});startTick();}
 async function fetchMyPrivateWord(){if(state.mode!=='firebase'||!state.roomId)return;const room=getRoom();if(!['reveal','discussion','vote','result'].includes(room?.phase)){state.myPrivateWord=null;return;}const snap=await firebaseFns.getDoc(privateRef(state.roomId,state.mySecret));if(snap.exists()){const d=snap.data();if(d.roundNumber===currentRoundNumber()){state.myPrivateWord=d;if(rankedSessionResults)rankedSessionResults.role=d.role||'civil';}}updateRevealPanel();}
 
 async function firebaseStartRound(){
@@ -2059,9 +2072,9 @@ $('soundVolume').addEventListener('input',updateAudioSettings);
 $('btnCopyLink').addEventListener('click',()=>{navigator.clipboard.writeText($('shareLinkInput').value).catch(()=>{});SFX.tap();toast('Lien copié !');});
 $('btnSkipWord').addEventListener('click',castSkipVote);
 $('toggleMrWhite').addEventListener('click',()=>{const item=$('mrWhiteRoleItem');const btn=$('toggleMrWhite');const isOn=item.classList.contains('enabled');item.classList.toggle('enabled',!isOn);btn.classList.toggle('on',!isOn);btn.textContent=!isOn?'Actif':'Inactif';const el=$('createMrWhite');if(el){el.value=!isOn?'1':'0';syncSetupValues();}SFX.tap();});
-$('btnCreateOnline').addEventListener('click',async()=>{SFX.tap();const nickname=($('createNickname').value||'').trim();if(!nickname)return alert('Entre un pseudo.');if(!state.firebaseReady)return alert('Firebase non disponible.');let uc=clamp(parseInt($('createUndercover').value,10)??0,0,1);let mw=clamp(parseInt($('createMrWhite').value,10)??0,0,1);if(uc>0&&mw>0)mw=0;const settings={voteSeconds:clamp(parseInt($('createVote').value,10)||45,10,300),clueSeconds:clamp(parseInt($('createClueTime').value,10)||60,15,180),undercoverCount:uc,mrWhiteCount:mw,roundsTotal:clamp(parseInt($('createRounds').value,10)||3,1,20),turnsPerRound:clamp(parseInt($('createTurns').value,10)||2,1,20),gameMode:'custom',ranked:false,secretVotes:false};state.myName=nickname;try{await createFirebaseRoom(nickname,settings);SFX.success();}catch(e){alert(e.message||'Erreur.');}});
-$('btnCreateOffline').addEventListener('click',async()=>{SFX.tap();const nickname=($('createNickname').value||'').trim();if(!nickname)return alert('Entre un pseudo.');let uc=clamp(parseInt($('createUndercover').value,10)??0,0,1);let mw=clamp(parseInt($('createMrWhite').value,10)??0,0,1);if(uc>0&&mw>0)mw=0;const settings={voteSeconds:clamp(parseInt($('createVote').value,10)||45,10,300),clueSeconds:clamp(parseInt($('createClueTime').value,10)||60,15,180),undercoverCount:uc,mrWhiteCount:mw,roundsTotal:clamp(parseInt($('createRounds').value,10)||3,1,20),turnsPerRound:clamp(parseInt($('createTurns').value,10)||2,1,20),gameMode:'custom',ranked:false,secretVotes:false};createOfflineRoom(nickname,settings);SFX.success();});
-$('btnJoinRoom').addEventListener('click',async()=>{SFX.tap();const roomId=($('joinRoomCode').value||'').trim().toUpperCase();const nickname=($('joinNickname').value||'').trim();if(!roomId)return alert('Entre le code de la salle.');if(!nickname)return alert('Entre un pseudo.');if(!state.firebaseReady)return alert('Firebase non disponible.');state.myName=nickname;try{await joinFirebaseRoom(roomId,nickname);SFX.success();}catch(e){alert(e.message||'Erreur.');}});
+$('btnCreateOnline').addEventListener('click',async()=>{SFX.tap();const nickname=($('createNickname').value||'').trim();if(!nickname)return alert('Entre un pseudo.');if(!state.firebaseReady)return alert('Firebase non disponible.');ensureProfile(nickname);let uc=clamp(parseInt($('createUndercover').value,10)??0,0,1);let mw=clamp(parseInt($('createMrWhite').value,10)??0,0,1);if(uc>0&&mw>0)mw=0;const settings={voteSeconds:clamp(parseInt($('createVote').value,10)||45,10,300),clueSeconds:clamp(parseInt($('createClueTime').value,10)||60,15,180),undercoverCount:uc,mrWhiteCount:mw,roundsTotal:clamp(parseInt($('createRounds').value,10)||3,1,20),turnsPerRound:clamp(parseInt($('createTurns').value,10)||2,1,20),gameMode:'custom',ranked:false,secretVotes:false};state.myName=nickname;try{await createFirebaseRoom(nickname,settings);SFX.success();}catch(e){alert(e.message||'Erreur.');}});
+$('btnCreateOffline').addEventListener('click',async()=>{SFX.tap();const nickname=($('createNickname').value||'').trim();if(!nickname)return alert('Entre un pseudo.');ensureProfile(nickname);let uc=clamp(parseInt($('createUndercover').value,10)??0,0,1);let mw=clamp(parseInt($('createMrWhite').value,10)??0,0,1);if(uc>0&&mw>0)mw=0;const settings={voteSeconds:clamp(parseInt($('createVote').value,10)||45,10,300),clueSeconds:clamp(parseInt($('createClueTime').value,10)||60,15,180),undercoverCount:uc,mrWhiteCount:mw,roundsTotal:clamp(parseInt($('createRounds').value,10)||3,1,20),turnsPerRound:clamp(parseInt($('createTurns').value,10)||2,1,20),gameMode:'custom',ranked:false,secretVotes:false};createOfflineRoom(nickname,settings);SFX.success();});
+$('btnJoinRoom').addEventListener('click',async()=>{SFX.tap();const roomId=($('joinRoomCode').value||'').trim().toUpperCase();const nickname=($('joinNickname').value||'').trim();if(!roomId)return alert('Entre le code de la salle.');if(!nickname)return alert('Entre un pseudo.');if(!state.firebaseReady)return alert('Firebase non disponible.');ensureProfile(nickname);state.myName=nickname;try{await joinFirebaseRoom(roomId,nickname);SFX.success();}catch(e){alert(e.message||'Erreur.');}});
 $('btnStartRound').addEventListener('click',async()=>{SFX.tap();if(state.mode==='firebase')firebaseStartRound();else offlineStartRound();});
 $('btnLeaveLobby').addEventListener('click',()=>{SFX.tap();if(state.mode==='firebase'&&state.roomId&&firebaseFns){try{firebaseFns.deleteDoc(playerRef(state.roomId,state.myId)).catch(()=>{});}catch(e){}}goMenu();});
 $('btnSeenWord').addEventListener('click',async()=>{SFX.tap();if(state.mode==='firebase')firebaseMarkSeen();else offlineMarkSeen();});
